@@ -7,6 +7,7 @@ const nextConfig: NextConfig = {
   },
   basePath: '',
   trailingSlash: true,
+  skipTrailingSlashRedirect: true,
 };
 
 export default nextConfig;
