@@ -15,6 +15,10 @@ export const metadata: Metadata = {
   title: "EV Trip Log",
   description: "Track your electric vehicle trips, charging sessions, and efficiency",
   manifest: "/manifest.json",
+  icons: {
+    icon: "/favicon.ico",
+    apple: "/ev-trip-log-app-icon.png",
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
@@ -27,7 +31,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 1,
   userScalable: false,
-  themeColor: "#10b981",
+  themeColor: "#667eea",
 };
 
 export default function RootLayout({
