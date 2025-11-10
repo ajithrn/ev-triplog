@@ -25,6 +25,12 @@ EV Trip Log is designed for electric vehicle owners who want to track their driv
 - Recharts 3.3.0 for data visualization
 - Local Storage for data persistence
 
+## Live Demo
+
+🚀 **Try it now**: [https://trip.evaluate.autos/](https://trip.evaluate.autos/)
+
+Experience the full application without any installation required.
+
 ## Quick Start
 
 ### Prerequisites
