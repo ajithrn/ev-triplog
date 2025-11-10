@@ -29,6 +29,7 @@ interface StopCardProps {
   onDelete: () => void;
   deleteConfirm: boolean;
   isActive: boolean;
+  isFirstStop: boolean;
 }
 
 export default function StopCard({
@@ -45,6 +46,7 @@ export default function StopCard({
   onDelete,
   deleteConfirm,
   isActive,
+  isFirstStop,
 }: StopCardProps) {
   const { deleteChargingSession } = useTrips();
   const [deleteChargingConfirm, setDeleteChargingConfirm] = useState(false);
@@ -64,7 +66,7 @@ export default function StopCard({
       <div className="card-body p-4 sm:p-6">
         <div className="flex items-start justify-between mb-4 gap-2">
           <div className="flex-1 min-w-0">
-            <h3 className="card-title text-sm sm:text-base">{index === 0 ? 'Starting Point' : `Stop ${index + 1}`}</h3>
+            <h3 className="card-title text-sm sm:text-base">{isFirstStop ? 'Starting Point' : `Stop ${index}`}</h3>
             <p className="text-xs opacity-70">{format(new Date(stop.timestamp), 'PPp')}</p>
           </div>
         </div>
@@ -101,7 +103,7 @@ export default function StopCard({
         {isActive && (
           <div className="flex justify-between items-center gap-2 mt-2">
             {/* Add Charging button on left */}
-            {index > 0 && !stop.chargingSession && !showAddCharging ? (
+            {!isFirstStop && !stop.chargingSession && !showAddCharging ? (
               <button
                 onClick={onShowAddCharging}
                 className="btn btn-success btn-sm gap-1 sm:gap-2"
@@ -122,7 +124,7 @@ export default function StopCard({
               >
                 <Edit className="h-4 w-4 text-primary" strokeWidth={2.5} />
               </button>
-              {index > 0 && (
+              {!isFirstStop && (
                 <button
                   onClick={onDelete}
                   className="p-1 hover:opacity-70 transition-opacity"

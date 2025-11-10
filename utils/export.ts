@@ -130,7 +130,8 @@ export function exportTripToPDF(trip: Trip, vehicle: Vehicle): void {
   yPos += 7;
   doc.text(`Vehicle: ${vehicle.name} (${vehicle.make} ${vehicle.model})`, 20, yPos);
   yPos += 6;
-  doc.text(`Battery Capacity: ${vehicle.batteryCapacity} kWh | Trip Date: ${format(new Date(trip.startDate), 'PPP')}`, 20, yPos);
+  const firstStop = trip.stops[0];
+  doc.text(`Battery Capacity: ${vehicle.batteryCapacity} kWh | Trip Date: ${format(new Date(firstStop.timestamp), 'PPP')}`, 20, yPos);
   yPos += 12;
   
   // Key Metrics - 2x3 Grid
@@ -237,15 +238,17 @@ export function exportTripToPDF(trip: Trip, vehicle: Vehicle): void {
   // Basic Info
   doc.text(`Status: ${trip.status.charAt(0).toUpperCase() + trip.status.slice(1)}`, 20, yPos);
   yPos += 6;
-  doc.text(`Start Date: ${format(new Date(trip.startDate), 'PPP')}`, 20, yPos);
+  const lastStop = trip.stops[trip.stops.length - 1];
+  doc.text(`Start Date: ${format(new Date(firstStop.timestamp), 'PPp')}`, 20, yPos);
   yPos += 6;
-  if (trip.endDate) {
-    doc.text(`End Date: ${format(new Date(trip.endDate), 'PPP')}`, 20, yPos);
+  if (trip.status === 'completed') {
+    doc.text(`End Date: ${format(new Date(lastStop.timestamp), 'PPp')}`, 20, yPos);
     yPos += 6;
-    const duration = trip.endDate - trip.startDate;
+    const duration = lastStop.timestamp - firstStop.timestamp;
     const days = Math.floor(duration / (1000 * 60 * 60 * 24));
     const hours = Math.floor((duration % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    doc.text(`Trip Duration: ${days} day(s) ${hours} hour(s)`, 20, yPos);
+    const minutes = Math.floor((duration % (1000 * 60 * 60)) / (1000 * 60));
+    doc.text(`Trip Duration: ${days} day(s) ${hours} hour(s) ${minutes} minute(s)`, 20, yPos);
     yPos += 6;
   }
   
@@ -258,8 +261,6 @@ export function exportTripToPDF(trip: Trip, vehicle: Vehicle): void {
   yPos += 6;
   
   // Battery Usage
-  const firstStop = trip.stops[0];
-  const lastStop = trip.stops[trip.stops.length - 1];
   const batteryUsed = firstStop.batteryPercent - lastStop.batteryPercent;
   doc.text(`Battery Used: ${batteryUsed.toFixed(1)}% (${firstStop.batteryPercent}% -> ${lastStop.batteryPercent}%)`, 20, yPos);
   yPos += 6;
@@ -295,9 +296,6 @@ export function exportTripToPDF(trip: Trip, vehicle: Vehicle): void {
   
   // Stop Details
   doc.text(`Total Stops: ${trip.stops.length}`, 20, yPos);
-  yPos += 6;
-  const stopsWithLocation = trip.stops.filter(s => s.location).length;
-  doc.text(`Stops with Location: ${stopsWithLocation}`, 20, yPos);
   
   // Add new page for details
   doc.addPage();
@@ -316,7 +314,7 @@ export function exportTripToPDF(trip: Trip, vehicle: Vehicle): void {
     // Stop header
     doc.setFontSize(10);
     doc.setFont('helvetica', 'bold');
-    doc.text(`Stop ${index + 1}`, 20, yPos);
+    doc.text(index === 0 ? 'Starting Point' : `Stop ${index}`, 20, yPos);
     yPos += lineHeight;
     
     doc.setFont('helvetica', 'normal');

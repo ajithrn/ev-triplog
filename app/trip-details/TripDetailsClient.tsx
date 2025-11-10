@@ -345,6 +345,7 @@ export default function TripDetailsClient() {
                   onDelete={() => handleDeleteStop(stop.id)}
                   deleteConfirm={deleteStopConfirm === stop.id}
                   isActive={trip.status === 'active' || isEditMode}
+                  isFirstStop={index === 0}
                 />
               )}
             </div>

@@ -54,7 +54,7 @@ export function TripProvider({ children }: { children: ReactNode }) {
       id: tripId,
       name,
       vehicleId,
-      startDate: Date.now(),
+      startDate: initialStop.timestamp, // Use the first stop's timestamp as trip start date
       status: 'active',
       stops: [stop],
       totalDistance: 0,
