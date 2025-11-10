@@ -38,11 +38,11 @@ export default function TripsPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl sm:text-4xl font-bold text-white drop-shadow-lg">Trips</h1>
-          <p className="text-white/80 mt-1">View and manage your trip history</p>
+          <h1 className="text-3xl sm:text-4xl font-bold" style={{ color: 'var(--page-title)' }}>Trips</h1>
+          <p className="mt-1" style={{ color: 'var(--page-subtitle)' }}>View and manage your trip history</p>
         </div>
         {vehicles.length > 0 && (
-          <Link href="/trips/new" className="btn btn-primary glass shadow-lg hover:shadow-xl">
+          <Link href="/trips/new" className="btn btn-primary shadow-lg hover:shadow-xl">
             <Plus className="h-5 w-5" />
             New Trip
           </Link>
@@ -51,7 +51,7 @@ export default function TripsPage() {
 
       {/* No vehicles message */}
       {vehicles.length === 0 && (
-        <div className="card bg-base-100 glass shadow-xl card-hover">
+        <div className="card bg-base-100 shadow-xl card-hover">
           <div className="card-body items-center text-center">
             <Car className="h-16 w-16 text-primary mb-4" />
             <h2 className="card-title text-2xl">No Vehicles Yet</h2>
@@ -69,7 +69,7 @@ export default function TripsPage() {
       {vehicles.length > 0 && (
         <>
           {/* Filter Tabs */}
-          <div role="tablist" className="tabs bg-base-100 glass p-2 rounded-l shadow-lg">
+          <div role="tablist" className="tabs bg-base-100 p-2 rounded-l shadow-lg">
             <a
               role="tab"
               className={`tab rounded-lg transition-all ${
@@ -107,7 +107,7 @@ export default function TripsPage() {
 
           {/* Trips List */}
           {sortedTrips.length === 0 ? (
-            <div className="card bg-base-100 glass shadow-xl card-hover">
+            <div className="card bg-base-100 shadow-xl card-hover">
               <div className="card-body items-center text-center">
                 <MapPin className="h-16 w-16 text-primary mb-4" />
                 <h2 className="card-title text-2xl">No Trips Yet</h2>
@@ -130,9 +130,13 @@ export default function TripsPage() {
                     href={`/trips/${trip.id}`}
                     className={`card shadow-lg card-hover ${
                       trip.status === 'active' 
-                        ? 'bg-blue-50 border-2 border-blue-200' 
-                        : 'bg-base-100 glass'
+                        ? 'border-2 border-primary' 
+                        : 'bg-base-100'
                     }`}
+                    style={trip.status === 'active' ? { 
+                      backgroundColor: 'var(--card-bg)',
+                      borderColor: 'var(--color-primary)'
+                    } : undefined}
                   >
                     <div className="card-body p-4">
                       <div className="flex items-center gap-3 mb-3">

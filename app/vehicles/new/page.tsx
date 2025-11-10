@@ -43,12 +43,12 @@ export default function NewVehiclePage() {
           <ArrowLeft className="h-4 w-4" />
           Back to Vehicles
         </Link>
-        <h1 className="text-3xl sm:text-4xl font-bold text-white drop-shadow-lg">Add New Vehicle</h1>
-        <p className="text-white/80 mt-1">Enter your electric vehicle details</p>
+        <h1 className="text-3xl sm:text-4xl font-bold" style={{ color: 'var(--page-title)' }}>Add New Vehicle</h1>
+        <p className="mt-1" style={{ color: 'var(--page-subtitle)' }}>Enter your electric vehicle details</p>
       </div>
 
       {/* Form */}
-      <div className="card bg-base-100 glass shadow-xl text-base-content">
+      <div className="card bg-base-100 shadow-xl text-base-content">
         <div className="card-body">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="form-control">

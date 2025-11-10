@@ -55,7 +55,7 @@ export default function TripDetailsClient() {
   
   if (!trip) {
     return (
-      <div className="card bg-base-100 glass shadow-xl max-w-md mx-auto mt-12">
+      <div className="card bg-base-100 shadow-xl max-w-md mx-auto mt-12">
         <div className="card-body items-center text-center">
           <h2 className="card-title">Trip not found</h2>
           <div className="card-actions mt-4">
@@ -181,7 +181,7 @@ export default function TripDetailsClient() {
       </div>
 
       {/* Trip Summary */}
-      <div className="stats stats-vertical lg:stats-horizontal shadow-xl bg-base-100 glass w-full">
+      <div className="stats stats-vertical lg:stats-horizontal shadow-xl bg-base-100 w-full">
         <div className="stat">
           <div className="flex items-center gap-3 mb-2">
             <MapPin className="h-8 w-8 text-primary" />
@@ -255,7 +255,7 @@ export default function TripDetailsClient() {
             <div key={stop.id}>
               {/* Stretch Info */}
               {stretch && (
-                <div className="card bg-base-100 glass shadow-lg mb-4">
+                <div className="card bg-base-100 shadow-lg mb-4">
                   <div className="card-body">
                     <h4 className="card-title text-sm">Stretch {index}</h4>
                     <div className="grid grid-cols-2 md:grid-cols-5 gap-3">

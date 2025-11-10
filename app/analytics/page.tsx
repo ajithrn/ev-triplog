@@ -65,12 +65,12 @@ export default function AnalyticsPage() {
     <div className="space-y-6 animate-fade-in">
       {/* Header */}
       <div>
-        <h1 className="text-3xl sm:text-4xl font-bold text-white drop-shadow-lg">Analytics</h1>
-        <p className="text-white/80 mt-1">View your EV performance trends and statistics</p>
+        <h1 className="text-3xl sm:text-4xl font-bold" style={{ color: 'var(--page-title)' }}>Analytics</h1>
+        <p className="mt-1" style={{ color: 'var(--page-subtitle)' }}>View your EV performance trends and statistics</p>
       </div>
 
       {completedTrips.length === 0 ? (
-        <div className="card bg-base-100 glass shadow-xl card-hover">
+        <div className="card bg-base-100 shadow-xl card-hover">
           <div className="card-body items-center text-center">
             <BarChart3 className="h-16 w-16 text-primary mb-4" />
             <h2 className="card-title text-2xl">No Data Yet</h2>
@@ -80,7 +80,7 @@ export default function AnalyticsPage() {
       ) : (
         <>
           {/* Stats Grid */}
-          <div className="stats stats-vertical lg:stats-horizontal shadow-xl bg-base-100 glass w-full">
+          <div className="stats stats-vertical lg:stats-horizontal shadow-xl bg-base-100 w-full">
             <div className="stat">
               <div className="flex items-center gap-3 mb-2">
                 <BarChart3 className="h-8 w-8 text-primary" />
@@ -118,7 +118,7 @@ export default function AnalyticsPage() {
           </div>
 
           {/* Efficiency Trend Chart */}
-          <div className="card bg-base-100 glass shadow-xl card-hover">
+          <div className="card bg-base-100 shadow-xl card-hover">
             <div className="card-body">
               <h2 className="card-title">Efficiency Trend</h2>
               <div className="divider mt-0"></div>
@@ -158,7 +158,7 @@ export default function AnalyticsPage() {
           </div>
 
           {/* Distance & Energy Chart */}
-          <div className="card bg-base-100 glass shadow-xl card-hover">
+          <div className="card bg-base-100 shadow-xl card-hover">
             <div className="card-body">
               <h2 className="card-title">Distance & Energy Usage</h2>
               <div className="divider mt-0"></div>
@@ -187,7 +187,7 @@ export default function AnalyticsPage() {
 
           {/* Vehicle Breakdown */}
           {vehicles.length > 1 && (
-            <div className="card bg-base-100 glass shadow-xl card-hover">
+            <div className="card bg-base-100 shadow-xl card-hover">
               <div className="card-body">
                 <h2 className="card-title">Vehicle Breakdown</h2>
                 <div className="divider mt-0"></div>

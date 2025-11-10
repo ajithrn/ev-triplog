@@ -84,12 +84,12 @@ export default function NewTripPage() {
           <ArrowLeft className="h-4 w-4" />
           <span>Back to Trips</span>
         </Link>
-        <h1 className="text-3xl sm:text-4xl font-bold text-white drop-shadow-lg">Start New Trip</h1>
-        <p className="text-white/80 mt-1">Record your starting point and battery status</p>
+        <h1 className="text-3xl sm:text-4xl font-bold" style={{ color: 'var(--page-title)' }}>Start New Trip</h1>
+        <p className="mt-1" style={{ color: 'var(--page-subtitle)' }}>Record your starting point and battery status</p>
       </div>
 
       {/* Form */}
-      <div className="card bg-base-100 glass shadow-xl">
+      <div className="card bg-base-100 shadow-xl">
         <div className="card-body">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="form-control">

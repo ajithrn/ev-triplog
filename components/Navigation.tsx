@@ -27,14 +27,14 @@ export default function Navigation() {
       />
       <div className="drawer-content flex flex-col">
         {/* Navbar */}
-        <div className="navbar bg-base-100 glass sticky top-0 z-50 shadow-xl border-b border-white/30">
+        <div className="navbar sticky top-0 z-50 border-b" style={{ borderColor: 'var(--border-color)' }}>
           <div className="container mx-auto px-4">
             <div className="navbar w-full">
               {/* Logo - Left */}
               <div className="flex-1">
             <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
               <Car className="h-7 w-7 text-primary" />
-              <span className="font-bold text-lg text-gray-800 uppercase tracking-wide">
+              <span className="font-bold text-lg uppercase tracking-wide" style={{ color: 'var(--nav-text)' }}>
                 EV Trip Log
               </span>
             </Link>
@@ -54,8 +54,9 @@ export default function Navigation() {
                       className={`gap-2 font-medium transition-all ${
                         isActive
                           ? 'text-primary'
-                          : 'text-gray-700 hover:text-primary'
+                          : 'hover:text-primary'
                       }`}
+                      style={{ color: isActive ? undefined : 'var(--nav-text)' }}
                     >
                       <Icon className="h-5 w-5" />
                       {item.label}
@@ -70,9 +71,9 @@ export default function Navigation() {
               <div className="flex-none md:hidden">
                 <label htmlFor="mobile-drawer" className="btn btn-square btn-ghost hover:bg-white/20">
                   {mobileMenuOpen ? (
-                    <X className="h-6 w-6 text-gray-700" />
+                    <X className="h-6 w-6" style={{ color: 'var(--nav-text)' }} />
                   ) : (
-                    <Menu className="h-6 w-6 text-gray-700" />
+                    <Menu className="h-6 w-6" style={{ color: 'var(--nav-text)' }} />
                   )}
                 </label>
               </div>
@@ -84,17 +85,17 @@ export default function Navigation() {
       {/* Drawer Side */}
       <div className="drawer-side z-50">
         <label htmlFor="mobile-drawer" className="drawer-overlay"></label>
-        <div className="menu p-4 w-72 min-h-full bg-base-100 glass shadow-2xl">
+        <div className="menu p-4 w-72 min-h-full bg-base-100 shadow-2xl">
           {/* Drawer Header */}
           <div className="flex items-center justify-between mb-6 pb-4 border-b border-white/20">
             <div className="flex items-center gap-3">
               <Car className="h-7 w-7 text-primary" />
-              <span className="text-lg font-bold text-gray-800 uppercase tracking-wide">
+              <span className="text-lg font-bold uppercase tracking-wide" style={{ color: 'var(--nav-text)' }}>
                 EV Trip Log
               </span>
             </div>
             <label htmlFor="mobile-drawer" className="btn btn-sm btn-circle btn-ghost hover:bg-white/20">
-              <X className="h-5 w-5 text-gray-700" />
+              <X className="h-5 w-5" style={{ color: 'var(--nav-text)' }} />
             </label>
           </div>
 
@@ -112,8 +113,9 @@ export default function Navigation() {
                     className={`gap-3 font-medium transition-all ${
                       isActive
                         ? 'text-primary'
-                        : 'text-gray-700 hover:text-primary'
+                        : 'hover:text-primary'
                     }`}
+                    style={{ color: isActive ? undefined : 'var(--nav-text)' }}
                   >
                     <Icon className="h-5 w-5" />
                     {item.label}

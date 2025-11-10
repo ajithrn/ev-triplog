@@ -60,7 +60,7 @@ export default function StopCard({
   };
 
   return (
-    <div className="card bg-base-100 glass shadow-xl card-hover">
+    <div className="card bg-base-100 shadow-xl card-hover">
       <div className="card-body">
         <div className="flex items-start justify-between mb-4">
           <div>

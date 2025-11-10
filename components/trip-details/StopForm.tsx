@@ -53,7 +53,7 @@ export default function StopForm({ tripId, stop, onCancel }: StopFormProps) {
   const calculatedKwh = vehicle ? (vehicle.batteryCapacity * formData.batteryPercent) / 100 : 0;
 
   return (
-    <div className="card bg-base-100 glass shadow-xl">
+    <div className="card bg-base-100 shadow-xl">
       <div className="card-body">
         <h3 className="card-title">{stop ? 'Edit Stop' : 'Add New Stop'}</h3>
         <form onSubmit={handleSubmit} className="space-y-4">

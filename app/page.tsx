@@ -39,13 +39,13 @@ export default function Dashboard() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl sm:text-4xl font-bold text-white drop-shadow-lg">Dashboard</h1>
-          <p className="text-white/80 mt-1">Track your EV trips and efficiency</p>
+          <h1 className="text-3xl sm:text-4xl font-bold" style={{ color: 'var(--page-title)' }}>Dashboard</h1>
+          <p className="mt-1" style={{ color: 'var(--page-subtitle)' }}>Track your EV trips and efficiency</p>
         </div>
         {vehicles.length === 0 ? (
           <Link
             href="/vehicles"
-            className="btn btn-primary glass shadow-lg hover:shadow-xl"
+            className="btn btn-primary shadow-lg hover:shadow-xl"
           >
             <Plus className="h-5 w-5" />
             Add Vehicle
@@ -53,7 +53,7 @@ export default function Dashboard() {
         ) : (
           <Link
             href="/trips/new"
-            className="btn btn-primary glass shadow-lg hover:shadow-xl"
+            className="btn btn-primary shadow-lg hover:shadow-xl"
           >
             <Plus className="h-5 w-5" />
             New Trip
@@ -63,7 +63,7 @@ export default function Dashboard() {
 
       {/* No vehicles message */}
       {vehicles.length === 0 && (
-        <div className="card bg-base-100 glass shadow-xl card-hover">
+        <div className="card bg-base-100 shadow-xl card-hover">
           <div className="card-body items-center text-center">
             <Car className="h-16 w-16 text-primary mb-4" />
             <h2 className="card-title text-2xl">No Vehicles Yet</h2>
@@ -82,7 +82,7 @@ export default function Dashboard() {
         <>
           {/* Active Trip Card */}
           {activeTrip && (
-            <div className="card bg-base-100 glass shadow-xl">
+            <div className="card bg-base-100 shadow-xl">
               <div className="card-body">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
                   <div className="flex items-center gap-3">
@@ -96,7 +96,7 @@ export default function Dashboard() {
                     View Details
                   </Link>
                 </div>
-                <div className="stats stats-vertical sm:grid sm:grid-cols-2 lg:grid-cols-4 shadow-lg bg-base-100 glass w-full">
+                <div className="stats stats-vertical sm:grid sm:grid-cols-2 lg:grid-cols-4 shadow-lg bg-base-100 w-full">
                   <div className="stat">
                     <div className="flex items-center gap-3 mb-2">
                       <Calendar className="h-8 w-8 text-info" />
@@ -135,7 +135,7 @@ export default function Dashboard() {
           )}
 
           {/* Stats Grid */}
-          <div className="stats stats-vertical sm:grid sm:grid-cols-2 lg:grid-cols-4 shadow-xl bg-base-100 glass w-full">
+          <div className="stats stats-vertical sm:grid sm:grid-cols-2 lg:grid-cols-4 shadow-xl bg-base-100 w-full">
             <div className="stat">
               <div className="flex items-center gap-3 mb-2">
                 <MapPin className="h-8 w-8 text-primary" />
@@ -173,7 +173,7 @@ export default function Dashboard() {
           </div>
 
           {/* Recent Trips */}
-          <div className="card bg-base-100 glass shadow-xl">
+          <div className="card bg-base-100 shadow-xl">
             <div className="card-body">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="card-title">Recent Trips</h2>
@@ -194,7 +194,7 @@ export default function Dashboard() {
                       <Link
                         key={trip.id}
                         href={`/trips/${trip.id}`}
-                        className="card bg-base-100 glass shadow-lg card-hover"
+                        className="card bg-base-100 shadow-lg card-hover"
                       >
                         <div className="card-body p-4">
                           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">

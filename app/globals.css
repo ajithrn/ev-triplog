@@ -20,77 +20,129 @@
 :root {
   --background: #f8fafc;
   --foreground: #0f172a;
+  --card-bg: rgba(255, 255, 255, 0.95);
+  --card-text: #1f2937;
+  --nav-bg: rgba(255, 255, 255, 0.95);
+  --nav-text: #1f2937;
+  --page-title: #1f2937;
+  --page-subtitle: #475569;
+  --border-color: rgba(0, 0, 0, 0.1);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+    --card-bg: rgba(30, 41, 59, 0.95);
+    --card-text: #f1f5f9;
+    --nav-bg: rgba(30, 41, 59, 0.95);
+    --nav-text: #f1f5f9;
+    --page-title: #f1f5f9;
+    --page-subtitle: #e2e8f0;
+    --border-color: rgba(255, 255, 255, 0.1);
   }
 }
 
 body {
-  background: 
-    radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.15), transparent 50%),
-    radial-gradient(circle at 80% 80%, rgba(99, 102, 241, 0.15), transparent 50%),
-    radial-gradient(circle at 40% 20%, rgba(139, 92, 246, 0.1), transparent 50%),
-    linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
-  background-attachment: fixed;
+  background-color: #1e293b;
   color: var(--foreground);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
   min-height: 100vh;
   position: relative;
 }
 
-body::before {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: 
-    url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E"),
-    repeating-linear-gradient(
-      0deg,
-      rgba(255, 255, 255, 0.02) 0px,
-      transparent 1px,
-      transparent 40px,
-      rgba(255, 255, 255, 0.02) 41px
-    ),
-    repeating-linear-gradient(
-      90deg,
-      rgba(255, 255, 255, 0.02) 0px,
-      transparent 1px,
-      transparent 40px,
-      rgba(255, 255, 255, 0.02) 41px
-    );
-  pointer-events: none;
-  z-index: 0;
+@media (prefers-color-scheme: light) {
+  body {
+    background-color: #f1f5f9;
+  }
 }
 
-
-/* Gradient text utility */
-.gradient-text {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
 
 /* Custom hover effect for cards */
 .card-hover {
-  transition: all 0.3s ease;
+  transition: box-shadow 0.3s ease;
 }
 
 .card-hover:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.25);
+  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.08);
 }
 
-/* Ensure card titles are dark and readable on white backgrounds */
+@media (prefers-color-scheme: dark) {
+  .card-hover:hover {
+    box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.2);
+  }
+}
+
+/* Card styling for light and dark modes */
+.card {
+  background-color: var(--card-bg) !important;
+  color: var(--card-text) !important;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+}
+
+@media (prefers-color-scheme: dark) {
+  .card {
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.15);
+  }
+}
+
 .card-title {
-  color: #1f2937 !important;
+  color: var(--card-text) !important;
+}
+
+.card-body {
+  color: var(--card-text) !important;
+}
+
+/* Base content colors */
+.text-base-content {
+  color: var(--card-text) !important;
+}
+
+.text-base-content\/70 {
+  color: var(--card-text) !important;
+  opacity: 0.7;
+}
+
+.text-base-content\/80 {
+  color: var(--card-text) !important;
+  opacity: 0.8;
+}
+
+/* Stats styling */
+.stats {
+  background-color: var(--card-bg) !important;
+  border: 1px solid var(--border-color);
+}
+
+.stat {
+  color: var(--card-text) !important;
+}
+
+.stat-title {
+  color: var(--card-text) !important;
+  opacity: 0.7;
+}
+
+.stat-value {
+  color: var(--card-text) !important;
+}
+
+.stat-desc {
+  color: var(--card-text) !important;
+  opacity: 0.6;
+}
+
+/* Navigation styling */
+.navbar {
+  background: transparent !important;
+  border-color: var(--border-color) !important;
+}
+
+/* Drawer styling */
+.drawer-side .menu {
+  background-color: var(--nav-bg) !important;
 }
 
 /* Smooth scrolling */
@@ -110,12 +162,12 @@ html {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #667eea;
   border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+  background: #764ba2;
 }
 
 /* Animations */
@@ -141,4 +193,66 @@ html {
 
 .react-datepicker__input-container input {
   width: 100%;
+}
+
+/* Mobile-specific improvements */
+@media (max-width: 768px) {
+  /* Ensure cards are properly sized on mobile */
+  .card {
+    width: 100%;
+  }
+  
+  /* Better spacing for mobile */
+  .card-body {
+    padding: 1rem;
+  }
+  
+  /* Ensure stats are readable on mobile */
+  .stats {
+    width: 100%;
+  }
+  
+  .stat {
+    padding: 1rem;
+  }
+  
+  .stat-value {
+    font-size: 1.5rem;
+  }
+  
+  /* Better button sizing on mobile */
+  .btn {
+    min-height: 2.5rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  /* Improve navbar on mobile */
+  .navbar {
+    padding: 0.5rem 0;
+  }
+  
+  /* Better drawer width on mobile */
+  .drawer-side .menu {
+    width: 80vw;
+    max-width: 320px;
+  }
+}
+
+/* Ensure proper text wrapping */
+.card-title,
+.stat-title,
+h1, h2, h3, h4, h5, h6 {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+/* Improve touch targets for mobile */
+@media (hover: none) and (pointer: coarse) {
+  .btn,
+  a,
+  button {
+    min-height: 44px;
+    min-width: 44px;
+  }
 }

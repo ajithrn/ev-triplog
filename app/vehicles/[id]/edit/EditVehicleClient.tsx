@@ -47,7 +47,7 @@ export default function EditVehicleClient() {
 
   if (!vehicle) {
     return (
-      <div className="card bg-base-100 glass shadow-xl max-w-md mx-auto mt-12">
+      <div className="card bg-base-100 shadow-xl max-w-md mx-auto mt-12">
         <div className="card-body items-center text-center">
           <h2 className="card-title">Vehicle not found</h2>
           <div className="card-actions mt-4">
@@ -90,7 +90,7 @@ export default function EditVehicleClient() {
       </div>
 
       {/* Form */}
-      <div className="card bg-base-100 glass shadow-xl">
+      <div className="card bg-base-100 shadow-xl">
         <div className="card-body">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="form-control">
