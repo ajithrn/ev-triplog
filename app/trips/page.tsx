@@ -191,16 +191,13 @@ export default function TripsPage() {
                               ? `${(1 / trip.averageEfficiency).toFixed(2)} km/kWh`
                               : 'N/A'}
                           </div>
-                          {trip.stops.length >= 2 && (() => {
-                            const firstStop = trip.stops[0];
-                            const lastStop = trip.stops[trip.stops.length - 1];
-                            const batteryPercentUsed = firstStop.batteryPercent - lastStop.batteryPercent;
-                            const kmPerPercent = batteryPercentUsed > 0 
-                              ? (trip.totalDistance / batteryPercentUsed).toFixed(2)
-                              : 'N/A';
-                            return batteryPercentUsed > 0 ? (
+                          {trip.stops.length >= 2 && vehicle && (() => {
+                            const kmPerKwh = trip.averageEfficiency > 0 ? 1 / trip.averageEfficiency : 0;
+                            const kwhPerPercent = vehicle.batteryCapacity / 100;
+                            const kmPerPercent = kmPerKwh * kwhPerPercent;
+                            return kmPerPercent > 0 ? (
                               <div className="stat-desc text-xs opacity-70 mt-1">
-                                {kmPerPercent} km/%
+                                {kmPerPercent.toFixed(2)} km/%
                               </div>
                             ) : null;
                           })()}

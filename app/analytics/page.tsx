@@ -49,7 +49,7 @@ export default function AnalyticsPage() {
     .sort((a, b) => a.startDate - b.startDate)
     .map((trip) => ({
       date: format(new Date(trip.startDate), 'MMM dd'),
-      efficiency: trip.averageEfficiency,
+      efficiency: trip.averageEfficiency > 0 ? 1 / trip.averageEfficiency : 0,
       distance: trip.totalDistance,
     }));
 
@@ -103,8 +103,8 @@ export default function AnalyticsPage() {
                 <Battery className="h-8 w-8 text-warning" />
                 <div className="stat-title">Efficiency</div>
               </div>
-              <div className="stat-value text-warning">{avgEfficiency.toFixed(2)}</div>
-              <div className="stat-desc">kWh/km</div>
+              <div className="stat-value text-warning">{avgEfficiency > 0 ? (1 / avgEfficiency).toFixed(2) : '0.00'}</div>
+              <div className="stat-desc">km/kWh</div>
             </div>
 
             <div className="stat">
@@ -127,7 +127,7 @@ export default function AnalyticsPage() {
                   <LineChart data={efficiencyData}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
                     <XAxis dataKey="date" stroke="#6b7280" />
-                    <YAxis label={{ value: 'kWh/km', angle: -90, position: 'insideLeft' }} stroke="#6b7280" />
+                    <YAxis label={{ value: 'km/kWh', angle: -90, position: 'insideLeft' }} stroke="#6b7280" />
                     <Tooltip 
                       contentStyle={{ 
                         backgroundColor: 'rgba(255, 255, 255, 0.95)', 
@@ -142,7 +142,7 @@ export default function AnalyticsPage() {
                       dataKey="efficiency"
                       stroke="url(#colorGradient)"
                       strokeWidth={3}
-                      name="Efficiency (kWh/km)"
+                      name="Efficiency (km/kWh)"
                       dot={{ fill: '#3b82f6', r: 4 }}
                     />
                     <defs>
@@ -217,7 +217,7 @@ export default function AnalyticsPage() {
                             </div>
                             <div>
                               <p className="text-base-content/70 mb-1">Efficiency</p>
-                              <p className="font-bold">{vehicleEfficiency.toFixed(2)} kWh/km</p>
+                              <p className="font-bold">{vehicleEfficiency > 0 ? (1 / vehicleEfficiency).toFixed(2) : '0.00'} km/kWh</p>
                             </div>
                           </div>
                         </div>

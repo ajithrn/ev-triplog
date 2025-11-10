@@ -266,8 +266,10 @@ export function exportTripToPDF(trip: Trip, vehicle: Vehicle): void {
   yPos += 6;
   
   // km per % efficiency
-  if (batteryUsed > 0) {
-    const kmPerPercent = trip.totalDistance / batteryUsed;
+  const kmPerKwh = trip.averageEfficiency > 0 ? 1 / trip.averageEfficiency : 0;
+  const kwhPerPercent = vehicle.batteryCapacity / 100;
+  const kmPerPercent = kmPerKwh * kwhPerPercent;
+  if (kmPerPercent > 0) {
     doc.text(`Efficiency (km/%): ${kmPerPercent.toFixed(2)} km per %`, 20, yPos);
     yPos += 6;
   }

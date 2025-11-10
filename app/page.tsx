@@ -167,8 +167,8 @@ export default function Dashboard() {
                 <Zap className="h-8 w-8 text-info" />
                 <div className="stat-title">Efficiency</div>
               </div>
-              <div className="stat-value">{avgEfficiency.toFixed(2)}</div>
-              <div className="stat-desc">kWh/km</div>
+              <div className="stat-value">{avgEfficiency > 0 ? (1 / avgEfficiency).toFixed(2) : '0.00'}</div>
+              <div className="stat-desc">km/kWh</div>
             </div>
           </div>
 
@@ -230,7 +230,9 @@ export default function Dashboard() {
                                 <Zap className="h-5 w-5 text-accent flex-shrink-0" />
                                 <div>
                                   <div className="text-xs opacity-70">Efficiency</div>
-                                  <div className="font-semibold text-sm">{formatEfficiency(trip.averageEfficiency, 1 / trip.averageEfficiency)}</div>
+                                  <div className="font-semibold text-sm">
+                                    {trip.averageEfficiency > 0 ? `${(1 / trip.averageEfficiency).toFixed(2)} km/kWh` : 'N/A'}
+                                  </div>
                                 </div>
                               </div>
                               <div className="bg-base-200/30 rounded-lg p-2 flex items-center gap-2">
