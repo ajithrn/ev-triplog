@@ -42,7 +42,7 @@ export default function NewTripPage() {
 
   // Redirect if there's already an active trip
   if (activeTrip) {
-    router.push(`/trips/${activeTrip.id}`);
+    router.push(`/trip-details?id=${activeTrip.id}`);
     return null;
   }
 
@@ -60,7 +60,7 @@ export default function NewTripPage() {
       batteryKwh,
       timestamp: Date.now(),
     });
-    router.push(`/trips/${trip.id}`);
+    router.push(`/trip-details?id=${trip.id}`);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
