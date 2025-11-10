@@ -3,14 +3,14 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Car, Map, BarChart3, Menu, X } from 'lucide-react';
+import { Car, Map, BarChart3, Menu, X, LayoutDashboard } from 'lucide-react';
 
 export default function Navigation() {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navItems = [
-    { href: '/', label: 'Dashboard', icon: Map },
+    { href: '/', label: 'Dashboard', icon: LayoutDashboard },
     { href: '/vehicles', label: 'Vehicles', icon: Car },
     { href: '/trips', label: 'Trips', icon: Map },
     { href: '/analytics', label: 'Analytics', icon: BarChart3 },

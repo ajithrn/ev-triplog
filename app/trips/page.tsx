@@ -53,10 +53,7 @@ export default function TripsPage() {
       {vehicles.length === 0 && (
         <div className="card bg-base-100 glass shadow-xl card-hover">
           <div className="card-body items-center text-center">
-            <div className="relative inline-block mb-4">
-              <div className="absolute inset-0 bg-gradient-to-r from-primary to-secondary rounded-full blur-xl opacity-50"></div>
-              <Car className="relative h-16 w-16 text-primary" />
-            </div>
+            <Car className="h-16 w-16 text-primary mb-4" />
             <h2 className="card-title text-2xl">No Vehicles Yet</h2>
             <p className="text-base-content/70">Add a vehicle first to start tracking trips</p>
             <div className="card-actions mt-4">
@@ -112,10 +109,7 @@ export default function TripsPage() {
           {sortedTrips.length === 0 ? (
             <div className="card bg-base-100 glass shadow-xl card-hover">
               <div className="card-body items-center text-center">
-                <div className="relative inline-block mb-4">
-                  <div className="absolute inset-0 bg-gradient-to-r from-primary to-secondary rounded-full blur-xl opacity-50"></div>
-                  <MapPin className="relative h-16 w-16 text-primary" />
-                </div>
+                <MapPin className="h-16 w-16 text-primary mb-4" />
                 <h2 className="card-title text-2xl">No Trips Yet</h2>
                 <p className="text-base-content/70">Start your first trip to begin tracking</p>
                 <div className="card-actions mt-4">

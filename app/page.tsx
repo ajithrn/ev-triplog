@@ -65,14 +65,11 @@ export default function Dashboard() {
       {vehicles.length === 0 && (
         <div className="card bg-base-100 glass shadow-xl card-hover">
           <div className="card-body items-center text-center">
-            <div className="relative inline-block mb-4">
-              <div className="absolute inset-0 bg-gradient-to-r from-primary to-secondary rounded-full blur-xl opacity-50"></div>
-              <Car className="relative h-16 w-16 text-primary" />
-            </div>
+            <Car className="h-16 w-16 text-primary mb-4" />
             <h2 className="card-title text-2xl">No Vehicles Yet</h2>
             <p className="text-base-content/70">Add your first vehicle to start tracking trips</p>
             <div className="card-actions mt-4">
-              <Link href="/vehicles" className="btn btn-primary">
+              <Link href="/vehicles/new" className="btn btn-primary">
                 <Plus className="h-5 w-5" />
                 Add Vehicle
               </Link>

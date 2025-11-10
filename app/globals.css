@@ -88,6 +88,11 @@ body::before {
   box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.25);
 }
 
+/* Ensure card titles are dark and readable on white backgrounds */
+.card-title {
+  color: #1f2937 !important;
+}
+
 /* Smooth scrolling */
 html {
   scroll-behavior: smooth;

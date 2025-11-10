@@ -72,10 +72,7 @@ export default function AnalyticsPage() {
       {completedTrips.length === 0 ? (
         <div className="card bg-base-100 glass shadow-xl card-hover">
           <div className="card-body items-center text-center">
-            <div className="relative inline-block mb-4">
-              <div className="absolute inset-0 bg-gradient-to-r from-primary to-secondary rounded-full blur-xl opacity-50"></div>
-              <BarChart3 className="relative h-16 w-16 text-primary" />
-            </div>
+            <BarChart3 className="h-16 w-16 text-primary mb-4" />
             <h2 className="card-title text-2xl">No Data Yet</h2>
             <p className="text-base-content/70">Complete some trips to see analytics and trends</p>
           </div>
