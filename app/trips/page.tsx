@@ -127,7 +127,7 @@ export default function TripsPage() {
                 return (
                   <Link
                     key={trip.id}
-                    href={`/trips/${trip.id}`}
+                    href={`/trip-details?id=${trip.id}`}
                     className={`card shadow-lg card-hover ${
                       trip.status === 'active' 
                         ? 'border-2 border-primary' 

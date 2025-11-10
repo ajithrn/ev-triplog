@@ -103,7 +103,7 @@ export default function VehiclesPage() {
 
                 <div className="card-actions justify-end gap-2">
                   <Link
-                    href={`/vehicles/${vehicle.id}/edit`}
+                    href={`/edit-vehicle?id=${vehicle.id}`}
                     className="btn btn-sm btn-ghost gap-2"
                   >
                     <Edit className="h-4 w-4" />

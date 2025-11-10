@@ -7,6 +7,7 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import RegisterServiceWorker from "./register-sw";
 import InstallPrompt from "@/components/InstallPrompt";
+import ClientRedirect from "./ClientRedirect";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -39,6 +40,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <RegisterServiceWorker />
         <InstallPrompt />
+        <ClientRedirect />
         <VehicleProvider>
           <TripProvider>
             <div className="min-h-screen flex flex-col">

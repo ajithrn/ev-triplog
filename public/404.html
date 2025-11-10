@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Redirecting...</title>
+  <script>
+    // Store the path in sessionStorage so the app can redirect to it
+    sessionStorage.setItem('redirect', window.location.pathname + window.location.search + window.location.hash);
+    // Redirect to the root, which will handle the routing
+    window.location.replace('/');
+  </script>
+</head>
+<body>
+  <p>Redirecting...</p>
+</body>
+</html>

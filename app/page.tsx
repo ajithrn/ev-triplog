@@ -92,7 +92,7 @@ export default function Dashboard() {
                       <p className="text-sm text-base-content/70">Currently in progress</p>
                     </div>
                   </div>
-                  <Link href={`/trips/${activeTrip.id}`} className="btn btn-primary">
+                  <Link href={`/trip-details?id=${activeTrip.id}`} className="btn btn-primary">
                     View Details
                   </Link>
                 </div>
@@ -193,7 +193,7 @@ export default function Dashboard() {
                     return (
                       <Link
                         key={trip.id}
-                        href={`/trips/${trip.id}`}
+                        href={`/trip-details?id=${trip.id}`}
                         className="card bg-base-100 shadow-lg card-hover"
                       >
                         <div className="card-body p-4">

@@ -69,7 +69,7 @@ export default function Navigation() {
 
               {/* Mobile Menu Button - Right */}
               <div className="flex-none md:hidden">
-                <label htmlFor="mobile-drawer" className="btn btn-square btn-ghost hover:bg-white/20">
+                <label htmlFor="mobile-drawer" className="btn-square btn-ghost hover:bg-white/20">
                   {mobileMenuOpen ? (
                     <X className="h-6 w-6" style={{ color: 'var(--nav-text)' }} />
                   ) : (
