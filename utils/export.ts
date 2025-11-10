@@ -38,7 +38,8 @@ export function exportTripToCSV(trip: Trip, vehicle: Vehicle): void {
     'km per %',
     'Charging Start SOC',
     'Charging End SOC',
-    'Charging Cost',
+    'Charging Cost (Rs)',
+    'Charging Duration (min)',
     'Notes',
   ]);
   
@@ -60,7 +61,8 @@ export function exportTripToCSV(trip: Trip, vehicle: Vehicle): void {
       stretch ? stretch.kmPerPercent.toFixed(2) : '',
       stop.chargingSession ? stop.chargingSession.startSoc : '',
       stop.chargingSession ? stop.chargingSession.endSoc : '',
-      stop.chargingSession ? stop.chargingSession.cost : '',
+      stop.chargingSession ? stop.chargingSession.cost.toFixed(2) : '',
+      stop.chargingSession ? stop.chargingSession.duration : '',
       stop.notes || '',
     ]);
   });
@@ -89,6 +91,12 @@ export function exportTripToPDF(trip: Trip, vehicle: Vehicle): void {
   const doc = new jsPDF();
   const stretches = calculateTripStretches(trip.stops);
   
+  // Calculate total charging cost and cost per km
+  const totalChargingCost = trip.stops.reduce((sum, stop) => {
+    return sum + (stop.chargingSession?.cost || 0);
+  }, 0);
+  const costPerKm = trip.totalDistance > 0 ? totalChargingCost / trip.totalDistance : 0;
+  
   let yPos = 20;
   const lineHeight = 7;
   const pageHeight = doc.internal.pageSize.height;
@@ -101,29 +109,199 @@ export function exportTripToPDF(trip: Trip, vehicle: Vehicle): void {
     }
   };
   
+  // ===== DASHBOARD PAGE =====
   // Title
-  doc.setFontSize(18);
-  doc.text('EV Trip Report', 105, yPos, { align: 'center' });
+  doc.setFontSize(20);
+  doc.setFont('helvetica', 'bold');
+  doc.text('EV Trip Dashboard', 105, yPos, { align: 'center' });
+  yPos += 12;
+  
+  // Trip Name
+  doc.setFontSize(16);
+  doc.text(trip.name, 105, yPos, { align: 'center' });
   yPos += 15;
   
-  // Vehicle Info
-  doc.setFontSize(12);
+  // Vehicle Info Box
+  doc.setFontSize(11);
+  doc.setFont('helvetica', 'normal');
+  doc.setDrawColor(200, 200, 200);
+  doc.setFillColor(245, 245, 245);
+  doc.roundedRect(15, yPos, 180, 20, 3, 3, 'FD');
+  yPos += 7;
   doc.text(`Vehicle: ${vehicle.name} (${vehicle.make} ${vehicle.model})`, 20, yPos);
-  yPos += lineHeight;
-  doc.text(`Battery Capacity: ${vehicle.batteryCapacity} kWh`, 20, yPos);
-  yPos += lineHeight + 3;
+  yPos += 6;
+  doc.text(`Battery Capacity: ${vehicle.batteryCapacity} kWh | Trip Date: ${format(new Date(trip.startDate), 'PPP')}`, 20, yPos);
+  yPos += 12;
   
-  // Trip Info
-  doc.text(`Trip Date: ${format(new Date(trip.startDate), 'PPP')}`, 20, yPos);
-  yPos += lineHeight;
-  doc.text(`Status: ${trip.status}`, 20, yPos);
-  yPos += lineHeight;
-  doc.text(`Total Distance: ${formatDistance(trip.totalDistance)}`, 20, yPos);
-  yPos += lineHeight;
-  doc.text(`Total Energy Used: ${formatEnergy(trip.totalEnergyUsed)}`, 20, yPos);
-  yPos += lineHeight;
-  doc.text(`Average Efficiency: ${formatEfficiency(trip.averageEfficiency, 1 / trip.averageEfficiency)}`, 20, yPos);
-  yPos += lineHeight + 5;
+  // Key Metrics - 2x3 Grid
+  const boxWidth = 58;
+  const boxHeight = 35;
+  const boxSpacing = 4;
+  const startX = 15;
+  
+  // Row 1
+  let boxX = startX;
+  let boxY = yPos;
+  
+  // Distance Box
+  doc.setFillColor(59, 130, 246); // Blue
+  doc.roundedRect(boxX, boxY, boxWidth, boxHeight, 3, 3, 'F');
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(10);
+  doc.text('Total Distance', boxX + boxWidth / 2, boxY + 8, { align: 'center' });
+  doc.setFontSize(18);
+  doc.setFont('helvetica', 'bold');
+  doc.text(`${trip.totalDistance.toFixed(1)}`, boxX + boxWidth / 2, boxY + 20, { align: 'center' });
+  doc.setFontSize(10);
+  doc.setFont('helvetica', 'normal');
+  doc.text('kilometers', boxX + boxWidth / 2, boxY + 28, { align: 'center' });
+  
+  // Energy Box
+  boxX += boxWidth + boxSpacing;
+  doc.setFillColor(139, 92, 246); // Purple
+  doc.roundedRect(boxX, boxY, boxWidth, boxHeight, 3, 3, 'F');
+  doc.text('Energy Used', boxX + boxWidth / 2, boxY + 8, { align: 'center' });
+  doc.setFontSize(18);
+  doc.setFont('helvetica', 'bold');
+  doc.text(`${trip.totalEnergyUsed.toFixed(2)}`, boxX + boxWidth / 2, boxY + 20, { align: 'center' });
+  doc.setFontSize(10);
+  doc.setFont('helvetica', 'normal');
+  doc.text('kWh', boxX + boxWidth / 2, boxY + 28, { align: 'center' });
+  
+  // Efficiency Box
+  boxX += boxWidth + boxSpacing;
+  doc.setFillColor(16, 185, 129); // Green
+  doc.roundedRect(boxX, boxY, boxWidth, boxHeight, 3, 3, 'F');
+  doc.text('Efficiency', boxX + boxWidth / 2, boxY + 8, { align: 'center' });
+  doc.setFontSize(18);
+  doc.setFont('helvetica', 'bold');
+  const efficiency = trip.averageEfficiency > 0 ? (1 / trip.averageEfficiency).toFixed(2) : 'N/A';
+  doc.text(`${efficiency}`, boxX + boxWidth / 2, boxY + 20, { align: 'center' });
+  doc.setFontSize(10);
+  doc.setFont('helvetica', 'normal');
+  doc.text('km/kWh', boxX + boxWidth / 2, boxY + 28, { align: 'center' });
+  
+  // Row 2
+  boxX = startX;
+  boxY += boxHeight + boxSpacing;
+  
+  // Charging Cost Box
+  doc.setFillColor(251, 146, 60); // Orange
+  doc.roundedRect(boxX, boxY, boxWidth, boxHeight, 3, 3, 'F');
+  doc.text('Charging Cost', boxX + boxWidth / 2, boxY + 8, { align: 'center' });
+  doc.setFontSize(18);
+  doc.setFont('helvetica', 'bold');
+  doc.text(`Rs ${totalChargingCost.toFixed(2)}`, boxX + boxWidth / 2, boxY + 20, { align: 'center' });
+  doc.setFontSize(10);
+  doc.setFont('helvetica', 'normal');
+  doc.text('total cost', boxX + boxWidth / 2, boxY + 28, { align: 'center' });
+  
+  // Cost per km Box
+  boxX += boxWidth + boxSpacing;
+  doc.setFillColor(236, 72, 153); // Pink
+  doc.roundedRect(boxX, boxY, boxWidth, boxHeight, 3, 3, 'F');
+  doc.text('Cost per km', boxX + boxWidth / 2, boxY + 8, { align: 'center' });
+  doc.setFontSize(18);
+  doc.setFont('helvetica', 'bold');
+  doc.text(`Rs ${costPerKm.toFixed(2)}`, boxX + boxWidth / 2, boxY + 20, { align: 'center' });
+  doc.setFontSize(10);
+  doc.setFont('helvetica', 'normal');
+  doc.text('per kilometer', boxX + boxWidth / 2, boxY + 28, { align: 'center' });
+  
+  // Stops Box
+  boxX += boxWidth + boxSpacing;
+  doc.setFillColor(34, 197, 94); // Bright Green
+  doc.roundedRect(boxX, boxY, boxWidth, boxHeight, 3, 3, 'F');
+  doc.text('Total Stops', boxX + boxWidth / 2, boxY + 8, { align: 'center' });
+  doc.setFontSize(18);
+  doc.setFont('helvetica', 'bold');
+  doc.text(`${trip.stops.length}`, boxX + boxWidth / 2, boxY + 20, { align: 'center' });
+  doc.setFontSize(10);
+  doc.setFont('helvetica', 'normal');
+  doc.text('stops', boxX + boxWidth / 2, boxY + 28, { align: 'center' });
+  
+  // Reset text color
+  doc.setTextColor(0, 0, 0);
+  
+  yPos = boxY + boxHeight + 15;
+  
+  // Trip Summary Section
+  doc.setFontSize(12);
+  doc.setFont('helvetica', 'bold');
+  doc.text('Trip Summary', 20, yPos);
+  yPos += 8;
+  
+  doc.setFontSize(10);
+  doc.setFont('helvetica', 'normal');
+  
+  // Basic Info
+  doc.text(`Status: ${trip.status.charAt(0).toUpperCase() + trip.status.slice(1)}`, 20, yPos);
+  yPos += 6;
+  doc.text(`Start Date: ${format(new Date(trip.startDate), 'PPP')}`, 20, yPos);
+  yPos += 6;
+  if (trip.endDate) {
+    doc.text(`End Date: ${format(new Date(trip.endDate), 'PPP')}`, 20, yPos);
+    yPos += 6;
+    const duration = trip.endDate - trip.startDate;
+    const days = Math.floor(duration / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((duration % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    doc.text(`Trip Duration: ${days} day(s) ${hours} hour(s)`, 20, yPos);
+    yPos += 6;
+  }
+  
+  // Distance & Energy Details
+  doc.text(`Total Distance: ${trip.totalDistance.toFixed(1)} km`, 20, yPos);
+  yPos += 6;
+  doc.text(`Total Energy Consumed: ${trip.totalEnergyUsed.toFixed(2)} kWh`, 20, yPos);
+  yPos += 6;
+  doc.text(`Average Efficiency: ${efficiency} km/kWh`, 20, yPos);
+  yPos += 6;
+  
+  // Battery Usage
+  const firstStop = trip.stops[0];
+  const lastStop = trip.stops[trip.stops.length - 1];
+  const batteryUsed = firstStop.batteryPercent - lastStop.batteryPercent;
+  doc.text(`Battery Used: ${batteryUsed.toFixed(1)}% (${firstStop.batteryPercent}% -> ${lastStop.batteryPercent}%)`, 20, yPos);
+  yPos += 6;
+  
+  // Charging Details
+  const chargingSessions = trip.stops.filter(s => s.chargingSession).length;
+  doc.text(`Number of Charging Sessions: ${chargingSessions}`, 20, yPos);
+  yPos += 6;
+  
+  if (chargingSessions > 0) {
+    const totalChargingTime = trip.stops.reduce((sum, stop) => {
+      return sum + (stop.chargingSession?.duration || 0);
+    }, 0);
+    doc.text(`Total Charging Time: ${formatDuration(totalChargingTime)}`, 20, yPos);
+    yPos += 6;
+    
+    const totalEnergyCharged = trip.stops.reduce((sum, stop) => {
+      return sum + (stop.chargingSession ? calculateChargingEnergy(stop.chargingSession) : 0);
+    }, 0);
+    doc.text(`Total Energy Charged: ${totalEnergyCharged.toFixed(2)} kWh`, 20, yPos);
+    yPos += 6;
+    
+    doc.text(`Total Charging Cost: Rs ${totalChargingCost.toFixed(2)}`, 20, yPos);
+    yPos += 6;
+    
+    const avgCostPerKwh = totalEnergyCharged > 0 ? totalChargingCost / totalEnergyCharged : 0;
+    doc.text(`Average Cost per kWh: Rs ${avgCostPerKwh.toFixed(2)}`, 20, yPos);
+    yPos += 6;
+    
+    doc.text(`Cost per km: Rs ${costPerKm.toFixed(2)}`, 20, yPos);
+    yPos += 6;
+  }
+  
+  // Stop Details
+  doc.text(`Total Stops: ${trip.stops.length}`, 20, yPos);
+  yPos += 6;
+  const stopsWithLocation = trip.stops.filter(s => s.location).length;
+  doc.text(`Stops with Location: ${stopsWithLocation}`, 20, yPos);
+  
+  // Add new page for details
+  doc.addPage();
+  yPos = 20;
   
   // Stops and Stretches
   doc.setFontSize(14);
@@ -174,7 +352,7 @@ export function exportTripToPDF(trip: Trip, vehicle: Vehicle): void {
       yPos += lineHeight;
       doc.text(`Energy Added: ${formatEnergy(energyAdded)}`, 30, yPos);
       yPos += lineHeight;
-      doc.text(`Cost: ${formatCost(session.cost)} (${formatCost(costPerKwh)}/kWh)`, 30, yPos);
+      doc.text(`Cost: Rs ${session.cost.toFixed(2)} (Rs ${costPerKwh.toFixed(2)}/kWh)`, 30, yPos);
       yPos += lineHeight;
       doc.text(`Duration: ${formatDuration(session.duration)}`, 30, yPos);
       yPos += lineHeight;
