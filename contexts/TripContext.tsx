@@ -22,6 +22,7 @@ interface TripContextType {
   updateChargingSession: (tripId: string, stopId: string, session: ChargingSession) => void;
   deleteChargingSession: (tripId: string, stopId: string) => void;
   completeTrip: (tripId: string) => void;
+  reopenTrip: (tripId: string) => void;
   deleteTrip: (tripId: string) => void;
   getTripById: (id: string) => Trip | undefined;
   refreshTrips: () => void;
@@ -220,6 +221,21 @@ export function TripProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const reopenTrip = (tripId: string) => {
+    const trip = trips.find((t) => t.id === tripId);
+    if (!trip) return;
+
+    const updatedTrip: Trip = {
+      ...trip,
+      status: 'active',
+      endDate: undefined,
+    };
+
+    updateTripInStorage(tripId, updatedTrip);
+    setTrips((prev) => prev.map((t) => (t.id === tripId ? updatedTrip : t)));
+    setActiveTrip(updatedTrip);
+  };
+
   const deleteTrip = (tripId: string) => {
     deleteTripFromStorage(tripId);
     setTrips((prev) => prev.filter((t) => t.id !== tripId));
@@ -252,6 +268,7 @@ export function TripProvider({ children }: { children: ReactNode }) {
         updateChargingSession,
         deleteChargingSession,
         completeTrip,
+        reopenTrip,
         deleteTrip,
         getTripById,
         refreshTrips,

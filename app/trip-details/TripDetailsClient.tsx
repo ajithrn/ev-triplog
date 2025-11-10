@@ -15,6 +15,7 @@ import {
   Download,
   Trash2,
   DollarSign,
+  Edit,
 } from 'lucide-react';
 import { format } from 'date-fns';
 import {
@@ -29,7 +30,7 @@ import StopCard from '@/components/trip-details/StopCard';
 export default function TripDetailsClient() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const { trips, getTripById, completeTrip, deleteTrip } = useTrips();
+  const { trips, getTripById, completeTrip, reopenTrip, deleteTrip } = useTrips();
   const { vehicles } = useVehicles();
   const [mounted, setMounted] = useState(false);
   const [showAddStop, setShowAddStop] = useState(false);
@@ -38,6 +39,7 @@ export default function TripDetailsClient() {
   const [editingCharging, setEditingCharging] = useState<string | null>(null);
   const [deleteConfirm, setDeleteConfirm] = useState(false);
   const [deleteStopConfirm, setDeleteStopConfirm] = useState<string | null>(null);
+  const [isEditMode, setIsEditMode] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -77,9 +79,18 @@ export default function TripDetailsClient() {
     return sum + (stop.chargingSession?.cost || 0);
   }, 0);
 
+  // Calculate cost per km
+  const costPerKm = trip.totalDistance > 0 ? totalChargingCost / trip.totalDistance : 0;
+
   const handleCompleteTrip = () => {
     completeTrip(trip.id);
+    setIsEditMode(false);
     router.push('/trips');
+  };
+
+  const handleReopenTrip = () => {
+    reopenTrip(trip.id);
+    setIsEditMode(true);
   };
 
   const handleDeleteTrip = () => {
@@ -156,6 +167,23 @@ export default function TripDetailsClient() {
                   <Download className="h-4 w-4" />
                   PDF
                 </button>
+                {!isEditMode ? (
+                  <button
+                    onClick={handleReopenTrip}
+                    className="btn btn-warning gap-2"
+                  >
+                    <Edit className="h-5 w-5" />
+                    Edit Trip
+                  </button>
+                ) : (
+                  <button
+                    onClick={handleCompleteTrip}
+                    className="btn btn-success gap-2"
+                  >
+                    <CheckCircle className="h-5 w-5" />
+                    Save & Complete
+                  </button>
+                )}
               </>
             )}
             {trip.status === 'active' && (
@@ -218,8 +246,17 @@ export default function TripDetailsClient() {
             <DollarSign className="h-5 w-5 sm:h-6 sm:w-6 text-warning" />
             <div className="stat-title text-xs sm:text-sm">Charging Cost</div>
           </div>
-          <div className="stat-value text-2xl sm:text-3xl">${totalChargingCost.toFixed(2)}</div>
+          <div className="stat-value text-2xl sm:text-3xl">₹{totalChargingCost.toFixed(2)}</div>
           <div className="stat-desc text-xs">total cost</div>
+        </div>
+
+        <div className="stat">
+          <div className="flex items-center gap-2 mb-1">
+            <DollarSign className="h-5 w-5 sm:h-6 sm:w-6 text-info" />
+            <div className="stat-title text-xs sm:text-sm">Cost per km</div>
+          </div>
+          <div className="stat-value text-2xl sm:text-3xl">₹{costPerKm.toFixed(2)}</div>
+          <div className="stat-desc text-xs">per kilometer</div>
         </div>
 
         <div className="stat">
@@ -233,7 +270,7 @@ export default function TripDetailsClient() {
       </div>
 
       {/* Add Stop Button */}
-      {trip.status === 'active' && !showAddStop && (
+      {(trip.status === 'active' || isEditMode) && !showAddStop && (
         <button
           onClick={() => setShowAddStop(true)}
           className="btn btn-primary w-full gap-2"
@@ -307,7 +344,7 @@ export default function TripDetailsClient() {
                   onEdit={() => setEditingStop(stop.id)}
                   onDelete={() => handleDeleteStop(stop.id)}
                   deleteConfirm={deleteStopConfirm === stop.id}
-                  isActive={trip.status === 'active'}
+                  isActive={trip.status === 'active' || isEditMode}
                 />
               )}
             </div>

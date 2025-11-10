@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useTrips } from '@/contexts/TripContext';
 import { useVehicles } from '@/contexts/VehicleContext';
 import Link from 'next/link';
-import { Car, Plus, MapPin, Calendar, Battery, Zap } from 'lucide-react';
+import { Car, Plus, MapPin, Calendar, Battery, Zap, DollarSign } from 'lucide-react';
 import { format } from 'date-fns';
 import { formatDistance, formatEnergy } from '@/utils/calculations';
 
@@ -124,6 +124,10 @@ export default function TripsPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {sortedTrips.map((trip) => {
                 const vehicle = vehicles.find((v) => v.id === trip.vehicleId);
+                // Calculate total charging cost
+                const totalChargingCost = trip.stops.reduce((sum, stop) => {
+                  return sum + (stop.chargingSession?.cost || 0);
+                }, 0);
                 return (
                   <Link
                     key={trip.id}
@@ -184,9 +188,16 @@ export default function TripsPage() {
                           <div className="stat-title text-xs">Efficiency</div>
                           <div className="stat-value text-sm">
                             {trip.averageEfficiency > 0
-                              ? `${trip.averageEfficiency.toFixed(2)}`
+                              ? `${(1 / trip.averageEfficiency).toFixed(2)} km/kWh`
                               : 'N/A'}
                           </div>
+                        </div>
+                        <div className="stat p-2">
+                          <div className="stat-figure text-warning">
+                            <DollarSign className="h-5 w-5" />
+                          </div>
+                          <div className="stat-title text-xs">Cost</div>
+                          <div className="stat-value text-sm">₹{totalChargingCost.toFixed(2)}</div>
                         </div>
                         <div className="stat p-2">
                           <div className="stat-figure text-success">
