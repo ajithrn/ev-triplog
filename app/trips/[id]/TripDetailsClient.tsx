@@ -120,7 +120,8 @@ export default function TripDetailsClient() {
       <div>
         <Link
           href="/trips"
-          className="btn btn-ghost btn-sm gap-2 text-white/80 hover:text-white mb-4"
+          className="btn btn-ghost btn-sm gap-2 mb-4"
+          style={{ color: 'var(--page-subtitle)' }}
         >
           <ArrowLeft className="h-4 w-4" />
           Back to Trips
@@ -128,12 +129,12 @@ export default function TripDetailsClient() {
         <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
           <div>
             <div className="flex items-center gap-3">
-              <h1 className="text-3xl sm:text-4xl font-bold text-white drop-shadow-lg">{trip.name}</h1>
+              <h1 className="text-3xl sm:text-4xl font-bold" style={{ color: 'var(--page-title)' }}>{trip.name}</h1>
               {trip.status === 'active' && (
                 <span className="badge badge-primary badge-lg">Active</span>
               )}
             </div>
-            <p className="text-white/80 mt-1">
+            <p className="mt-1" style={{ color: 'var(--page-subtitle)' }}>
               {vehicle?.name} • {format(new Date(trip.startDate), 'PPP')}
             </p>
           </div>
@@ -142,14 +143,14 @@ export default function TripDetailsClient() {
               <>
                 <button
                   onClick={handleExportCSV}
-                  className="btn btn-ghost gap-2 text-white/90 hover:text-white"
+                  className="btn btn-ghost gap-2"
                 >
                   <Download className="h-4 w-4" />
                   CSV
                 </button>
                 <button
                   onClick={handleExportPDF}
-                  className="btn btn-ghost gap-2 text-white/90 hover:text-white"
+                  className="btn btn-ghost gap-2"
                 >
                   <Download className="h-4 w-4" />
                   PDF
@@ -170,7 +171,7 @@ export default function TripDetailsClient() {
               className={`btn gap-2 ${
                 deleteConfirm
                   ? 'btn-error'
-                  : 'btn-ghost text-white/90 hover:text-white'
+                  : 'btn-ghost'
               }`}
             >
               <Trash2 className="h-4 w-4" />
@@ -259,23 +260,23 @@ export default function TripDetailsClient() {
                   <div className="card-body">
                     <h4 className="card-title text-sm">Stretch {index}</h4>
                     <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-                      <div className="bg-base-200/50 rounded-lg p-3">
+                      <div className=" rounded-lg p-3">
                         <p className="text-xs opacity-70 mb-1">Distance</p>
                         <p className="font-semibold">{formatDistance(stretch.distance)}</p>
                       </div>
-                      <div className="bg-base-200/50 rounded-lg p-3">
+                      <div className=" rounded-lg p-3">
                         <p className="text-xs opacity-70 mb-1">Energy Used</p>
                         <p className="font-semibold">{formatEnergy(stretch.energyUsed)}</p>
                       </div>
-                      <div className="bg-base-200/50 rounded-lg p-3">
+                      <div className=" rounded-lg p-3">
                         <p className="text-xs opacity-70 mb-1">kWh/km</p>
                         <p className="font-semibold">{stretch.efficiencyKwhPerKm.toFixed(3)}</p>
                       </div>
-                      <div className="bg-base-200/50 rounded-lg p-3">
+                      <div className=" rounded-lg p-3">
                         <p className="text-xs opacity-70 mb-1">km/kWh</p>
                         <p className="font-semibold">{stretch.efficiencyKmPerKwh.toFixed(2)}</p>
                       </div>
-                      <div className="bg-base-200/50 rounded-lg p-3">
+                      <div className=" rounded-lg p-3">
                         <p className="text-xs opacity-70 mb-1">km per %</p>
                         <p className="font-semibold">{stretch.kmPerPercent.toFixed(2)} km</p>
                       </div>

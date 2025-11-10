@@ -20,12 +20,15 @@
 :root {
   --background: #f8fafc;
   --foreground: #0f172a;
-  --card-bg: rgba(255, 255, 255, 0.95);
+  --card-bg: #ffffff;
   --card-text: #1f2937;
-  --nav-bg: rgba(255, 255, 255, 0.95);
+  --nav-bg: #ffffff;
   --nav-text: #1f2937;
   --page-title: #1f2937;
   --page-subtitle: #475569;
+  --input-bg: #ffffff;
+  --input-text: #1f2937;
+  --input-border: #e2e8f0;
   --border-color: rgba(0, 0, 0, 0.1);
 }
 
@@ -33,12 +36,15 @@
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
-    --card-bg: rgba(30, 41, 59, 0.95);
+    --card-bg: #1e293b;
     --card-text: #f1f5f9;
-    --nav-bg: rgba(30, 41, 59, 0.95);
+    --nav-bg: #1e293b;
     --nav-text: #f1f5f9;
     --page-title: #f1f5f9;
     --page-subtitle: #e2e8f0;
+    --input-bg: #334155;
+    --input-text: #f1f5f9;
+    --input-border: #475569;
     --border-color: rgba(255, 255, 255, 0.1);
   }
 }
@@ -186,6 +192,66 @@ html {
   animation: fadeIn 0.5s ease-out;
 }
 
+/* Input field styling for light and dark modes */
+input[type="text"],
+input[type="email"],
+input[type="number"],
+input[type="date"],
+input[type="datetime-local"],
+input[type="time"],
+textarea,
+select {
+  background-color: var(--input-bg) !important;
+  color: var(--input-text) !important;
+  border-color: var(--input-border) !important;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="number"]:focus,
+input[type="date"]:focus,
+input[type="datetime-local"]:focus,
+input[type="time"]:focus,
+textarea:focus,
+select:focus {
+  background-color: var(--input-bg) !important;
+  color: var(--input-text) !important;
+  border-color: var(--color-primary) !important;
+  outline: none;
+}
+
+/* DaisyUI input overrides */
+.input,
+.textarea,
+.select {
+  background-color: var(--input-bg) !important;
+  color: var(--input-text) !important;
+  border-color: var(--input-border) !important;
+}
+
+.input:focus,
+.textarea:focus,
+.select:focus {
+  background-color: var(--input-bg) !important;
+  color: var(--input-text) !important;
+  border-color: var(--color-primary) !important;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+/* Label styling */
+.label-text {
+  color: var(--card-text) !important;
+}
+
+.label-text-alt {
+  color: var(--card-text) !important;
+  opacity: 0.7;
+  white-space: normal !important;
+  word-wrap: break-word !important;
+  overflow-wrap: break-word !important;
+}
+
 /* React Datepicker custom styles */
 .react-datepicker-wrapper {
   width: 100%;
@@ -193,6 +259,9 @@ html {
 
 .react-datepicker__input-container input {
   width: 100%;
+  background-color: var(--input-bg) !important;
+  color: var(--input-text) !important;
+  border-color: var(--input-border) !important;
 }
 
 /* Mobile-specific improvements */

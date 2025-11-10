@@ -115,7 +115,7 @@ export default function ChargingForm({
                 step="0.1"
                 value={formData.endSoc}
                 onChange={handleChange}
-                className="input input-bordered w-full bg-base-200/50"
+                className="input input-bordered w-full "
               />
               <label className="label">
                 <span className="label-text-alt">
@@ -136,7 +136,7 @@ export default function ChargingForm({
                 value={formData.unitsConsumed || ''}
                 onChange={handleChange}
                 placeholder="From charger display"
-                className="input input-bordered w-full bg-base-200/50"
+                className="input input-bordered w-full "
               />
               {formData.unitsConsumed > 0 && (
                 <label className="label">
@@ -162,7 +162,7 @@ export default function ChargingForm({
                 step="0.01"
                 value={formData.cost || ''}
                 onChange={handleChange}
-                className="input input-bordered w-full bg-base-200/50"
+                className="input input-bordered w-full "
               />
               {costPerKwh > 0 && (
                 <label className="label">
@@ -183,7 +183,7 @@ export default function ChargingForm({
                 min="0"
                 value={formData.duration || ''}
                 onChange={handleChange}
-                className="input input-bordered w-full bg-base-200/50"
+                className="input input-bordered w-full "
               />
             </div>
             <div className="form-control">
@@ -196,7 +196,7 @@ export default function ChargingForm({
                 value={formData.chargerType}
                 onChange={handleChange}
                 placeholder="e.g., DC Fast"
-                className="input input-bordered w-full bg-base-200/50"
+                className="input input-bordered w-full "
               />
             </div>
             <div className="form-control">
@@ -209,7 +209,7 @@ export default function ChargingForm({
                 value={formData.location}
                 onChange={handleChange}
                 placeholder="e.g., Station A"
-                className="input input-bordered w-full bg-base-200/50"
+                className="input input-bordered w-full "
               />
             </div>
           </div>

@@ -105,19 +105,19 @@ export default function StopCard({
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-          <div className="stat bg-base-200/50 rounded-lg p-3">
+          <div className="stat  rounded-lg p-3">
             <div className="stat-title text-xs">Odometer</div>
             <div className="stat-value text-lg">{stop.odometer} km</div>
           </div>
-          <div className="stat bg-base-200/50 rounded-lg p-3">
+          <div className="stat  rounded-lg p-3">
             <div className="stat-title text-xs">Battery %</div>
             <div className="stat-value text-lg">{formatBatteryPercent(stop.batteryPercent)}</div>
           </div>
-          <div className="stat bg-base-200/50 rounded-lg p-3">
+          <div className="stat  rounded-lg p-3">
             <div className="stat-title text-xs">Battery kWh</div>
             <div className="stat-value text-lg">{formatEnergy(stop.batteryKwh)}</div>
           </div>
-          <div className="stat bg-base-200/50 rounded-lg p-3">
+          <div className="stat  rounded-lg p-3">
             <div className="stat-title text-xs">Location</div>
             <div className="stat-value text-lg">{stop.location || 'N/A'}</div>
           </div>
@@ -167,25 +167,25 @@ export default function StopCard({
                 )}
               </div>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-                <div className="stat bg-base-200/50 rounded-lg p-3">
+                <div className="stat  rounded-lg p-3">
                   <div className="stat-title text-xs">SOC</div>
                   <div className="stat-value text-base">
                     {stop.chargingSession.startSoc}% → {stop.chargingSession.endSoc}%
                   </div>
                 </div>
-                <div className="stat bg-base-200/50 rounded-lg p-3">
+                <div className="stat  rounded-lg p-3">
                   <div className="stat-title text-xs">Energy Added</div>
                   <div className="stat-value text-base">
                     {formatEnergy(calculateChargingEnergy(stop.chargingSession))}
                   </div>
                 </div>
-                <div className="stat bg-base-200/50 rounded-lg p-3">
+                <div className="stat  rounded-lg p-3">
                   <div className="stat-title text-xs">Cost</div>
                   <div className="stat-value text-base">
                     {formatCost(stop.chargingSession.cost)}
                   </div>
                 </div>
-                <div className="stat bg-base-200/50 rounded-lg p-3">
+                <div className="stat  rounded-lg p-3">
                   <div className="stat-title text-xs">Duration</div>
                   <div className="stat-value text-base">
                     {formatDuration(stop.chargingSession.duration)}

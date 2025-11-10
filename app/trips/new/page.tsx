@@ -104,7 +104,7 @@ export default function NewTripPage() {
                 value={formData.name}
                 onChange={handleChange}
                 placeholder="e.g., Weekend Trip, Office Commute"
-                className="input input-bordered w-full bg-base-200/50"
+                className="input input-bordered w-full "
               />
             </div>
 
@@ -118,7 +118,7 @@ export default function NewTripPage() {
                 required
                 value={formData.vehicleId}
                 onChange={handleChange}
-                className="select select-bordered w-full bg-base-200/50"
+                className="select select-bordered w-full "
               >
                 <option value="">Choose a vehicle</option>
                 {vehicles.map((vehicle) => (
@@ -143,7 +143,7 @@ export default function NewTripPage() {
                 value={formData.odometer || ''}
                 onChange={handleChange}
                 placeholder="e.g., 12345.6"
-                className="input input-bordered w-full bg-base-200/50"
+                className="input input-bordered w-full "
               />
             </div>
 
@@ -161,7 +161,7 @@ export default function NewTripPage() {
                 step="0.1"
                 value={formData.batteryPercent}
                 onChange={handleChange}
-                className="input input-bordered w-full bg-base-200/50"
+                className="input input-bordered w-full "
               />
               {selectedVehicle && (
                 <label className="label">
@@ -183,7 +183,7 @@ export default function NewTripPage() {
                 value={formData.location}
                 onChange={handleChange}
                 placeholder="e.g., Home, Office"
-                className="input input-bordered w-full bg-base-200/50"
+                className="input input-bordered w-full "
               />
             </div>
 
@@ -198,7 +198,7 @@ export default function NewTripPage() {
                 value={formData.notes}
                 onChange={handleChange}
                 placeholder="Any notes about this trip..."
-                className="textarea textarea-bordered w-full bg-base-200/50 resize-none"
+                className="textarea textarea-bordered w-full  resize-none"
               />
             </div>
 

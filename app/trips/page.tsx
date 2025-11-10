@@ -75,7 +75,7 @@ export default function TripsPage() {
               className={`tab rounded-lg transition-all ${
                 filter === 'all' 
                   ? 'bg-primary/10 text-primary' 
-                  : 'hover:bg-base-200/50'
+                  : 'hover:'
               }`}
               onClick={() => setFilter('all')}
             >
@@ -86,7 +86,7 @@ export default function TripsPage() {
               className={`tab rounded-lg transition-all ${
                 filter === 'active' 
                   ? 'bg-primary/10 text-primary' 
-                  : 'hover:bg-base-200/50'
+                  : 'hover:'
               }`}
               onClick={() => setFilter('active')}
             >
@@ -97,7 +97,7 @@ export default function TripsPage() {
               className={`tab rounded-lg transition-all ${
                 filter === 'completed' 
                   ? 'bg-primary/10 text-primary' 
-                  : 'hover:bg-base-200/50'
+                  : 'hover:'
               }`}
               onClick={() => setFilter('completed')}
             >

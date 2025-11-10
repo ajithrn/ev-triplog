@@ -122,7 +122,7 @@ export default function AnalyticsPage() {
             <div className="card-body">
               <h2 className="card-title">Efficiency Trend</h2>
               <div className="divider mt-0"></div>
-              <div className="bg-base-200/50 rounded-xl p-4">
+              <div className=" rounded-xl p-4">
                 <ResponsiveContainer width="100%" height={300}>
                   <LineChart data={efficiencyData}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
@@ -162,7 +162,7 @@ export default function AnalyticsPage() {
             <div className="card-body">
               <h2 className="card-title">Distance & Energy Usage</h2>
               <div className="divider mt-0"></div>
-              <div className="bg-base-200/50 rounded-xl p-4">
+              <div className=" rounded-xl p-4">
                 <ResponsiveContainer width="100%" height={300}>
                   <BarChart data={distanceData}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
@@ -199,7 +199,7 @@ export default function AnalyticsPage() {
                     const vehicleEfficiency = vehicleDistance > 0 ? vehicleEnergy / vehicleDistance : 0;
 
                     return (
-                      <div key={vehicle.id} className="card bg-base-200/50">
+                      <div key={vehicle.id} className="card ">
                         <div className="card-body">
                           <h3 className="card-title text-base">{vehicle.name}</h3>
                           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm mt-2">
