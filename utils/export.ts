@@ -265,6 +265,13 @@ export function exportTripToPDF(trip: Trip, vehicle: Vehicle): void {
   doc.text(`Battery Used: ${batteryUsed.toFixed(1)}% (${firstStop.batteryPercent}% -> ${lastStop.batteryPercent}%)`, 20, yPos);
   yPos += 6;
   
+  // km per % efficiency
+  if (batteryUsed > 0) {
+    const kmPerPercent = trip.totalDistance / batteryUsed;
+    doc.text(`Efficiency (km/%): ${kmPerPercent.toFixed(2)} km per %`, 20, yPos);
+    yPos += 6;
+  }
+  
   // Charging Details
   const chargingSessions = trip.stops.filter(s => s.chargingSession).length;
   doc.text(`Number of Charging Sessions: ${chargingSessions}`, 20, yPos);
