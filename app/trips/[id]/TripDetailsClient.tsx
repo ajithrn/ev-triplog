@@ -76,6 +76,13 @@ export default function TripDetailsClient() {
     return sum + (stop.chargingSession?.cost || 0);
   }, 0);
 
+  // Format trip date range
+  const firstStop = trip.stops[0];
+  const lastStop = trip.stops[trip.stops.length - 1];
+  const tripDateRange = trip.status === 'completed' && trip.stops.length > 1
+    ? `${format(new Date(firstStop.timestamp), 'MMM d')} - ${format(new Date(lastStop.timestamp), 'MMM d, yyyy')}`
+    : format(new Date(trip.startDate), 'PPP');
+
   const handleCompleteTrip = () => {
     completeTrip(trip.id);
     router.push('/trips');
@@ -135,7 +142,7 @@ export default function TripDetailsClient() {
               )}
             </div>
             <p className="mt-1" style={{ color: 'var(--page-subtitle)' }}>
-              {vehicle?.name} • {format(new Date(trip.startDate), 'PPP')}
+              {vehicle?.name} • {tripDateRange}
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-2">

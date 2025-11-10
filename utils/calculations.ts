@@ -48,12 +48,14 @@ export function calculateTripStretches(stops: Stop[]): Stretch[] {
 export function calculateTripMetrics(trip: Trip): {
   totalDistance: number;
   totalEnergyUsed: number;
+  totalEnergyCharged: number;
   averageEfficiency: number;
 } {
   if (trip.stops.length < 2) {
     return {
       totalDistance: 0,
       totalEnergyUsed: 0,
+      totalEnergyCharged: 0,
       averageEfficiency: 0,
     };
   }
@@ -64,7 +66,7 @@ export function calculateTripMetrics(trip: Trip): {
   const totalDistance = stretches.reduce((sum, stretch) => sum + stretch.distance, 0);
   const energyConsumed = stretches.reduce((sum, stretch) => sum + stretch.energyUsed, 0);
   
-  // Add energy from all charging sessions
+  // Calculate energy from all charging sessions
   const energyCharged = trip.stops.reduce((sum, stop) => {
     if (stop.chargingSession) {
       return sum + calculateChargingEnergy(stop.chargingSession);
@@ -72,12 +74,15 @@ export function calculateTripMetrics(trip: Trip): {
     return sum;
   }, 0);
   
-  const totalEnergyUsed = energyConsumed + energyCharged;
+  // Total energy used is just the energy consumed while driving
+  // Charging sessions add energy back to the battery, they don't add to consumption
+  const totalEnergyUsed = energyConsumed;
   const averageEfficiency = totalDistance > 0 ? energyConsumed / totalDistance : 0;
 
   return {
     totalDistance,
     totalEnergyUsed,
+    totalEnergyCharged: energyCharged,
     averageEfficiency,
   };
 }

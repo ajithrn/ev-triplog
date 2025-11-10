@@ -45,7 +45,8 @@ export interface Trip {
   status: 'active' | 'completed';
   stops: Stop[];
   totalDistance: number; // in km
-  totalEnergyUsed: number; // in kWh
+  totalEnergyUsed: number; // in kWh (energy consumed while driving)
+  totalEnergyCharged?: number; // in kWh (energy added at charging stations)
   averageEfficiency: number; // in kWh/km
 }
 

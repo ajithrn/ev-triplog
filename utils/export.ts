@@ -131,7 +131,11 @@ export function exportTripToPDF(trip: Trip, vehicle: Vehicle): void {
   doc.text(`Vehicle: ${vehicle.name} (${vehicle.make} ${vehicle.model})`, 20, yPos);
   yPos += 6;
   const firstStop = trip.stops[0];
-  doc.text(`Battery Capacity: ${vehicle.batteryCapacity} kWh | Trip Date: ${format(new Date(firstStop.timestamp), 'PPP')}`, 20, yPos);
+  const lastStop = trip.stops[trip.stops.length - 1];
+  const tripDateText = trip.status === 'completed' && trip.stops.length > 1
+    ? `Trip Date: ${format(new Date(firstStop.timestamp), 'MMM d')} - ${format(new Date(lastStop.timestamp), 'MMM d, yyyy')}`
+    : `Trip Date: ${format(new Date(firstStop.timestamp), 'PPP')}`;
+  doc.text(`Battery Capacity: ${vehicle.batteryCapacity} kWh | ${tripDateText}`, 20, yPos);
   yPos += 12;
   
   // Key Metrics - 2x3 Grid
@@ -238,7 +242,6 @@ export function exportTripToPDF(trip: Trip, vehicle: Vehicle): void {
   // Basic Info
   doc.text(`Status: ${trip.status.charAt(0).toUpperCase() + trip.status.slice(1)}`, 20, yPos);
   yPos += 6;
-  const lastStop = trip.stops[trip.stops.length - 1];
   doc.text(`Start Date: ${format(new Date(firstStop.timestamp), 'PPp')}`, 20, yPos);
   yPos += 6;
   if (trip.status === 'completed') {
@@ -258,11 +261,6 @@ export function exportTripToPDF(trip: Trip, vehicle: Vehicle): void {
   doc.text(`Total Energy Consumed: ${trip.totalEnergyUsed.toFixed(2)} kWh`, 20, yPos);
   yPos += 6;
   doc.text(`Average Efficiency: ${efficiency} km/kWh`, 20, yPos);
-  yPos += 6;
-  
-  // Battery Usage
-  const batteryUsed = firstStop.batteryPercent - lastStop.batteryPercent;
-  doc.text(`Battery Used: ${batteryUsed.toFixed(1)}% (${firstStop.batteryPercent}% -> ${lastStop.batteryPercent}%)`, 20, yPos);
   yPos += 6;
   
   // km per % efficiency
