@@ -170,7 +170,7 @@ export default function TripDetailsClient() {
                 {!isEditMode ? (
                   <button
                     onClick={handleReopenTrip}
-                    className="btn btn-warning gap-2"
+                    className="btn btn-ghost text-warning gap-2"
                   >
                     <Edit className="h-5 w-5" />
                     Edit Trip
@@ -200,7 +200,7 @@ export default function TripDetailsClient() {
               className={`btn gap-2 ${
                 deleteConfirm
                   ? 'btn-error'
-                  : 'btn-ghost'
+                  : 'btn-ghost text-error'
               }`}
             >
               <Trash2 className="h-4 w-4" />
