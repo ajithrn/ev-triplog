@@ -191,6 +191,19 @@ export default function TripsPage() {
                               ? `${(1 / trip.averageEfficiency).toFixed(2)} km/kWh`
                               : 'N/A'}
                           </div>
+                          {trip.stops.length >= 2 && (() => {
+                            const firstStop = trip.stops[0];
+                            const lastStop = trip.stops[trip.stops.length - 1];
+                            const batteryPercentUsed = firstStop.batteryPercent - lastStop.batteryPercent;
+                            const kmPerPercent = batteryPercentUsed > 0 
+                              ? (trip.totalDistance / batteryPercentUsed).toFixed(2)
+                              : 'N/A';
+                            return batteryPercentUsed > 0 ? (
+                              <div className="stat-desc text-xs opacity-70 mt-1">
+                                {kmPerPercent} km/%
+                              </div>
+                            ) : null;
+                          })()}
                         </div>
                         <div className="stat p-2">
                           <div className="stat-figure text-warning">
