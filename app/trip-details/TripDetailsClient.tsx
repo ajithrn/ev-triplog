@@ -129,13 +129,13 @@ export default function TripDetailsClient() {
         </Link>
         <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
           <div>
-            <div className="flex items-center gap-3">
-              <h1 className="text-3xl sm:text-4xl font-bold" style={{ color: 'var(--page-title)' }}>{trip.name}</h1>
+            <div className="flex items-center gap-2 sm:gap-3">
+              <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold" style={{ color: 'var(--page-title)' }}>{trip.name}</h1>
               {trip.status === 'active' && (
-                <span className="badge badge-primary badge-lg">Active</span>
+                <span className="badge badge-primary badge-sm sm:badge-md">Active</span>
               )}
             </div>
-            <p className="mt-1" style={{ color: 'var(--page-subtitle)' }}>
+            <p className="mt-1 text-xs sm:text-sm" style={{ color: 'var(--page-subtitle)' }}>
               {vehicle?.name} • {format(new Date(trip.startDate), 'PPP')}
             </p>
           </div>
@@ -185,50 +185,50 @@ export default function TripDetailsClient() {
       {/* Trip Summary */}
       <div className="stats stats-vertical lg:stats-horizontal shadow-xl bg-base-100 w-full">
         <div className="stat">
-          <div className="flex items-center gap-3 mb-2">
-            <MapPin className="h-8 w-8 text-primary" />
-            <div className="stat-title">Distance</div>
+          <div className="flex items-center gap-2 mb-1">
+            <MapPin className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
+            <div className="stat-title text-xs sm:text-sm">Distance</div>
           </div>
-          <div className="stat-value">{trip.totalDistance.toFixed(1)}</div>
-          <div className="stat-desc">kilometers</div>
+          <div className="stat-value text-2xl sm:text-3xl">{trip.totalDistance.toFixed(1)}</div>
+          <div className="stat-desc text-xs">kilometers</div>
         </div>
 
         <div className="stat">
-          <div className="flex items-center gap-3 mb-2">
-            <Battery className="h-8 w-8 text-secondary" />
-            <div className="stat-title">Energy</div>
+          <div className="flex items-center gap-2 mb-1">
+            <Battery className="h-5 w-5 sm:h-6 sm:w-6 text-secondary" />
+            <div className="stat-title text-xs sm:text-sm">Energy</div>
           </div>
-          <div className="stat-value">{trip.totalEnergyUsed.toFixed(2)}</div>
-          <div className="stat-desc">kWh consumed</div>
+          <div className="stat-value text-2xl sm:text-3xl">{trip.totalEnergyUsed.toFixed(2)}</div>
+          <div className="stat-desc text-xs">kWh consumed</div>
         </div>
 
         <div className="stat">
-          <div className="flex items-center gap-3 mb-2">
-            <Zap className="h-8 w-8 text-accent" />
-            <div className="stat-title">Efficiency</div>
+          <div className="flex items-center gap-2 mb-1">
+            <Zap className="h-5 w-5 sm:h-6 sm:w-6 text-accent" />
+            <div className="stat-title text-xs sm:text-sm">Efficiency</div>
           </div>
-          <div className="stat-value">
+          <div className="stat-value text-2xl sm:text-3xl">
             {trip.averageEfficiency > 0 ? (1 / trip.averageEfficiency).toFixed(2) : 'N/A'}
           </div>
-          <div className="stat-desc">km/kWh</div>
+          <div className="stat-desc text-xs">km/kWh</div>
         </div>
 
         <div className="stat">
-          <div className="flex items-center gap-3 mb-2">
-            <DollarSign className="h-8 w-8 text-warning" />
-            <div className="stat-title">Charging Cost</div>
+          <div className="flex items-center gap-2 mb-1">
+            <DollarSign className="h-5 w-5 sm:h-6 sm:w-6 text-warning" />
+            <div className="stat-title text-xs sm:text-sm">Charging Cost</div>
           </div>
-          <div className="stat-value">${totalChargingCost.toFixed(2)}</div>
-          <div className="stat-desc">total cost</div>
+          <div className="stat-value text-2xl sm:text-3xl">${totalChargingCost.toFixed(2)}</div>
+          <div className="stat-desc text-xs">total cost</div>
         </div>
 
         <div className="stat">
-          <div className="flex items-center gap-3 mb-2">
-            <MapPin className="h-8 w-8 text-success" />
-            <div className="stat-title">Stops</div>
+          <div className="flex items-center gap-2 mb-1">
+            <MapPin className="h-5 w-5 sm:h-6 sm:w-6 text-success" />
+            <div className="stat-title text-xs sm:text-sm">Stops</div>
           </div>
-          <div className="stat-value">{trip.stops.length}</div>
-          <div className="stat-desc">total stops</div>
+          <div className="stat-value text-2xl sm:text-3xl">{trip.stops.length}</div>
+          <div className="stat-desc text-xs">total stops</div>
         </div>
       </div>
 
@@ -258,28 +258,28 @@ export default function TripDetailsClient() {
               {/* Stretch Info */}
               {stretch && (
                 <div className="card bg-base-100 shadow-lg mb-4">
-                  <div className="card-body">
-                    <h4 className="card-title text-sm">Stretch {index}</h4>
-                    <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-                      <div className=" rounded-lg p-3">
-                        <p className="text-xs opacity-70 mb-1">Distance</p>
-                        <p className="font-semibold">{formatDistance(stretch.distance)}</p>
+                  <div className="card-body p-4">
+                    <h4 className="card-title text-xs sm:text-sm mb-2">Stretch {index}</h4>
+                    <div className="grid grid-cols-2 md:grid-cols-5 gap-2 sm:gap-3">
+                      <div className="rounded-lg p-2 sm:p-3 bg-base-200">
+                        <p className="text-[10px] sm:text-xs opacity-70 mb-1">Distance</p>
+                        <p className="font-semibold text-xs sm:text-sm">{formatDistance(stretch.distance)}</p>
                       </div>
-                      <div className=" rounded-lg p-3">
-                        <p className="text-xs opacity-70 mb-1">Energy Used</p>
-                        <p className="font-semibold">{formatEnergy(stretch.energyUsed)}</p>
+                      <div className="rounded-lg p-2 sm:p-3 bg-base-200">
+                        <p className="text-[10px] sm:text-xs opacity-70 mb-1">Energy Used</p>
+                        <p className="font-semibold text-xs sm:text-sm">{formatEnergy(stretch.energyUsed)}</p>
                       </div>
-                      <div className=" rounded-lg p-3">
-                        <p className="text-xs opacity-70 mb-1">kWh/km</p>
-                        <p className="font-semibold">{stretch.efficiencyKwhPerKm.toFixed(3)}</p>
+                      <div className="rounded-lg p-2 sm:p-3 bg-base-200">
+                        <p className="text-[10px] sm:text-xs opacity-70 mb-1">kWh/km</p>
+                        <p className="font-semibold text-xs sm:text-sm">{stretch.efficiencyKwhPerKm.toFixed(3)}</p>
                       </div>
-                      <div className=" rounded-lg p-3">
-                        <p className="text-xs opacity-70 mb-1">km/kWh</p>
-                        <p className="font-semibold">{stretch.efficiencyKmPerKwh.toFixed(2)}</p>
+                      <div className="rounded-lg p-2 sm:p-3 bg-base-200">
+                        <p className="text-[10px] sm:text-xs opacity-70 mb-1">km/kWh</p>
+                        <p className="font-semibold text-xs sm:text-sm">{stretch.efficiencyKmPerKwh.toFixed(2)}</p>
                       </div>
-                      <div className=" rounded-lg p-3">
-                        <p className="text-xs opacity-70 mb-1">km per %</p>
-                        <p className="font-semibold">{stretch.kmPerPercent.toFixed(2)} km</p>
+                      <div className="rounded-lg p-2 sm:p-3 bg-base-200">
+                        <p className="text-[10px] sm:text-xs opacity-70 mb-1">km per %</p>
+                        <p className="font-semibold text-xs sm:text-sm">{stretch.kmPerPercent.toFixed(2)} km</p>
                       </div>
                     </div>
                   </div>

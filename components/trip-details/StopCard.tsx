@@ -61,73 +61,76 @@ export default function StopCard({
 
   return (
     <div className="card bg-base-100 shadow-xl card-hover">
-      <div className="card-body">
-        <div className="flex items-start justify-between mb-4">
-          <div>
-            <h3 className="card-title text-lg">{index === 0 ? 'Starting Point' : `Stop ${index + 1}`}</h3>
-            <p className="text-sm opacity-70">{format(new Date(stop.timestamp), 'PPp')}</p>
-          </div>
-          <div className="flex items-center gap-2">
-            {isActive && (
-              <>
-                <button
-                  onClick={onEdit}
-                  className="btn btn-ghost btn-sm btn-square"
-                  title="Edit stop"
-                >
-                  <Edit className="h-4 w-4" />
-                </button>
-                {index > 0 && (
-                  <button
-                    onClick={onDelete}
-                    className={`btn btn-sm btn-square ${
-                      deleteConfirm
-                        ? 'btn-error'
-                        : 'btn-ghost'
-                    }`}
-                    title={deleteConfirm ? 'Click again to confirm' : 'Delete stop'}
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </button>
-                )}
-                {index > 0 && !stop.chargingSession && !showAddCharging && (
-                  <button
-                    onClick={onShowAddCharging}
-                    className="btn btn-success btn-sm gap-2"
-                  >
-                    <Zap className="h-4 w-4" />
-                    Add Charging
-                  </button>
-                )}
-              </>
-            )}
+      <div className="card-body p-4 sm:p-6">
+        <div className="flex items-start justify-between mb-4 gap-2">
+          <div className="flex-1 min-w-0">
+            <h3 className="card-title text-sm sm:text-base">{index === 0 ? 'Starting Point' : `Stop ${index + 1}`}</h3>
+            <p className="text-xs opacity-70">{format(new Date(stop.timestamp), 'PPp')}</p>
           </div>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-          <div className="stat  rounded-lg p-3">
-            <div className="stat-title text-xs">Odometer</div>
-            <div className="stat-value text-lg">{stop.odometer} km</div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3 mb-4">
+          <div className="bg-base-200 rounded-lg p-2 sm:p-3">
+            <div className="text-xs opacity-70 mb-1">Odometer</div>
+            <div className="text-sm font-semibold truncate">{stop.odometer} km</div>
           </div>
-          <div className="stat  rounded-lg p-3">
-            <div className="stat-title text-xs">Battery %</div>
-            <div className="stat-value text-lg">{formatBatteryPercent(stop.batteryPercent)}</div>
+          <div className="bg-base-200 rounded-lg p-2 sm:p-3">
+            <div className="text-xs opacity-70 mb-1">Battery %</div>
+            <div className="text-sm font-semibold truncate">{formatBatteryPercent(stop.batteryPercent)}</div>
           </div>
-          <div className="stat  rounded-lg p-3">
-            <div className="stat-title text-xs">Battery kWh</div>
-            <div className="stat-value text-lg">{formatEnergy(stop.batteryKwh)}</div>
+          <div className="bg-base-200 rounded-lg p-2 sm:p-3">
+            <div className="text-xs opacity-70 mb-1">Battery kWh</div>
+            <div className="text-sm font-semibold truncate">{formatEnergy(stop.batteryKwh)}</div>
           </div>
-          <div className="stat  rounded-lg p-3">
-            <div className="stat-title text-xs">Location</div>
-            <div className="stat-value text-lg">{stop.location || 'N/A'}</div>
+          <div className="bg-base-200 rounded-lg p-2 sm:p-3">
+            <div className="text-xs opacity-70 mb-1">Location</div>
+            <div className="text-xs font-semibold truncate">{stop.location || 'N/A'}</div>
           </div>
         </div>
 
         {stop.notes && (
           <div className="alert alert-info mb-4">
             <div>
-              <p className="text-sm font-medium mb-1">Notes</p>
-              <p>{stop.notes}</p>
+              <p className="text-xs sm:text-sm font-medium mb-1">Notes</p>
+              <p className="text-xs sm:text-sm">{stop.notes}</p>
+            </div>
+          </div>
+        )}
+
+        {/* Action buttons at bottom */}
+        {isActive && (
+          <div className="flex justify-between items-center gap-2 mt-2">
+            {/* Add Charging button on left */}
+            {index > 0 && !stop.chargingSession && !showAddCharging ? (
+              <button
+                onClick={onShowAddCharging}
+                className="btn btn-success btn-sm gap-1 sm:gap-2"
+              >
+                <Zap className="h-4 w-4 sm:h-5 sm:w-5" />
+                <span>Add Charging</span>
+              </button>
+            ) : (
+              <div></div>
+            )}
+            
+            {/* Edit/Delete buttons on right */}
+            <div className="flex gap-2">
+              <button
+                onClick={onEdit}
+                className="p-1 hover:opacity-70 transition-opacity"
+                title="Edit stop"
+              >
+                <Edit className="h-4 w-4 text-primary" strokeWidth={2.5} />
+              </button>
+              {index > 0 && (
+                <button
+                  onClick={onDelete}
+                  className="p-1 hover:opacity-70 transition-opacity"
+                  title={deleteConfirm ? 'Click again to confirm' : 'Delete stop'}
+                >
+                  <Trash2 className="h-4 w-4 text-error" strokeWidth={2.5} />
+                </button>
+              )}
             </div>
           </div>
         )}
@@ -135,65 +138,61 @@ export default function StopCard({
         {/* Charging Session */}
         {stop.chargingSession && !editingCharging && (
           <div className="card bg-success/10 border border-success/20 shadow-lg mt-4">
-            <div className="card-body">
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center gap-2">
-                  <div className="badge badge-success badge-lg">
-                    <Zap className="h-4 w-4" />
+            <div className="card-body p-3 sm:p-6">
+              <div className="flex items-center justify-between mb-3 gap-2">
+                <div className="flex items-center gap-2 flex-1 min-w-0">
+                  <div className="badge badge-success badge-sm">
+                    <Zap className="h-3 w-3" />
                   </div>
-                  <h4 className="font-semibold">Charging Session</h4>
+                  <h4 className="font-semibold text-xs sm:text-sm">Charging Session</h4>
                 </div>
                 {isActive && (
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 flex-shrink-0">
                     <button
                       onClick={onEditCharging}
-                      className="btn btn-ghost btn-sm btn-square"
+                      className="p-1 hover:opacity-70 transition-opacity"
                       title="Edit charging"
                     >
-                      <Edit className="h-4 w-4" />
+                      <Edit className="h-4 w-4 text-primary" strokeWidth={2.5} />
                     </button>
                     <button
                       onClick={handleDeleteCharging}
-                      className={`btn btn-sm btn-square ${
-                        deleteChargingConfirm
-                          ? 'btn-error'
-                          : 'btn-ghost'
-                      }`}
+                      className="p-1 hover:opacity-70 transition-opacity"
                       title={deleteChargingConfirm ? 'Click again to confirm' : 'Delete charging'}
                     >
-                      <Trash2 className="h-4 w-4" />
+                      <Trash2 className="h-4 w-4 text-error" strokeWidth={2.5} />
                     </button>
                   </div>
                 )}
               </div>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-                <div className="stat  rounded-lg p-3">
-                  <div className="stat-title text-xs">SOC</div>
-                  <div className="stat-value text-base">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3">
+                <div className="bg-base-200 rounded-lg p-2 sm:p-3">
+                  <div className="text-xs opacity-70 mb-1">SOC</div>
+                  <div className="text-sm font-semibold truncate">
                     {stop.chargingSession.startSoc}% → {stop.chargingSession.endSoc}%
                   </div>
                 </div>
-                <div className="stat  rounded-lg p-3">
-                  <div className="stat-title text-xs">Energy Added</div>
-                  <div className="stat-value text-base">
+                <div className="bg-base-200 rounded-lg p-2 sm:p-3">
+                  <div className="text-xs opacity-70 mb-1">Energy Added</div>
+                  <div className="text-sm font-semibold truncate">
                     {formatEnergy(calculateChargingEnergy(stop.chargingSession))}
                   </div>
                 </div>
-                <div className="stat  rounded-lg p-3">
-                  <div className="stat-title text-xs">Cost</div>
-                  <div className="stat-value text-base">
+                <div className="bg-base-200 rounded-lg p-2 sm:p-3">
+                  <div className="text-xs opacity-70 mb-1">Cost</div>
+                  <div className="text-sm font-semibold truncate">
                     {formatCost(stop.chargingSession.cost)}
                   </div>
                 </div>
-                <div className="stat  rounded-lg p-3">
-                  <div className="stat-title text-xs">Duration</div>
-                  <div className="stat-value text-base">
+                <div className="bg-base-200 rounded-lg p-2 sm:p-3">
+                  <div className="text-xs opacity-70 mb-1">Duration</div>
+                  <div className="text-sm font-semibold truncate">
                     {formatDuration(stop.chargingSession.duration)}
                   </div>
                 </div>
               </div>
               <div className="alert alert-info mt-2">
-                <span className="text-sm">Cost per kWh: {formatCost(calculateCostPerKwh(stop.chargingSession))}</span>
+                <span className="text-xs sm:text-sm">Cost per kWh: {formatCost(calculateCostPerKwh(stop.chargingSession))}</span>
               </div>
             </div>
           </div>
