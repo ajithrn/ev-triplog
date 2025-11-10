@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import DatePicker from 'react-datepicker';
 import { useTrips } from '@/contexts/TripContext';
 import { useVehicles } from '@/contexts/VehicleContext';
 import { MapPin, ArrowLeft } from 'lucide-react';
@@ -12,6 +13,7 @@ export default function NewTripPage() {
   const { createTrip, activeTrip } = useTrips();
   const { vehicles } = useVehicles();
   const [mounted, setMounted] = useState(false);
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [formData, setFormData] = useState({
     name: '',
     vehicleId: '',
@@ -58,7 +60,7 @@ export default function NewTripPage() {
       ...stopData,
       batteryPercent,
       batteryKwh,
-      timestamp: Date.now(),
+      timestamp: selectedDate.getTime(),
     });
     router.push(`/trip-details?id=${trip.id}`);
   };
@@ -127,6 +129,19 @@ export default function NewTripPage() {
                   </option>
                 ))}
               </select>
+            </div>
+
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text font-medium">Start Date & Time *</span>
+              </label>
+              <DatePicker
+                selected={selectedDate}
+                onChange={(date) => date && setSelectedDate(date)}
+                showTimeSelect
+                dateFormat="PPp"
+                className="input input-bordered w-full "
+              />
             </div>
 
             <div className="form-control">

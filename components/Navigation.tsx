@@ -100,7 +100,7 @@ export default function Navigation() {
           </div>
 
           {/* Drawer Items */}
-          <ul className="gap-2">
+          <ul className="gap-4">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = pathname === item.href;
@@ -110,14 +110,14 @@ export default function Navigation() {
                   <Link
                     href={item.href}
                     onClick={() => setMobileMenuOpen(false)}
-                    className={`gap-3 font-medium transition-all ${
+                    className={`gap-4 font-medium text-lg py-4 transition-all ${
                       isActive
                         ? 'text-primary'
                         : 'hover:text-primary'
                     }`}
                     style={{ color: isActive ? undefined : 'var(--nav-text)' }}
                   >
-                    <Icon className="h-5 w-5" />
+                    <Icon className="h-6 w-6" />
                     {item.label}
                   </Link>
                 </li>

@@ -64,7 +64,7 @@ export default function StopCard({
       <div className="card-body">
         <div className="flex items-start justify-between mb-4">
           <div>
-            <h3 className="card-title text-lg">Stop {index + 1}</h3>
+            <h3 className="card-title text-lg">{index === 0 ? 'Starting Point' : `Stop ${index + 1}`}</h3>
             <p className="text-sm opacity-70">{format(new Date(stop.timestamp), 'PPp')}</p>
           </div>
           <div className="flex items-center gap-2">
@@ -90,7 +90,7 @@ export default function StopCard({
                     <Trash2 className="h-4 w-4" />
                   </button>
                 )}
-                {!stop.chargingSession && !showAddCharging && (
+                {index > 0 && !stop.chargingSession && !showAddCharging && (
                   <button
                     onClick={onShowAddCharging}
                     className="btn btn-success btn-sm gap-2"
