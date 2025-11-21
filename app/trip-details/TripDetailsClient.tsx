@@ -287,7 +287,7 @@ export default function TripDetailsClient() {
       <div className="space-y-6">
         {[...trip.stops].reverse().map((stop, reverseIndex) => {
           const index = trip.stops.length - 1 - reverseIndex;
-          const stretch = index > 0 ? stretches[index - 1] : null;
+          const stretch = index < trip.stops.length - 1 ? stretches[index] : null;
           const isEditing = editingStop === stop.id;
           
           return (
@@ -296,7 +296,7 @@ export default function TripDetailsClient() {
               {stretch && (
                 <div className="card bg-base-100 shadow-lg mb-4">
                   <div className="card-body p-4">
-                    <h4 className="card-title text-xs sm:text-sm mb-2">Stretch {index}</h4>
+                    <h4 className="card-title text-xs sm:text-sm mb-2">Stretch {index + 1}</h4>
                     <div className="grid grid-cols-2 md:grid-cols-5 gap-2 sm:gap-3">
                       <div className="rounded-lg p-2 sm:p-3 bg-base-200">
                         <p className="text-[10px] sm:text-xs opacity-70 mb-1">Distance</p>
