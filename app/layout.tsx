@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { VehicleProvider } from "@/contexts/VehicleContext";
 import { TripProvider } from "@/contexts/TripContext";
+import { SettingsProvider } from "@/contexts/SettingsContext";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import RegisterServiceWorker from "./register-sw";
@@ -62,22 +63,24 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" data-theme="evtriplog">
+    <html lang="en">
       <body className={inter.className}>
         <RegisterServiceWorker />
         <InstallPrompt />
         <ClientRedirect />
-        <VehicleProvider>
-          <TripProvider>
-            <div className="min-h-screen flex flex-col">
-              <Navigation />
-              <main className="relative z-10 container mx-auto px-4 py-8 flex-1">
-                {children}
-              </main>
-              <Footer />
-            </div>
-          </TripProvider>
-        </VehicleProvider>
+        <SettingsProvider>
+          <VehicleProvider>
+            <TripProvider>
+              <div className="min-h-screen flex flex-col">
+                <Navigation />
+                <main className="relative z-10 container mx-auto px-4 py-8 flex-1">
+                  {children}
+                </main>
+                <Footer />
+              </div>
+            </TripProvider>
+          </VehicleProvider>
+        </SettingsProvider>
       </body>
     </html>
   );

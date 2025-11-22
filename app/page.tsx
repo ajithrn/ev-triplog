@@ -3,14 +3,17 @@
 import { useEffect, useState } from 'react';
 import { useVehicles } from '@/contexts/VehicleContext';
 import { useTrips } from '@/contexts/TripContext';
+import { useSettings } from '@/contexts/SettingsContext';
 import Link from 'next/link';
 import { Car, Plus, MapPin, Battery, TrendingUp, Zap, Calendar, DollarSign } from 'lucide-react';
-import { format } from 'date-fns';
 import { formatDistance, formatEnergy, formatBatteryPercent, formatEfficiency } from '@/utils/calculations';
+import { formatCurrency } from '@/utils/formatters';
+import { formatDate } from '@/utils/dateFormatters';
 
 export default function Dashboard() {
   const { vehicles } = useVehicles();
   const { trips, activeTrip } = useTrips();
+  const { settings } = useSettings();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -114,7 +117,7 @@ export default function Dashboard() {
                   <div className="badge badge-primary badge-sm">Active</div>
                 </div>
                 <p className="text-xs sm:text-sm opacity-80">
-                  Started {format(new Date(activeTrip.startDate), 'PP')} • Click to manage trip
+                  Started {formatDate(new Date(activeTrip.startDate), settings)} • Click to manage trip
                 </p>
               </div>
             </Link>
@@ -173,7 +176,7 @@ export default function Dashboard() {
                   <DollarSign className="h-4 w-4 text-primary flex-shrink-0" />
                   <h3 className="text-xs font-medium text-base-content/70">Charging Cost</h3>
                 </div>
-                <p className="text-2xl sm:text-3xl font-bold text-base-content">₹{totalChargingCost.toFixed(0)}</p>
+                <p className="text-2xl sm:text-3xl font-bold text-base-content">{formatCurrency(totalChargingCost, settings)}</p>
                 <p className="text-xs text-base-content/60 mt-1">total cost</p>
               </div>
             </div>
@@ -184,7 +187,7 @@ export default function Dashboard() {
                   <DollarSign className="h-4 w-4 text-primary flex-shrink-0" />
                   <h3 className="text-xs font-medium text-base-content/70">Cost/km</h3>
                 </div>
-                <p className="text-2xl sm:text-3xl font-bold text-base-content">₹{costPerKm.toFixed(2)}</p>
+                <p className="text-2xl sm:text-3xl font-bold text-base-content">{formatCurrency(costPerKm, settings)}</p>
                 <p className="text-xs text-base-content/60 mt-1">per kilometer</p>
               </div>
             </div>
@@ -218,7 +221,7 @@ export default function Dashboard() {
                           <MapPin className="h-5 w-5 text-primary flex-shrink-0" />
                           <div className="flex-1 min-w-0">
                             <h3 className="font-semibold text-sm text-base-content truncate">{trip.name || 'Trip'}</h3>
-                            <p className="text-xs text-base-content/60 truncate">{format(new Date(trip.startDate), 'PP')}</p>
+                            <p className="text-xs text-base-content/60 truncate">{formatDate(new Date(trip.startDate), settings)}</p>
                           </div>
                         </div>
                         <div className="flex items-center gap-4 lg:gap-6 flex-shrink-0">

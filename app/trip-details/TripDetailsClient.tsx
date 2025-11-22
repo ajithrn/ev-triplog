@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useTrips } from '@/contexts/TripContext';
 import { useVehicles } from '@/contexts/VehicleContext';
+import { useSettings } from '@/contexts/SettingsContext';
 import Link from 'next/link';
 import {
   ArrowLeft,
@@ -17,13 +18,14 @@ import {
   DollarSign,
   Edit,
 } from 'lucide-react';
-import { format } from 'date-fns';
 import {
   calculateTripStretches,
   formatDistance,
   formatEnergy,
 } from '@/utils/calculations';
 import { exportTripToCSV, exportTripToPDF } from '@/utils/export';
+import { formatCurrency } from '@/utils/formatters';
+import { formatDate } from '@/utils/dateFormatters';
 import StopForm from '@/components/trip-details/StopForm';
 import StopCard from '@/components/trip-details/StopCard';
 
@@ -32,6 +34,7 @@ export default function TripDetailsClient() {
   const router = useRouter();
   const { trips, getTripById, completeTrip, reopenTrip, deleteTrip } = useTrips();
   const { vehicles } = useVehicles();
+  const { settings } = useSettings();
   const [mounted, setMounted] = useState(false);
   const [showAddStop, setShowAddStop] = useState(false);
   const [editingStop, setEditingStop] = useState<string | null>(null);
@@ -146,7 +149,7 @@ export default function TripDetailsClient() {
               )}
             </div>
             <p className="mt-1 text-xs sm:text-sm text-base-content/70">
-              {vehicle?.name} • {format(new Date(trip.startDate), 'PPP')}
+              {vehicle?.name} • {formatDate(new Date(trip.startDate), settings)}
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-2">
@@ -252,7 +255,7 @@ export default function TripDetailsClient() {
               <DollarSign className="h-4 w-4 text-primary flex-shrink-0" />
               <h3 className="text-xs font-medium text-base-content/70">Charging Cost</h3>
             </div>
-            <p className="text-2xl sm:text-3xl font-bold text-base-content">₹{totalChargingCost.toFixed(2)}</p>
+            <p className="text-2xl sm:text-3xl font-bold text-base-content">{formatCurrency(totalChargingCost, settings)}</p>
             <p className="text-xs text-base-content/60 mt-1">total cost</p>
           </div>
         </div>
@@ -263,7 +266,7 @@ export default function TripDetailsClient() {
               <DollarSign className="h-4 w-4 text-primary flex-shrink-0" />
               <h3 className="text-xs font-medium text-base-content/70">Cost/km</h3>
             </div>
-            <p className="text-2xl sm:text-3xl font-bold text-base-content">₹{costPerKm.toFixed(2)}</p>
+            <p className="text-2xl sm:text-3xl font-bold text-base-content">{formatCurrency(costPerKm, settings)}</p>
             <p className="text-xs text-base-content/60 mt-1">per kilometer</p>
           </div>
         </div>

@@ -3,14 +3,17 @@
 import { useEffect, useState } from 'react';
 import { useTrips } from '@/contexts/TripContext';
 import { useVehicles } from '@/contexts/VehicleContext';
+import { useSettings } from '@/contexts/SettingsContext';
 import Link from 'next/link';
 import { Car, Plus, MapPin, Calendar, Battery, Zap, DollarSign } from 'lucide-react';
-import { format } from 'date-fns';
 import { formatDistance, formatEnergy } from '@/utils/calculations';
+import { formatCurrency } from '@/utils/formatters';
+import { formatDate } from '@/utils/dateFormatters';
 
 export default function TripsPage() {
   const { trips } = useTrips();
   const { vehicles } = useVehicles();
+  const { settings } = useSettings();
   const [mounted, setMounted] = useState(false);
   const [filter, setFilter] = useState<'all' | 'active' | 'completed'>('all');
 
@@ -160,7 +163,7 @@ export default function TripsPage() {
                       </div>
                       <div className="flex items-center gap-2 text-xs text-base-content/60 mb-3">
                         <Calendar className="h-3 w-3" />
-                        <span>{format(new Date(trip.startDate), 'PP')}</span>
+                        <span>{formatDate(new Date(trip.startDate), settings)}</span>
                       </div>
                       <div className="space-y-2">
                         <div className="flex items-center justify-between p-2 bg-base-300 rounded-lg">
@@ -206,10 +209,10 @@ export default function TripsPage() {
                             <span className="text-xs font-medium text-base-content/70">Charging Cost</span>
                           </div>
                           <div className="text-right">
-                            <div className="text-sm font-bold text-base-content">₹{totalChargingCost.toFixed(2)}</div>
+                            <div className="text-sm font-bold text-base-content">{formatCurrency(totalChargingCost, settings)}</div>
                             {trip.totalDistance > 0 && totalChargingCost > 0 && (
                               <div className="text-[10px] text-base-content/60">
-                                ₹{(totalChargingCost / trip.totalDistance).toFixed(2)}/km
+                                {formatCurrency(totalChargingCost / trip.totalDistance, settings)}/km
                               </div>
                             )}
                           </div>

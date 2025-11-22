@@ -3,13 +3,16 @@
 import { useEffect, useState } from 'react';
 import { useTrips } from '@/contexts/TripContext';
 import { useVehicles } from '@/contexts/VehicleContext';
+import { useSettings } from '@/contexts/SettingsContext';
 import { BarChart3, TrendingUp, DollarSign, Battery } from 'lucide-react';
 import { format } from 'date-fns';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { formatCurrency } from '@/utils/formatters';
 
 export default function AnalyticsPage() {
   const { trips } = useTrips();
   const { vehicles } = useVehicles();
+  const { settings } = useSettings();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -119,7 +122,7 @@ export default function AnalyticsPage() {
                   <DollarSign className="h-4 w-4 text-primary flex-shrink-0" />
                   <h3 className="text-xs font-medium text-base-content/70">Charging</h3>
                 </div>
-                <p className="text-2xl sm:text-3xl font-bold text-base-content">₹{totalChargingCost.toFixed(0)}</p>
+                <p className="text-2xl sm:text-3xl font-bold text-base-content">{formatCurrency(totalChargingCost, settings)}</p>
                 <p className="text-xs text-base-content/60 mt-1">{totalChargingSessions} sessions</p>
               </div>
             </div>

@@ -1,18 +1,19 @@
 'use client';
 
 import { useState } from 'react';
-import { format } from 'date-fns';
 import { Edit, Trash2, Zap } from 'lucide-react';
 import { useTrips } from '@/contexts/TripContext';
+import { useSettings } from '@/contexts/SettingsContext';
 import {
   formatDistance,
   formatEnergy,
   formatBatteryPercent,
-  formatCost,
   formatDuration,
   calculateChargingEnergy,
   calculateCostPerKwh,
 } from '@/utils/calculations';
+import { formatCurrency } from '@/utils/formatters';
+import { formatDateTimeLong } from '@/utils/dateFormatters';
 import ChargingForm from './ChargingForm';
 
 interface StopCardProps {
@@ -49,6 +50,7 @@ export default function StopCard({
   isFirstStop,
 }: StopCardProps) {
   const { deleteChargingSession } = useTrips();
+  const { settings } = useSettings();
   const [deleteChargingConfirm, setDeleteChargingConfirm] = useState(false);
 
   const handleDeleteCharging = () => {
@@ -67,7 +69,7 @@ export default function StopCard({
         <div className="flex items-start justify-between mb-4 gap-2">
           <div className="flex-1 min-w-0">
             <h3 className="card-title text-sm sm:text-base text-base-content">{isFirstStop ? 'Starting Point' : `Stop ${index}`}</h3>
-            <p className="text-xs text-base-content/60">{format(new Date(stop.timestamp), 'PPp')}</p>
+            <p className="text-xs text-base-content/60">{formatDateTimeLong(new Date(stop.timestamp))}</p>
           </div>
         </div>
 
@@ -183,7 +185,7 @@ export default function StopCard({
                 <div className="bg-success/5 rounded-lg p-2 sm:p-3">
                   <div className="text-xs text-base-content/70 mb-1">Cost</div>
                   <div className="text-sm font-bold text-base-content">
-                    {formatCost(stop.chargingSession.cost)}
+                    {formatCurrency(stop.chargingSession.cost, settings)}
                   </div>
                 </div>
                 <div className="bg-success/5 rounded-lg p-2 sm:p-3">
@@ -194,7 +196,7 @@ export default function StopCard({
                 </div>
               </div>
               <div className="bg-success/5 rounded-lg p-2 mt-3">
-                <span className="text-xs sm:text-sm text-base-content/70">Cost per kWh: <span className="font-semibold text-base-content">{formatCost(calculateCostPerKwh(stop.chargingSession))}</span></span>
+                <span className="text-xs sm:text-sm text-base-content/70">Cost per kWh: <span className="font-semibold text-base-content">{formatCurrency(calculateCostPerKwh(stop.chargingSession), settings)}</span></span>
               </div>
             </div>
           </div>

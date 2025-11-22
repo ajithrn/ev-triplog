@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import { useTrips } from '@/contexts/TripContext';
 import { useVehicles } from '@/contexts/VehicleContext';
+import { useSettings } from '@/contexts/SettingsContext';
+import { getCurrencySymbol } from '@/utils/formatters';
 
 interface ChargingFormProps {
   tripId: string;
@@ -34,6 +36,8 @@ export default function ChargingForm({
 
   const trip = getTripById(tripId);
   const vehicle = vehicles.find((v) => v.id === trip?.vehicleId);
+  const { settings } = useSettings();
+  const currencySymbol = getCurrencySymbol(settings);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -151,7 +155,7 @@ export default function ChargingForm({
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="form-control">
               <label className="label">
-                <span className="label-text font-medium">Cost (₹) *</span>
+                <span className="label-text font-medium">Cost ({currencySymbol}) *</span>
               </label>
               <input
                 type="number"
@@ -166,7 +170,7 @@ export default function ChargingForm({
               {costPerKwh > 0 && (
                 <label className="label">
                   <span className="label-text-alt">
-                    ₹{costPerKwh.toFixed(2)}/kWh (battery) • ₹{costPerKwhFromCharger.toFixed(2)}/kWh (charger)
+                    {currencySymbol}{costPerKwh.toFixed(2)}/kWh (battery) • {currencySymbol}{costPerKwhFromCharger.toFixed(2)}/kWh (charger)
                   </span>
                 </label>
               )}
