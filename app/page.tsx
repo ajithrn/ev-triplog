@@ -161,7 +161,9 @@ export default function Dashboard() {
                   <h3 className="text-xs font-medium text-base-content/70">Efficiency</h3>
                 </div>
                 <p className="text-2xl sm:text-3xl font-bold text-base-content">{avgEfficiency > 0 ? (1 / avgEfficiency).toFixed(2) : '0.00'}</p>
-                <p className="text-xs text-base-content/60 mt-1">{kmPerPercent > 0 ? `${kmPerPercent.toFixed(2)} km/%` : 'km/kWh'}</p>
+                <p className="text-xs text-base-content/60 mt-1">
+                  km/kWh {kmPerPercent > 0 ? `(${kmPerPercent.toFixed(2)} km/%)` : ''}
+                </p>
               </div>
             </div>
 
@@ -210,55 +212,45 @@ export default function Dashboard() {
                       <Link
                         key={trip.id}
                         href={`/trip-details?id=${trip.id}`}
-                        className="card bg-base-200 shadow-lg card-hover border border-base-300"
+                        className="flex items-center justify-between p-4 bg-base-300 rounded-lg hover:bg-base-300/80 transition-colors"
                       >
-                        <div className="card-body p-4">
-                          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-                            <div className="flex items-center gap-3 flex-shrink-0">
-                              <MapPin className="h-8 w-8 text-primary" />
-                              <div>
-                                <h3 className="font-semibold text-base text-base-content">{trip.name || 'Trip'}</h3>
-                                <div className="flex items-center gap-2 text-xs text-base-content/60">
-                                  <Car className="h-3 w-3" />
-                                  <span>{vehicle?.name || 'Unknown Vehicle'}</span>
-                                  <span>•</span>
-                                  <Calendar className="h-3 w-3" />
-                                  <span>{format(new Date(trip.startDate), 'PP')}</span>
-                                </div>
-                              </div>
+                        <div className="flex items-center gap-3 flex-1 min-w-0">
+                          <MapPin className="h-5 w-5 text-primary flex-shrink-0" />
+                          <div className="flex-1 min-w-0">
+                            <h3 className="font-semibold text-sm text-base-content truncate">{trip.name || 'Trip'}</h3>
+                            <p className="text-xs text-base-content/60 truncate">{format(new Date(trip.startDate), 'PP')}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-4 lg:gap-6 flex-shrink-0">
+                          <div className="text-right">
+                            <div className="flex items-center justify-end gap-1 mb-1">
+                              <TrendingUp className="h-3 w-3 text-primary" />
+                              <p className="text-xs text-base-content/60">Distance</p>
                             </div>
-                            <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 lg:gap-3">
-                              <div className="bg-base-300 rounded-lg p-2">
-                                <div className="flex items-center gap-1 mb-1">
-                                  <MapPin className="h-3 w-3 text-primary flex-shrink-0" />
-                                  <div className="text-xs text-base-content/60">Distance</div>
-                                </div>
-                                <div className="font-semibold text-sm text-base-content">{formatDistance(trip.totalDistance)}</div>
-                              </div>
-                              <div className="bg-base-300 rounded-lg p-2">
-                                <div className="flex items-center gap-1 mb-1">
-                                  <Battery className="h-3 w-3 text-secondary flex-shrink-0" />
-                                  <div className="text-xs text-base-content/60">Energy</div>
-                                </div>
-                                <div className="font-semibold text-sm text-base-content">{formatEnergy(trip.totalEnergyUsed)}</div>
-                              </div>
-                              <div className="bg-base-300 rounded-lg p-2">
-                                <div className="flex items-center gap-1 mb-1">
-                                  <Zap className="h-3 w-3 text-accent flex-shrink-0" />
-                                  <div className="text-xs text-base-content/60">Efficiency</div>
-                                </div>
-                                <div className="font-semibold text-sm text-base-content">
-                                  {trip.averageEfficiency > 0 ? `${(1 / trip.averageEfficiency).toFixed(2)} km/kWh` : 'N/A'}
-                                </div>
-                              </div>
-                              <div className="bg-base-300 rounded-lg p-2">
-                                <div className="flex items-center gap-1 mb-1">
-                                  <MapPin className="h-3 w-3 text-success flex-shrink-0" />
-                                  <div className="text-xs text-base-content/60">Stops</div>
-                                </div>
-                                <div className="font-semibold text-sm text-base-content">{trip.stops.length}</div>
-                              </div>
+                            <p className="font-semibold text-sm text-base-content">{formatDistance(trip.totalDistance)}</p>
+                          </div>
+                          <div className="text-right hidden lg:block">
+                            <div className="flex items-center justify-end gap-1 mb-1">
+                              <Battery className="h-3 w-3 text-primary" />
+                              <p className="text-xs text-base-content/60">Energy</p>
                             </div>
+                            <p className="font-semibold text-sm text-base-content">{formatEnergy(trip.totalEnergyUsed)}</p>
+                          </div>
+                          <div className="text-right">
+                            <div className="flex items-center justify-end gap-1 mb-1">
+                              <Zap className="h-3 w-3 text-primary" />
+                              <p className="text-xs text-base-content/60">Efficiency</p>
+                            </div>
+                            <p className="font-semibold text-sm text-base-content">
+                              {trip.averageEfficiency > 0 ? `${(1 / trip.averageEfficiency).toFixed(2)} km/kWh` : 'N/A'}
+                            </p>
+                          </div>
+                          <div className="text-right hidden lg:block">
+                            <div className="flex items-center justify-end gap-1 mb-1">
+                              <MapPin className="h-3 w-3 text-primary" />
+                              <p className="text-xs text-base-content/60">Stops</p>
+                            </div>
+                            <p className="font-semibold text-sm text-base-content">{trip.stops.length}</p>
                           </div>
                         </div>
                       </Link>

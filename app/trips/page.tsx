@@ -203,9 +203,16 @@ export default function TripsPage() {
                         <div className="flex items-center justify-between p-2 bg-base-300 rounded-lg">
                           <div className="flex items-center gap-2">
                             <DollarSign className="h-4 w-4 text-primary flex-shrink-0" />
-                            <span className="text-xs font-medium text-base-content/70">Cost</span>
+                            <span className="text-xs font-medium text-base-content/70">Charging Cost</span>
                           </div>
-                          <span className="text-sm font-bold text-base-content">₹{totalChargingCost.toFixed(2)}</span>
+                          <div className="text-right">
+                            <div className="text-sm font-bold text-base-content">₹{totalChargingCost.toFixed(2)}</div>
+                            {trip.totalDistance > 0 && totalChargingCost > 0 && (
+                              <div className="text-[10px] text-base-content/60">
+                                ₹{(totalChargingCost / trip.totalDistance).toFixed(2)}/km
+                              </div>
+                            )}
+                          </div>
                         </div>
                         <div className="flex items-center justify-between p-2 bg-base-300 rounded-lg">
                           <div className="flex items-center gap-2">
