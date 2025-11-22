@@ -247,7 +247,7 @@ export default function TripDetailsClient() {
             <div className="stat-title text-xs sm:text-sm">Charging Cost</div>
           </div>
           <div className="stat-value text-2xl sm:text-3xl">₹{totalChargingCost.toFixed(2)}</div>
-          <div className="stat-desc text-xs">total cost</div>
+          <div className="stat-desc text-xs">total charging cost</div>
         </div>
 
         <div className="stat">

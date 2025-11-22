@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useVehicles } from '@/contexts/VehicleContext';
 import { useTrips } from '@/contexts/TripContext';
 import Link from 'next/link';
-import { Car, Plus, MapPin, Battery, TrendingUp, Zap, Calendar } from 'lucide-react';
+import { Car, Plus, MapPin, Battery, TrendingUp, Zap, Calendar, DollarSign } from 'lucide-react';
 import { format } from 'date-fns';
 import { formatDistance, formatEnergy, formatBatteryPercent, formatEfficiency } from '@/utils/calculations';
 
@@ -29,6 +29,27 @@ export default function Dashboard() {
   const totalDistance = completedTrips.reduce((sum, t) => sum + t.totalDistance, 0);
   const totalEnergy = completedTrips.reduce((sum, t) => sum + t.totalEnergyUsed, 0);
   const avgEfficiency = totalDistance > 0 ? totalEnergy / totalDistance : 0;
+  
+  // Calculate total battery percentage used across all trips
+  const totalBatteryPercentUsed = completedTrips.reduce((sum, trip) => {
+    if (trip.stops.length < 2) return sum;
+    const firstStop = trip.stops[0];
+    const lastStop = trip.stops[trip.stops.length - 1];
+    return sum + (firstStop.batteryPercent - lastStop.batteryPercent);
+  }, 0);
+  
+  // Calculate km per % (average across all trips)
+  const kmPerPercent = totalBatteryPercentUsed > 0 ? totalDistance / totalBatteryPercentUsed : 0;
+  
+  // Calculate total charging cost
+  const totalChargingCost = completedTrips.reduce((sum, trip) => {
+    return sum + trip.stops.reduce((stopSum, stop) => {
+      return stopSum + (stop.chargingSession?.cost || 0);
+    }, 0);
+  }, 0);
+  
+  // Calculate cost per km
+  const costPerKm = totalDistance > 0 ? totalChargingCost / totalDistance : 0;
 
   const recentTrips = [...completedTrips]
     .sort((a, b) => b.startDate - a.startDate)
@@ -135,7 +156,7 @@ export default function Dashboard() {
           )}
 
           {/* Stats Grid */}
-          <div className="stats stats-vertical sm:grid sm:grid-cols-2 lg:grid-cols-4 shadow-xl bg-base-100 w-full">
+          <div className="stats stats-vertical sm:grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 shadow-xl bg-base-100 w-full">
             <div className="stat">
               <div className="flex items-center gap-3 mb-2">
                 <MapPin className="h-8 w-8 text-primary" />
@@ -168,7 +189,25 @@ export default function Dashboard() {
                 <div className="stat-title">Efficiency</div>
               </div>
               <div className="stat-value">{avgEfficiency > 0 ? (1 / avgEfficiency).toFixed(2) : '0.00'}</div>
-              <div className="stat-desc">km/kWh</div>
+              <div className="stat-desc">{kmPerPercent > 0 ? `km/kWh (${kmPerPercent.toFixed(2)} km/%)` : 'km/kWh'}</div>
+            </div>
+
+            <div className="stat">
+              <div className="flex items-center gap-3 mb-2">
+                <DollarSign className="h-8 w-8 text-accent" />
+                <div className="stat-title">Charging Cost</div>
+              </div>
+              <div className="stat-value">₹{totalChargingCost.toFixed(0)}</div>
+              <div className="stat-desc">total charging cost</div>
+            </div>
+
+            <div className="stat">
+              <div className="flex items-center gap-3 mb-2">
+                <DollarSign className="h-8 w-8 text-secondary" />
+                <div className="stat-title">Cost per km</div>
+              </div>
+              <div className="stat-value">₹{costPerKm.toFixed(2)}</div>
+              <div className="stat-desc">charging cost/km</div>
             </div>
           </div>
 
