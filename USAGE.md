@@ -5,11 +5,12 @@ Complete guide for using EV Trip Log to track your electric vehicle trips and an
 ## Table of Contents
 
 1. [Getting Started](#getting-started)
-2. [Vehicle Management](#vehicle-management)
-3. [Trip Tracking](#trip-tracking)
-4. [Charging Sessions](#charging-sessions)
-5. [Analytics Dashboard](#analytics-dashboard)
-6. [Data Export](#data-export)
+2. [Progressive Web App (PWA)](#progressive-web-app-pwa)
+3. [Vehicle Management](#vehicle-management)
+4. [Trip Tracking](#trip-tracking)
+5. [Charging Sessions](#charging-sessions)
+6. [Analytics Dashboard](#analytics-dashboard)
+7. [Data Export](#data-export)
 
 ## Getting Started
 
@@ -26,6 +27,37 @@ The dashboard displays:
 - Total statistics (trips, distance, energy, efficiency)
 - Recent completed trips
 - Quick access to start new trips
+
+## Progressive Web App (PWA)
+
+### Installing the App
+
+The app will automatically show an install prompt when you first visit. You can also install manually:
+
+**Desktop (Chrome/Edge/Brave)**:
+1. Look for the install icon (⊕) in the address bar
+2. Click "Install" to add to your desktop
+
+**Mobile (Android)**:
+1. Tap the menu (⋮) and select "Add to Home screen"
+
+**Mobile (iOS/Safari)**:
+1. Tap the Share button
+2. Select "Add to Home Screen"
+
+### Offline Functionality
+
+The app works completely offline after your first visit. All pages, features, and data are accessible without internet connection.
+
+**What Works Offline**:
+- All pages and navigation
+- Create and edit trips
+- Add stops and charging sessions
+- View analytics and export data
+
+### Automatic Updates
+
+The app checks for updates when you open it. If an update is available, you'll see a prompt to reload and get the latest version.
 
 ## Vehicle Management
 
@@ -300,4 +332,3 @@ All data is stored in your browser's Local Storage:
 For issues or questions:
 - Check the [Contributing Guide](./CONTRIBUTING.md) for technical details
 - Open an issue on [GitHub](https://github.com/ajithrn/ev-triplog)
-- Contact the developer at [ajithrn.com](https://ajithrn.com)

@@ -50,6 +50,26 @@ npm start            # Start production server
 npm run lint         # Run ESLint
 ```
 
+### Testing PWA/Offline Functionality
+
+**Important**: PWA features only work with production builds, not in development mode.
+
+```bash
+# Build production version
+npm run build
+
+# Serve the production build locally
+npx serve out
+
+# Open http://localhost:3000 (or the port shown)
+
+# Test offline mode:
+# 1. Open browser DevTools (F12)
+# 2. Go to Application > Service Workers
+# 3. Check "Offline" checkbox
+# 4. Navigate through the app - everything should work!
+```
+
 ### Environment Setup
 
 No environment variables required. The application uses browser Local Storage for data persistence.
@@ -280,58 +300,30 @@ docs(readme): update installation instructions
 3. Changes requested or approved
 4. PR merged into main branch
 
-## Roadmap
+## PWA & Offline Development
 
-### Phase 1: Cloud Integration
-- User authentication system
-- Cloud storage with sync
-- Multi-device support
-- Data backup to cloud
+### Service Worker (`public/sw.js`)
 
-### Phase 2: Mobile Experience
-- Progressive Web App (PWA) enhancements
-- Native mobile app (React Native)
-- Offline-first architecture
-- Push notifications
+**Updating the Service Worker**:
+1. Modify `public/sw.js` as needed
+2. Update `CACHE_VERSION` (e.g., `v1` → `v2`)
+3. Test with production build (see testing commands above)
 
-### Phase 3: Advanced Features
-- GPS integration for automatic tracking
-- Route planning and optimization
-- Weather data integration
-- Charging station finder
-- Real-time efficiency predictions
+**Adding New Pages**:
+Add routes to `PRECACHE_ASSETS` in `public/sw.js`:
+```javascript
+const PRECACHE_ASSETS = [
+  // ... existing routes
+  '/your-new-page/',
+  '/your-new-page/index.html',
+];
+```
 
-### Phase 4: Social Features
-- Community comparisons
-- Leaderboards
-- Trip sharing
-- Gamification elements
-- Achievement system
-
-### Phase 5: AI & Automation
-- AI-powered efficiency recommendations
-- Automatic trip detection
-- Predictive range calculations
-- Smart charging suggestions
-
-## Technical Debt & Known Issues
-
-### Current Limitations
-
-1. **No Cloud Sync**: Data is device-specific
-2. **No Multi-User**: Single-user application
-3. **Storage Limits**: Browser storage constraints
-4. **No GPS**: Manual location entry required
-5. **No Real-Time**: Manual data entry
-
-### Areas for Improvement
-
-- Add comprehensive test coverage
-- Implement error boundaries
-- Add loading states for better UX
-- Optimize bundle size
-- Add service worker for offline support
-- Implement data migration system
+**Key Files**:
+- `public/sw.js` - Service worker with caching logic
+- `app/register-sw.tsx` - Service worker registration and update handling
+- `public/manifest.json` - PWA manifest (icons, theme, etc.)
+- `app/layout.tsx` - PWA metadata and iOS settings
 
 ## Testing
 
@@ -375,6 +367,58 @@ Test on:
 - **GitHub Issues**: [github.com/ajithrn/ev-triplog/issues](https://github.com/ajithrn/ev-triplog/issues)
 - **Developer**: [ajithrn.com](https://ajithrn.com)
 - **Support**: [Buy me a coffee](https://buymeacoffee.com/ajithrn)
+
+## Roadmap
+
+### Cloud & Sync
+- User authentication system
+- Cloud storage with multi-device sync
+- Automatic data backup
+
+### Mobile Experience
+- Native mobile app (React Native)
+- Push notifications for charging reminders
+- Enhanced offline capabilities
+
+### Smart Features
+- GPS integration for automatic tracking
+- Route planning and optimization
+- Weather data integration
+- Charging station finder with real-time availability
+- AI-powered efficiency recommendations
+- Automatic trip detection
+- Predictive range calculations
+
+### Social & Community
+- Trip sharing and comparisons
+- Community leaderboards
+- Achievement system
+- Gamification elements
+
+### Future Enhancements
+- Integration with vehicle APIs (Tesla, etc.)
+- Smart charging suggestions based on electricity rates
+- Carbon footprint tracking
+- Cost comparison tools
+
+## Technical Debt & Known Issues
+
+### Current Limitations
+
+1. **No Cloud Sync**: Data is device-specific
+2. **No Multi-User**: Single-user application
+3. **Storage Limits**: Browser storage constraints
+4. **No GPS**: Manual location entry required
+5. **No Real-Time**: Manual data entry
+
+### Areas for Improvement
+
+- Add comprehensive test coverage
+- Implement error boundaries
+- Add loading states for better UX
+- Optimize bundle size
+- Add service worker for offline support
+- Implement data migration system
 
 ## License
 

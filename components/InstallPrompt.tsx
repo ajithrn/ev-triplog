@@ -38,10 +38,10 @@ export default function InstallPrompt() {
       e.preventDefault();
       setDeferredPrompt(e as BeforeInstallPromptEvent);
       
-      // Show prompt after a short delay (2 seconds)
+      // Show prompt after a short delay (500ms)
       setTimeout(() => {
         setShowPrompt(true);
-      }, 2000);
+      }, 500);
     };
 
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
@@ -50,7 +50,7 @@ export default function InstallPrompt() {
     if (iOS && !isInStandaloneMode) {
       setTimeout(() => {
         setShowPrompt(true);
-      }, 2000);
+      }, 500);
     }
 
     return () => {

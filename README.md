@@ -14,6 +14,8 @@ EV Trip Log is designed for electric vehicle owners who want to track their driv
 - **Efficiency Analytics** - Calculate kWh/km, km/kWh, and battery usage metrics for each stretch
 - **Visual Analytics** - View trends, statistics, and performance charts across all trips
 - **Data Export** - Export trip data to CSV, PDF reports, or JSON backup
+- **Progressive Web App (PWA)** - Install on any device and use offline with full functionality
+- **Offline-First** - Works completely offline after first visit, no internet required
 
 ## Tech Stack
 
