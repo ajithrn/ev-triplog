@@ -121,10 +121,56 @@ export function exportAllData(): { vehicles: Vehicle[]; trips: Trip[] } {
   };
 }
 
-// Import all data
+// Import all data (replace mode)
 export function importAllData(data: { vehicles: Vehicle[]; trips: Trip[] }): void {
   saveVehicles(data.vehicles);
   saveTrips(data.trips);
+}
+
+// Merge imported data with existing data
+export function mergeImportedData(data: { vehicles: Vehicle[]; trips: Trip[] }): {
+  vehiclesAdded: number;
+  vehiclesUpdated: number;
+  tripsAdded: number;
+  tripsUpdated: number;
+} {
+  const existingVehicles = getVehicles();
+  const existingTrips = getTrips();
+  
+  let vehiclesAdded = 0;
+  let vehiclesUpdated = 0;
+  let tripsAdded = 0;
+  let tripsUpdated = 0;
+  
+  // Merge vehicles
+  const vehicleMap = new Map(existingVehicles.map(v => [v.id, v]));
+  data.vehicles.forEach(vehicle => {
+    if (vehicleMap.has(vehicle.id)) {
+      vehicleMap.set(vehicle.id, vehicle);
+      vehiclesUpdated++;
+    } else {
+      vehicleMap.set(vehicle.id, vehicle);
+      vehiclesAdded++;
+    }
+  });
+  
+  // Merge trips
+  const tripMap = new Map(existingTrips.map(t => [t.id, t]));
+  data.trips.forEach(trip => {
+    if (tripMap.has(trip.id)) {
+      tripMap.set(trip.id, trip);
+      tripsUpdated++;
+    } else {
+      tripMap.set(trip.id, trip);
+      tripsAdded++;
+    }
+  });
+  
+  // Save merged data
+  saveVehicles(Array.from(vehicleMap.values()));
+  saveTrips(Array.from(tripMap.values()));
+  
+  return { vehiclesAdded, vehiclesUpdated, tripsAdded, tripsUpdated };
 }
 
 // Clear all data

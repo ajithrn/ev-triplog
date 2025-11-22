@@ -3,7 +3,7 @@
 import { useState, useRef } from 'react';
 import { Download, Upload, Trash2, AlertTriangle, CheckCircle, XCircle } from 'lucide-react';
 import { exportAllDataToJSON } from '@/utils/export';
-import { exportAllData, importAllData, clearAllData } from '@/utils/storage';
+import { exportAllData, importAllData, mergeImportedData, clearAllData } from '@/utils/storage';
 import { parseAndValidateJSON } from '@/utils/validation';
 import { useSettings } from '@/contexts/SettingsContext';
 import { format } from 'date-fns';
@@ -11,6 +11,9 @@ import { format } from 'date-fns';
 export default function DataManagement() {
   const { settings, updateSettings } = useSettings();
   const [showClearConfirm, setShowClearConfirm] = useState(false);
+  const [showImportModal, setShowImportModal] = useState(false);
+  const [importMode, setImportMode] = useState<'replace' | 'merge'>('replace');
+  const [pendingImportData, setPendingImportData] = useState<any>(null);
   const [importStatus, setImportStatus] = useState<{
     show: boolean;
     success: boolean;
@@ -40,7 +43,7 @@ export default function DataManagement() {
     setTimeout(() => setImportStatus({ show: false, success: false, message: '' }), 5000);
   };
 
-  const handleImportData = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
@@ -58,24 +61,67 @@ export default function DataManagement() {
         return;
       }
 
-      // Parse and import the data
+      // Parse the data
       const text = await file.text();
       const data = JSON.parse(text);
       
-      importAllData(data);
+      // Store data and show modal
+      setPendingImportData(data);
+      setShowImportModal(true);
+    } catch (error) {
+      setImportStatus({
+        show: true,
+        success: false,
+        message: 'Failed to read file',
+        details: [error instanceof Error ? error.message : 'Unknown error'],
+      });
+    } finally {
+      // Reset file input
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    }
+  };
+
+  const handleConfirmImport = () => {
+    if (!pendingImportData) return;
+
+    try {
+      if (importMode === 'replace') {
+        // Replace all data
+        importAllData(pendingImportData);
+        
+        setImportStatus({
+          show: true,
+          success: true,
+          message: 'Data replaced successfully!',
+          details: [
+            `${pendingImportData.vehicles.length} vehicle(s) imported`,
+            `${pendingImportData.trips.length} trip(s) imported`,
+            'All existing data has been replaced',
+          ],
+        });
+      } else {
+        // Merge data
+        const result = mergeImportedData(pendingImportData);
+        
+        setImportStatus({
+          show: true,
+          success: true,
+          message: 'Data merged successfully!',
+          details: [
+            `Vehicles: ${result.vehiclesAdded} added, ${result.vehiclesUpdated} updated`,
+            `Trips: ${result.tripsAdded} added, ${result.tripsUpdated} updated`,
+          ],
+        });
+      }
       
       // Update last backup date
       updateSettings({ lastBackupDate: Date.now() });
       
-      setImportStatus({
-        show: true,
-        success: true,
-        message: 'Data imported successfully!',
-        details: [
-          `${validationResult.vehiclesImported} vehicle(s) imported`,
-          `${validationResult.tripsImported} trip(s) imported`,
-        ],
-      });
+      // Close modal and reset
+      setShowImportModal(false);
+      setPendingImportData(null);
       
       // Reload the page to reflect changes
       setTimeout(() => {
@@ -88,11 +134,7 @@ export default function DataManagement() {
         message: 'Failed to import data',
         details: [error instanceof Error ? error.message : 'Unknown error'],
       });
-    } finally {
-      // Reset file input
-      if (fileInputRef.current) {
-        fileInputRef.current.value = '';
-      }
+      setShowImportModal(false);
     }
   };
 
@@ -193,7 +235,7 @@ export default function DataManagement() {
               ref={fileInputRef}
               type="file"
               accept=".json"
-              onChange={handleImportData}
+              onChange={handleFileSelect}
               className="hidden"
               id="import-file"
             />
@@ -260,6 +302,111 @@ export default function DataManagement() {
         </div>
       )}
 
+      {/* Import Confirmation Modal */}
+      {showImportModal && pendingImportData && (
+        <div className="modal modal-open">
+          <div className="modal-box max-w-2xl">
+            <div className="flex items-center gap-3 mb-4">
+              <AlertTriangle className="h-8 w-8 text-warning" />
+              <h3 className="font-bold text-lg">Confirm Data Import</h3>
+            </div>
+            
+            <div className="space-y-4">
+              {/* Warning Alert */}
+              <div className="alert alert-warning">
+                <AlertTriangle className="h-5 w-5 flex-shrink-0" />
+                <div className="text-sm">
+                  <div className="font-semibold mb-1">Important:</div>
+                  <p>You are about to import data. Please choose how to proceed:</p>
+                </div>
+              </div>
+
+              {/* Import Mode Selection */}
+              <div className="form-control">
+                <label className="label cursor-pointer justify-start gap-3 p-4 border rounded-lg hover:bg-base-200 transition-colors">
+                  <input
+                    type="radio"
+                    name="import-mode"
+                    className="radio radio-primary"
+                    checked={importMode === 'replace'}
+                    onChange={() => setImportMode('replace')}
+                  />
+                  <div className="flex-1">
+                    <div className="font-semibold">Replace All Data</div>
+                    <div className="text-sm opacity-70">
+                      ⚠️ This will completely replace all existing vehicles and trips with the imported data
+                    </div>
+                  </div>
+                </label>
+              </div>
+
+              <div className="form-control">
+                <label className="label cursor-pointer justify-start gap-3 p-4 border rounded-lg hover:bg-base-200 transition-colors">
+                  <input
+                    type="radio"
+                    name="import-mode"
+                    className="radio radio-primary"
+                    checked={importMode === 'merge'}
+                    onChange={() => setImportMode('merge')}
+                  />
+                  <div className="flex-1">
+                    <div className="font-semibold">Merge with Existing Data</div>
+                    <div className="text-sm opacity-70">
+                      ✓ Keeps existing data and adds/updates from import file (matching IDs will be updated)
+                    </div>
+                  </div>
+                </label>
+              </div>
+
+              {/* Data Preview */}
+              <div className="alert alert-info">
+                <div className="text-sm">
+                  <div className="font-semibold mb-1">Import Preview:</div>
+                  <ul className="list-disc list-inside">
+                    <li>{pendingImportData.vehicles.length} vehicle(s) in file</li>
+                    <li>{pendingImportData.trips.length} trip(s) in file</li>
+                  </ul>
+                </div>
+              </div>
+
+              {/* Replace Mode Warning */}
+              {importMode === 'replace' && (
+                <div className="alert alert-error">
+                  <AlertTriangle className="h-5 w-5 flex-shrink-0" />
+                  <div className="text-sm">
+                    <div className="font-semibold mb-1">⚠️ Data Loss Warning:</div>
+                    <p>All your current vehicles and trips will be permanently deleted and replaced with the imported data. Make sure you have a backup!</p>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="modal-action">
+              <button
+                onClick={() => {
+                  setShowImportModal(false);
+                  setPendingImportData(null);
+                }}
+                className="btn btn-ghost"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleConfirmImport}
+                className={`btn ${importMode === 'replace' ? 'btn-error' : 'btn-primary'}`}
+              >
+                <Upload className="h-4 w-4" />
+                {importMode === 'replace' ? 'Replace All Data' : 'Merge Data'}
+              </button>
+            </div>
+          </div>
+          <div className="modal-backdrop" onClick={() => {
+            setShowImportModal(false);
+            setPendingImportData(null);
+          }}></div>
+        </div>
+      )}
+
       {/* Information */}
       <div className="alert">
         <AlertTriangle className="h-5 w-5" />
@@ -267,7 +414,7 @@ export default function DataManagement() {
           <div className="font-semibold mb-1">Important Notes:</div>
           <ul className="list-disc list-inside space-y-1">
             <li>Export your data regularly to prevent data loss</li>
-            <li>Importing data will replace all existing data</li>
+            <li>You can choose to replace or merge data when importing</li>
             <li>Keep your backup files in a safe location</li>
           </ul>
         </div>
