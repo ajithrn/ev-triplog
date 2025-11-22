@@ -66,7 +66,7 @@ export default function StopForm({ tripId, stop, onCancel }: StopFormProps) {
               onChange={(date) => date && setSelectedDate(date)}
               showTimeSelect
               dateFormat="PPp"
-              className="input input-bordered w-full "
+              className="input input-bordered w-full"
             />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -82,7 +82,7 @@ export default function StopForm({ tripId, stop, onCancel }: StopFormProps) {
                 step="0.1"
                 value={formData.odometer || ''}
                 onChange={handleChange}
-                className="input input-bordered w-full "
+                className="input input-bordered w-full"
               />
             </div>
             <div className="form-control">
@@ -98,7 +98,7 @@ export default function StopForm({ tripId, stop, onCancel }: StopFormProps) {
                 step="0.1"
                 value={formData.batteryPercent || ''}
                 onChange={handleChange}
-                className="input input-bordered w-full "
+                className="input input-bordered w-full"
               />
               {vehicle && formData.batteryPercent > 0 && (
                 <label className="label">
@@ -118,7 +118,7 @@ export default function StopForm({ tripId, stop, onCancel }: StopFormProps) {
               name="location"
               value={formData.location}
               onChange={handleChange}
-              className="input input-bordered w-full "
+              className="input input-bordered w-full"
             />
           </div>
           <div className="form-control">
@@ -130,7 +130,7 @@ export default function StopForm({ tripId, stop, onCancel }: StopFormProps) {
               rows={2}
               value={formData.notes}
               onChange={handleChange}
-              className="textarea textarea-bordered w-full  resize-none"
+              className="textarea textarea-bordered w-full resize-none"
             />
           </div>
           <div className="divider"></div>

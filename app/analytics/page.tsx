@@ -65,12 +65,12 @@ export default function AnalyticsPage() {
     <div className="space-y-6 animate-fade-in">
       {/* Header */}
       <div>
-        <h1 className="text-3xl sm:text-4xl font-bold" style={{ color: 'var(--page-title)' }}>Analytics</h1>
-        <p className="mt-1" style={{ color: 'var(--page-subtitle)' }}>View your EV performance trends and statistics</p>
+        <h1 className="text-3xl sm:text-4xl font-bold text-base-content">Analytics</h1>
+        <p className="mt-1 text-base-content/70">View your EV performance trends and statistics</p>
       </div>
 
       {completedTrips.length === 0 ? (
-        <div className="card bg-base-100 shadow-xl card-hover">
+        <div className="card bg-base-200 shadow-xl card-hover border border-base-300">
           <div className="card-body items-center text-center">
             <BarChart3 className="h-16 w-16 text-primary mb-4" />
             <h2 className="card-title text-2xl">No Data Yet</h2>
@@ -80,45 +80,53 @@ export default function AnalyticsPage() {
       ) : (
         <>
           {/* Stats Grid */}
-          <div className="stats stats-vertical lg:stats-horizontal shadow-xl bg-base-100 w-full">
-            <div className="stat">
-              <div className="flex items-center gap-3 mb-2">
-                <BarChart3 className="h-8 w-8 text-primary" />
-                <div className="stat-title">Total Trips</div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+            <div className="card bg-base-200 shadow-lg border border-base-300">
+              <div className="card-body p-3 sm:p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <BarChart3 className="h-4 w-4 text-primary flex-shrink-0" />
+                  <h3 className="text-xs font-medium text-base-content/70">Total Trips</h3>
+                </div>
+                <p className="text-2xl sm:text-3xl font-bold text-base-content">{totalTrips}</p>
               </div>
-              <div className="stat-value text-primary">{totalTrips}</div>
             </div>
 
-            <div className="stat">
-              <div className="flex items-center gap-3 mb-2">
-                <TrendingUp className="h-8 w-8 text-success" />
-                <div className="stat-title">Distance</div>
+            <div className="card bg-base-200 shadow-lg border border-base-300">
+              <div className="card-body p-3 sm:p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <TrendingUp className="h-4 w-4 text-primary flex-shrink-0" />
+                  <h3 className="text-xs font-medium text-base-content/70">Distance</h3>
+                </div>
+                <p className="text-2xl sm:text-3xl font-bold text-base-content">{totalDistance.toFixed(0)}</p>
+                <p className="text-xs text-base-content/60 mt-1">kilometers</p>
               </div>
-              <div className="stat-value text-success">{totalDistance.toFixed(0)}</div>
-              <div className="stat-desc">kilometers</div>
             </div>
 
-            <div className="stat">
-              <div className="flex items-center gap-3 mb-2">
-                <Battery className="h-8 w-8 text-warning" />
-                <div className="stat-title">Efficiency</div>
+            <div className="card bg-base-200 shadow-lg border border-base-300">
+              <div className="card-body p-3 sm:p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <Battery className="h-4 w-4 text-primary flex-shrink-0" />
+                  <h3 className="text-xs font-medium text-base-content/70">Efficiency</h3>
+                </div>
+                <p className="text-2xl sm:text-3xl font-bold text-base-content">{avgEfficiency > 0 ? (1 / avgEfficiency).toFixed(2) : '0.00'}</p>
+                <p className="text-xs text-base-content/60 mt-1">km/kWh</p>
               </div>
-              <div className="stat-value text-warning">{avgEfficiency > 0 ? (1 / avgEfficiency).toFixed(2) : '0.00'}</div>
-              <div className="stat-desc">km/kWh</div>
             </div>
 
-            <div className="stat">
-              <div className="flex items-center gap-3 mb-2">
-                <DollarSign className="h-8 w-8 text-info" />
-                <div className="stat-title">Charging</div>
+            <div className="card bg-base-200 shadow-lg border border-base-300">
+              <div className="card-body p-3 sm:p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <DollarSign className="h-4 w-4 text-primary flex-shrink-0" />
+                  <h3 className="text-xs font-medium text-base-content/70">Charging</h3>
+                </div>
+                <p className="text-2xl sm:text-3xl font-bold text-base-content">₹{totalChargingCost.toFixed(0)}</p>
+                <p className="text-xs text-base-content/60 mt-1">{totalChargingSessions} sessions</p>
               </div>
-              <div className="stat-value text-info">₹{totalChargingCost.toFixed(0)}</div>
-              <div className="stat-desc">{totalChargingSessions} sessions</div>
             </div>
           </div>
 
           {/* Efficiency Trend Chart */}
-          <div className="card bg-base-100 shadow-xl card-hover">
+          <div className="card bg-base-200 shadow-xl card-hover border border-base-300">
             <div className="card-body">
               <h2 className="card-title">Efficiency Trend</h2>
               <div className="divider mt-0"></div>
@@ -158,7 +166,7 @@ export default function AnalyticsPage() {
           </div>
 
           {/* Distance & Energy Chart */}
-          <div className="card bg-base-100 shadow-xl card-hover">
+          <div className="card bg-base-200 shadow-xl card-hover border border-base-300">
             <div className="card-body">
               <h2 className="card-title">Distance & Energy Usage</h2>
               <div className="divider mt-0"></div>
@@ -187,7 +195,7 @@ export default function AnalyticsPage() {
 
           {/* Vehicle Breakdown */}
           {vehicles.length > 1 && (
-            <div className="card bg-base-100 shadow-xl card-hover">
+            <div className="card bg-base-200 shadow-xl card-hover border border-base-300">
               <div className="card-body">
                 <h2 className="card-title">Vehicle Breakdown</h2>
                 <div className="divider mt-0"></div>
@@ -199,7 +207,7 @@ export default function AnalyticsPage() {
                     const vehicleEfficiency = vehicleDistance > 0 ? vehicleEnergy / vehicleDistance : 0;
 
                     return (
-                      <div key={vehicle.id} className="card ">
+                      <div key={vehicle.id} className="card bg-base-300">
                         <div className="card-body">
                           <h3 className="card-title text-base">{vehicle.name}</h3>
                           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm mt-2">

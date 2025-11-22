@@ -38,8 +38,8 @@ export default function VehiclesPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl sm:text-4xl font-bold" style={{ color: 'var(--page-title)' }}>Vehicles</h1>
-          <p className="mt-1" style={{ color: 'var(--page-subtitle)' }}>Manage your electric vehicles</p>
+          <h1 className="text-3xl sm:text-4xl font-bold text-base-content">Vehicles</h1>
+          <p className="mt-1 text-base-content/70">Manage your electric vehicles</p>
         </div>
         <Link href="/vehicles/new" className="btn btn-primary shadow-lg hover:shadow-xl">
           <Plus className="h-5 w-5" />
@@ -49,10 +49,10 @@ export default function VehiclesPage() {
 
       {/* Vehicles Grid */}
       {vehicles.length === 0 ? (
-        <div className="card bg-base-100 shadow-xl card-hover">
+        <div className="card bg-base-200 shadow-xl card-hover border border-base-300">
           <div className="card-body items-center text-center">
             <Car className="h-16 w-16 text-primary mb-4" />
-            <h2 className="card-title text-2xl">No Vehicles Yet</h2>
+            <h2 className="card-title text-2xl text-base-content">No Vehicles Yet</h2>
             <p className="text-base-content/70">Add your first electric vehicle to start tracking trips</p>
             <div className="card-actions mt-4">
               <Link href="/vehicles/new" className="btn btn-primary">
@@ -65,14 +65,14 @@ export default function VehiclesPage() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {vehicles.map((vehicle) => (
-            <div key={vehicle.id} className="card bg-base-100 shadow-lg card-hover">
+            <div key={vehicle.id} className="card bg-base-200 shadow-lg card-hover border border-base-300">
               <div className="card-body">
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center gap-3">
                     <Car className="h-12 w-12 text-primary" />
                     <div>
-                      <h3 className="card-title text-lg">{vehicle.name}</h3>
-                      <p className="text-sm text-base-content/70">
+                      <h3 className="card-title text-lg text-base-content">{vehicle.name}</h3>
+                      <p className="text-sm text-base-content/60">
                         {vehicle.make} {vehicle.model}
                       </p>
                     </div>
@@ -81,19 +81,19 @@ export default function VehiclesPage() {
 
                 <div className="space-y-3 mb-4">
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-base-content/70">Year</span>
-                    <span className="font-medium">{vehicle.year}</span>
+                    <span className="text-base-content/60">Year</span>
+                    <span className="font-medium text-base-content">{vehicle.year}</span>
                   </div>
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-base-content/70 flex items-center gap-1">
+                    <span className="text-base-content/60 flex items-center gap-1">
                       <Battery className="h-4 w-4" />
                       Battery Capacity
                     </span>
-                    <span className="font-medium">{vehicle.batteryCapacity} kWh</span>
+                    <span className="font-medium text-base-content">{vehicle.batteryCapacity} kWh</span>
                   </div>
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-base-content/70">Added</span>
-                    <span className="font-medium">
+                    <span className="text-base-content/60">Added</span>
+                    <span className="font-medium text-base-content">
                       {format(new Date(vehicle.createdAt), 'PP')}
                     </span>
                   </div>

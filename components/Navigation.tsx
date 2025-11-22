@@ -1,14 +1,39 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import Image from 'next/image';
-import { Car, Map, BarChart3, Menu, X, LayoutDashboard } from 'lucide-react';
+import { Car, Map, BarChart3, Menu, X, LayoutDashboard, Sun, Moon } from 'lucide-react';
 
 export default function Navigation() {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [theme, setTheme] = useState<'light' | 'dark'>('light');
+
+  useEffect(() => {
+    // Get theme from localStorage or follow system preference
+    const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null;
+    
+    if (savedTheme) {
+      // Use saved preference
+      setTheme(savedTheme);
+      document.documentElement.setAttribute('data-theme', savedTheme);
+    } else {
+      // Follow system preference
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const systemTheme = prefersDark ? 'dark' : 'light';
+      setTheme(systemTheme);
+      document.documentElement.setAttribute('data-theme', systemTheme);
+    }
+  }, []);
+
+  const toggleTheme = () => {
+    const newTheme = theme === 'light' ? 'dark' : 'light';
+    setTheme(newTheme);
+    localStorage.setItem('theme', newTheme);
+    document.documentElement.setAttribute('data-theme', newTheme);
+  };
 
   const navItems = [
     { href: '/', label: 'Dashboard', icon: LayoutDashboard },
@@ -49,7 +74,7 @@ export default function Navigation() {
           </div>
           
           {/* Desktop Navigation - Right */}
-          <div className="flex-none hidden md:flex">
+          <div className="flex-none hidden md:flex items-center gap-2">
             <ul className="menu menu-horizontal px-1 gap-2">
               {navItems.map((item) => {
                 const Icon = item.icon;
@@ -73,10 +98,21 @@ export default function Navigation() {
                 );
               })}
             </ul>
+            <button
+              onClick={toggleTheme}
+              className="btn btn-ghost btn-circle"
+              aria-label="Toggle theme"
+            >
+              {theme === 'light' ? (
+                <Moon className="h-5 w-5" />
+              ) : (
+                <Sun className="h-5 w-5" />
+              )}
+            </button>
           </div>
 
               {/* Mobile Menu Button - Right */}
-              <div className="flex-none md:hidden">
+              <div className="flex-none md:hidden flex items-center gap-2">
                 <label htmlFor="mobile-drawer" className="btn-square btn-ghost hover:bg-white/20">
                   {mobileMenuOpen ? (
                     <X className="h-7 w-7" style={{ color: 'var(--nav-text)' }} />
@@ -139,6 +175,26 @@ export default function Navigation() {
               );
             })}
           </ul>
+
+          {/* Theme Toggle in Drawer - At Bottom */}
+          <div className="mt-4 pt-4 border-t border-base-300">
+            <button
+              onClick={toggleTheme}
+              className="btn btn-ghost w-full justify-start gap-4 text-lg py-4"
+            >
+              {theme === 'light' ? (
+                <>
+                  <Moon className="h-6 w-6" />
+                  Dark Mode
+                </>
+              ) : (
+                <>
+                  <Sun className="h-6 w-6" />
+                  Light Mode
+                </>
+              )}
+            </button>
+          </div>
         </div>
       </div>
     </div>

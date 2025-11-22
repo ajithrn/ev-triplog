@@ -86,12 +86,12 @@ export default function NewTripPage() {
           <ArrowLeft className="h-4 w-4" />
           <span>Back to Trips</span>
         </Link>
-        <h1 className="text-3xl sm:text-4xl font-bold" style={{ color: 'var(--page-title)' }}>Start New Trip</h1>
-        <p className="mt-1" style={{ color: 'var(--page-subtitle)' }}>Record your starting point and battery status</p>
+        <h1 className="text-3xl sm:text-4xl font-bold text-base-content">Start New Trip</h1>
+        <p className="mt-1 text-base-content/70">Record your starting point and battery status</p>
       </div>
 
       {/* Form */}
-      <div className="card bg-base-100 shadow-xl">
+      <div className="card bg-base-200 shadow-xl border border-base-300">
         <div className="card-body">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="form-control">
@@ -106,7 +106,7 @@ export default function NewTripPage() {
                 value={formData.name}
                 onChange={handleChange}
                 placeholder="e.g., Weekend Trip, Office Commute"
-                className="input input-bordered w-full "
+                className="input input-bordered w-full"
               />
             </div>
 
@@ -120,7 +120,7 @@ export default function NewTripPage() {
                 required
                 value={formData.vehicleId}
                 onChange={handleChange}
-                className="select select-bordered w-full "
+                className="select select-bordered w-full"
               >
                 <option value="">Choose a vehicle</option>
                 {vehicles.map((vehicle) => (
@@ -140,7 +140,7 @@ export default function NewTripPage() {
                 onChange={(date) => date && setSelectedDate(date)}
                 showTimeSelect
                 dateFormat="PPp"
-                className="input input-bordered w-full "
+                className="input input-bordered w-full"
               />
             </div>
 
@@ -158,7 +158,7 @@ export default function NewTripPage() {
                 value={formData.odometer || ''}
                 onChange={handleChange}
                 placeholder="e.g., 12345.6"
-                className="input input-bordered w-full "
+                className="input input-bordered w-full"
               />
             </div>
 
@@ -176,7 +176,7 @@ export default function NewTripPage() {
                 step="0.1"
                 value={formData.batteryPercent}
                 onChange={handleChange}
-                className="input input-bordered w-full "
+                className="input input-bordered w-full"
               />
               {selectedVehicle && (
                 <label className="label">
@@ -198,7 +198,7 @@ export default function NewTripPage() {
                 value={formData.location}
                 onChange={handleChange}
                 placeholder="e.g., Home, Office"
-                className="input input-bordered w-full "
+                className="input input-bordered w-full"
               />
             </div>
 
@@ -213,7 +213,7 @@ export default function NewTripPage() {
                 value={formData.notes}
                 onChange={handleChange}
                 placeholder="Any notes about this trip..."
-                className="textarea textarea-bordered w-full  resize-none"
+                className="textarea textarea-bordered w-full resize-none"
               />
             </div>
 

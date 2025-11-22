@@ -62,31 +62,31 @@ export default function StopCard({
   };
 
   return (
-    <div className="card bg-base-100 shadow-xl card-hover">
+    <div className="card bg-base-200 shadow-xl card-hover border border-base-300">
       <div className="card-body p-4 sm:p-6">
         <div className="flex items-start justify-between mb-4 gap-2">
           <div className="flex-1 min-w-0">
-            <h3 className="card-title text-sm sm:text-base">{isFirstStop ? 'Starting Point' : `Stop ${index}`}</h3>
-            <p className="text-xs opacity-70">{format(new Date(stop.timestamp), 'PPp')}</p>
+            <h3 className="card-title text-sm sm:text-base text-base-content">{isFirstStop ? 'Starting Point' : `Stop ${index}`}</h3>
+            <p className="text-xs text-base-content/60">{format(new Date(stop.timestamp), 'PPp')}</p>
           </div>
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3 mb-4">
-          <div className="bg-base-200 rounded-lg p-2 sm:p-3">
-            <div className="text-xs opacity-70 mb-1">Odometer</div>
-            <div className="text-sm font-semibold truncate">{stop.odometer} km</div>
+          <div className="bg-base-300 rounded-lg p-2 sm:p-3">
+            <div className="text-xs text-base-content/60 mb-1">Odometer</div>
+            <div className="text-sm font-semibold truncate text-base-content">{stop.odometer} km</div>
           </div>
-          <div className="bg-base-200 rounded-lg p-2 sm:p-3">
-            <div className="text-xs opacity-70 mb-1">Battery %</div>
-            <div className="text-sm font-semibold truncate">{formatBatteryPercent(stop.batteryPercent)}</div>
+          <div className="bg-base-300 rounded-lg p-2 sm:p-3">
+            <div className="text-xs text-base-content/60 mb-1">Battery %</div>
+            <div className="text-sm font-semibold truncate text-base-content">{formatBatteryPercent(stop.batteryPercent)}</div>
           </div>
-          <div className="bg-base-200 rounded-lg p-2 sm:p-3">
-            <div className="text-xs opacity-70 mb-1">Battery kWh</div>
-            <div className="text-sm font-semibold truncate">{formatEnergy(stop.batteryKwh)}</div>
+          <div className="bg-base-300 rounded-lg p-2 sm:p-3">
+            <div className="text-xs text-base-content/60 mb-1">Battery kWh</div>
+            <div className="text-sm font-semibold truncate text-base-content">{formatEnergy(stop.batteryKwh)}</div>
           </div>
-          <div className="bg-base-200 rounded-lg p-2 sm:p-3">
-            <div className="text-xs opacity-70 mb-1">Location</div>
-            <div className="text-xs font-semibold truncate">{stop.location || 'N/A'}</div>
+          <div className="bg-base-300 rounded-lg p-2 sm:p-3">
+            <div className="text-xs text-base-content/60 mb-1">Location</div>
+            <div className="text-xs font-semibold truncate text-base-content">{stop.location || 'N/A'}</div>
           </div>
         </div>
 
@@ -140,13 +140,13 @@ export default function StopCard({
         {/* Charging Session */}
         {stop.chargingSession && !editingCharging && (
           <div className="card bg-success/10 border border-success/20 shadow-lg mt-4">
-            <div className="card-body p-3 sm:p-6">
+            <div className="card-body p-3 sm:p-4">
               <div className="flex items-center justify-between mb-3 gap-2">
                 <div className="flex items-center gap-2 flex-1 min-w-0">
                   <div className="badge badge-success badge-sm">
                     <Zap className="h-3 w-3" />
                   </div>
-                  <h4 className="font-semibold text-xs sm:text-sm">Charging Session</h4>
+                  <h4 className="font-semibold text-sm text-base-content">Charging Session</h4>
                 </div>
                 {isActive && (
                   <div className="flex items-center gap-2 flex-shrink-0">
@@ -168,33 +168,33 @@ export default function StopCard({
                 )}
               </div>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3">
-                <div className="bg-base-200 rounded-lg p-2 sm:p-3">
-                  <div className="text-xs opacity-70 mb-1">SOC</div>
-                  <div className="text-sm font-semibold truncate">
+                <div className="bg-success/5 rounded-lg p-2 sm:p-3">
+                  <div className="text-xs text-base-content/70 mb-1">SOC</div>
+                  <div className="text-sm font-bold text-base-content">
                     {stop.chargingSession.startSoc}% → {stop.chargingSession.endSoc}%
                   </div>
                 </div>
-                <div className="bg-base-200 rounded-lg p-2 sm:p-3">
-                  <div className="text-xs opacity-70 mb-1">Energy Added</div>
-                  <div className="text-sm font-semibold truncate">
+                <div className="bg-success/5 rounded-lg p-2 sm:p-3">
+                  <div className="text-xs text-base-content/70 mb-1">Energy Added</div>
+                  <div className="text-sm font-bold text-base-content">
                     {formatEnergy(calculateChargingEnergy(stop.chargingSession))}
                   </div>
                 </div>
-                <div className="bg-base-200 rounded-lg p-2 sm:p-3">
-                  <div className="text-xs opacity-70 mb-1">Cost</div>
-                  <div className="text-sm font-semibold truncate">
+                <div className="bg-success/5 rounded-lg p-2 sm:p-3">
+                  <div className="text-xs text-base-content/70 mb-1">Cost</div>
+                  <div className="text-sm font-bold text-base-content">
                     {formatCost(stop.chargingSession.cost)}
                   </div>
                 </div>
-                <div className="bg-base-200 rounded-lg p-2 sm:p-3">
-                  <div className="text-xs opacity-70 mb-1">Duration</div>
-                  <div className="text-sm font-semibold truncate">
+                <div className="bg-success/5 rounded-lg p-2 sm:p-3">
+                  <div className="text-xs text-base-content/70 mb-1">Duration</div>
+                  <div className="text-sm font-bold text-base-content">
                     {formatDuration(stop.chargingSession.duration)}
                   </div>
                 </div>
               </div>
-              <div className="alert alert-info mt-2">
-                <span className="text-xs sm:text-sm">Cost per kWh: {formatCost(calculateCostPerKwh(stop.chargingSession))}</span>
+              <div className="bg-success/5 rounded-lg p-2 mt-3">
+                <span className="text-xs sm:text-sm text-base-content/70">Cost per kWh: <span className="font-semibold text-base-content">{formatCost(calculateCostPerKwh(stop.chargingSession))}</span></span>
               </div>
             </div>
           </div>

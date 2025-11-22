@@ -43,17 +43,17 @@ export default function NewVehiclePage() {
           <ArrowLeft className="h-4 w-4" />
           Back to Vehicles
         </Link>
-        <h1 className="text-3xl sm:text-4xl font-bold" style={{ color: 'var(--page-title)' }}>Add New Vehicle</h1>
-        <p className="mt-1" style={{ color: 'var(--page-subtitle)' }}>Enter your electric vehicle details</p>
+        <h1 className="text-3xl sm:text-4xl font-bold text-base-content">Add New Vehicle</h1>
+        <p className="mt-1 text-base-content/70">Enter your electric vehicle details</p>
       </div>
 
       {/* Form */}
-      <div className="card bg-base-100 shadow-xl text-base-content">
+      <div className="card bg-base-200 shadow-xl border border-base-300">
         <div className="card-body">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="form-control">
               <label className="label">
-                <span className="label-text font-medium text-gray-700">Vehicle Name *</span>
+                <span className="label-text font-medium">Vehicle Name *</span>
               </label>
               <input
                 type="text"
@@ -62,14 +62,14 @@ export default function NewVehiclePage() {
                 value={formData.name}
                 onChange={handleChange}
                 placeholder="e.g., My Tesla Model 3"
-                className="input input-bordered w-full bg-white text-gray-900"
+                className="input input-bordered w-full"
               />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="form-control">
                 <label className="label">
-                  <span className="label-text font-medium text-gray-700">Make *</span>
+                  <span className="label-text font-medium">Make *</span>
                 </label>
                 <input
                   type="text"
@@ -78,13 +78,13 @@ export default function NewVehiclePage() {
                   value={formData.make}
                   onChange={handleChange}
                   placeholder="e.g., Tesla"
-                  className="input input-bordered w-full bg-white text-gray-900"
+                  className="input input-bordered w-full"
                 />
               </div>
 
               <div className="form-control">
                 <label className="label">
-                  <span className="label-text font-medium text-gray-700">Model *</span>
+                  <span className="label-text font-medium">Model *</span>
                 </label>
                 <input
                   type="text"
@@ -93,7 +93,7 @@ export default function NewVehiclePage() {
                   value={formData.model}
                   onChange={handleChange}
                   placeholder="e.g., Model 3"
-                  className="input input-bordered w-full bg-white text-gray-900"
+                  className="input input-bordered w-full"
                 />
               </div>
             </div>
@@ -101,7 +101,7 @@ export default function NewVehiclePage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="form-control">
                 <label className="label">
-                  <span className="label-text font-medium text-gray-700">Year *</span>
+                  <span className="label-text font-medium">Year *</span>
                 </label>
                 <input
                   type="number"
@@ -111,13 +111,13 @@ export default function NewVehiclePage() {
                   max={new Date().getFullYear() + 1}
                   value={formData.year}
                   onChange={handleChange}
-                  className="input input-bordered w-full bg-white text-gray-900"
+                  className="input input-bordered w-full"
                 />
               </div>
 
               <div className="form-control">
                 <label className="label">
-                  <span className="label-text font-medium text-gray-700">Battery Capacity (kWh) *</span>
+                  <span className="label-text font-medium">Battery Capacity (kWh) *</span>
                 </label>
                 <input
                   type="number"
@@ -128,14 +128,14 @@ export default function NewVehiclePage() {
                   value={formData.batteryCapacity || ''}
                   onChange={handleChange}
                   placeholder="e.g., 75"
-                  className="input input-bordered w-full bg-white text-gray-900"
+                  className="input input-bordered w-full"
                 />
               </div>
             </div>
 
             <div className="form-control">
               <label className="label">
-                <span className="label-text font-medium text-gray-700">Charging Efficiency (%) *</span>
+                <span className="label-text font-medium">Charging Efficiency (%) *</span>
               </label>
               <input
                 type="number"
@@ -146,10 +146,10 @@ export default function NewVehiclePage() {
                 step="0.1"
                 value={formData.chargingEfficiency || ''}
                 onChange={handleChange}
-                className="input input-bordered w-full bg-white text-gray-900"
+                className="input input-bordered w-full"
               />
               <label className="label">
-                <span className="label-text-alt text-gray-600">
+                <span className="label-text-alt">
                   Typical: 85-90%. For a {formData.batteryCapacity || 53} kWh battery at {formData.chargingEfficiency}% efficiency, 
                   full charge requires ~{formData.batteryCapacity && formData.chargingEfficiency ? (formData.batteryCapacity / (formData.chargingEfficiency / 100)).toFixed(1) : '60'} kWh from charger
                 </span>

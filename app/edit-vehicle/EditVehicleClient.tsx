@@ -90,12 +90,12 @@ export default function EditVehicleClient() {
           <ArrowLeft className="h-4 w-4" />
           Back to Vehicles
         </Link>
-        <h1 className="text-3xl sm:text-4xl font-bold" style={{ color: 'var(--page-title)' }}>Edit Vehicle</h1>
-        <p className="mt-1" style={{ color: 'var(--page-subtitle)' }}>Update your vehicle details</p>
+        <h1 className="text-3xl sm:text-4xl font-bold text-base-content">Edit Vehicle</h1>
+        <p className="mt-1 text-base-content/70">Update your vehicle details</p>
       </div>
 
       {/* Form */}
-      <div className="card bg-base-100 shadow-xl">
+      <div className="card bg-base-200 shadow-xl border border-base-300">
         <div className="card-body">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="form-control">
@@ -125,7 +125,7 @@ export default function EditVehicleClient() {
                   value={formData.make}
                   onChange={handleChange}
                   placeholder="e.g., Tesla"
-                  className="input input-bordered w-full "
+                  className="input input-bordered w-full"
                 />
               </div>
 
@@ -140,7 +140,7 @@ export default function EditVehicleClient() {
                   value={formData.model}
                   onChange={handleChange}
                   placeholder="e.g., Model 3"
-                  className="input input-bordered w-full "
+                  className="input input-bordered w-full"
                 />
               </div>
             </div>
@@ -158,7 +158,7 @@ export default function EditVehicleClient() {
                   max={new Date().getFullYear() + 1}
                   value={formData.year}
                   onChange={handleChange}
-                  className="input input-bordered w-full "
+                  className="input input-bordered w-full"
                 />
               </div>
 
@@ -175,7 +175,7 @@ export default function EditVehicleClient() {
                   value={formData.batteryCapacity || ''}
                   onChange={handleChange}
                   placeholder="e.g., 75"
-                  className="input input-bordered w-full "
+                  className="input input-bordered w-full"
                 />
               </div>
             </div>
@@ -193,7 +193,7 @@ export default function EditVehicleClient() {
                 step="0.1"
                 value={formData.chargingEfficiency || ''}
                 onChange={handleChange}
-                className="input input-bordered w-full "
+                className="input input-bordered w-full"
               />
               <label className="label">
                 <span className="label-text-alt">

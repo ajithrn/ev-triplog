@@ -79,25 +79,24 @@ export default function ChargingForm({
   const costPerKwhFromCharger = estimatedUnitsFromCharger > 0 && formData.cost > 0 ? formData.cost / estimatedUnitsFromCharger : 0;
 
   return (
-    <div className="card bg-success/10 border border-success/20 shadow-lg mt-4">
+    <div className="card bg-base-200 border border-base-300 shadow-lg mt-4">
       <div className="card-body">
-        <h4 className="card-title text-base">{session ? 'Edit Charging Session' : 'Add Charging Session'}</h4>
+        <h4 className="card-title text-base text-base-content">{session ? 'Edit Charging Session' : 'Add Charging Session'}</h4>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="alert alert-info">
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
-              <div>
-                <p className="opacity-70">Starting SOC</p>
-                <p className="font-semibold">{currentBatteryPercent.toFixed(1)}% ({currentBatteryKwh.toFixed(2)} kWh)</p>
-              </div>
-              <div>
-                <p className="opacity-70">Energy to Battery</p>
-                <p className="font-semibold text-success">{energyAdded.toFixed(2)} kWh</p>
-              </div>
-              <div>
-                <p className="opacity-70">Est. Units from Charger</p>
-                <p className="font-semibold">{estimatedUnitsFromCharger.toFixed(2)} kWh</p>
-                <p className="text-xs opacity-70">({chargingEfficiency}% efficiency)</p>
-              </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div className="bg-base-300 rounded-lg p-3">
+              <p className="text-xs text-base-content/70 mb-1">Starting SOC</p>
+              <p className="text-xl font-bold text-base-content">{currentBatteryPercent.toFixed(1)}%</p>
+              <p className="text-xs text-base-content/60 mt-1">{currentBatteryKwh.toFixed(2)} kWh</p>
+            </div>
+            <div className="bg-base-300 rounded-lg p-3">
+              <p className="text-xs text-base-content/70 mb-1">Energy to Battery</p>
+              <p className="text-xl font-bold text-base-content">{energyAdded.toFixed(2)} kWh</p>
+            </div>
+            <div className="bg-base-300 rounded-lg p-3">
+              <p className="text-xs text-base-content/70 mb-1">Est. Units from Charger</p>
+              <p className="text-xl font-bold text-base-content">{estimatedUnitsFromCharger.toFixed(2)} kWh</p>
+              <p className="text-xs text-base-content/60 mt-1">{chargingEfficiency}% efficiency</p>
             </div>
           </div>
 
@@ -115,7 +114,7 @@ export default function ChargingForm({
                 step="0.1"
                 value={formData.endSoc}
                 onChange={handleChange}
-                className="input input-bordered w-full "
+                className="input input-bordered w-full"
               />
               <label className="label">
                 <span className="label-text-alt">
@@ -136,7 +135,7 @@ export default function ChargingForm({
                 value={formData.unitsConsumed || ''}
                 onChange={handleChange}
                 placeholder="From charger display"
-                className="input input-bordered w-full "
+                className="input input-bordered w-full"
               />
               {formData.unitsConsumed > 0 && (
                 <label className="label">
@@ -162,7 +161,7 @@ export default function ChargingForm({
                 step="0.01"
                 value={formData.cost || ''}
                 onChange={handleChange}
-                className="input input-bordered w-full "
+                className="input input-bordered w-full"
               />
               {costPerKwh > 0 && (
                 <label className="label">
@@ -183,7 +182,7 @@ export default function ChargingForm({
                 min="0"
                 value={formData.duration || ''}
                 onChange={handleChange}
-                className="input input-bordered w-full "
+                className="input input-bordered w-full"
               />
             </div>
             <div className="form-control">
@@ -196,7 +195,7 @@ export default function ChargingForm({
                 value={formData.chargerType}
                 onChange={handleChange}
                 placeholder="e.g., DC Fast"
-                className="input input-bordered w-full "
+                className="input input-bordered w-full"
               />
             </div>
             <div className="form-control">
@@ -209,7 +208,7 @@ export default function ChargingForm({
                 value={formData.location}
                 onChange={handleChange}
                 placeholder="e.g., Station A"
-                className="input input-bordered w-full "
+                className="input input-bordered w-full"
               />
             </div>
           </div>

@@ -38,8 +38,8 @@ export default function TripsPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl sm:text-4xl font-bold" style={{ color: 'var(--page-title)' }}>Trips</h1>
-          <p className="mt-1" style={{ color: 'var(--page-subtitle)' }}>View and manage your trip history</p>
+          <h1 className="text-3xl sm:text-4xl font-bold text-base-content">Trips</h1>
+          <p className="mt-1 text-base-content/70">View and manage your trip history</p>
         </div>
         {vehicles.length > 0 && (
           <Link href="/trips/new" className="btn btn-primary shadow-lg hover:shadow-xl">
@@ -51,10 +51,10 @@ export default function TripsPage() {
 
       {/* No vehicles message */}
       {vehicles.length === 0 && (
-        <div className="card bg-base-100 shadow-xl card-hover">
+        <div className="card bg-base-200 shadow-xl card-hover border border-base-300">
           <div className="card-body items-center text-center">
             <Car className="h-16 w-16 text-primary mb-4" />
-            <h2 className="card-title text-2xl">No Vehicles Yet</h2>
+            <h2 className="card-title text-2xl text-base-content">No Vehicles Yet</h2>
             <p className="text-base-content/70">Add a vehicle first to start tracking trips</p>
             <div className="card-actions mt-4">
               <Link href="/vehicles/new" className="btn btn-primary">
@@ -69,13 +69,13 @@ export default function TripsPage() {
       {vehicles.length > 0 && (
         <>
           {/* Filter Tabs */}
-          <div role="tablist" className="tabs bg-base-100 p-2 rounded-l shadow-lg">
+          <div role="tablist" className="tabs bg-base-200 p-2 rounded-lg shadow-lg border border-base-300">
             <a
               role="tab"
               className={`tab rounded-lg transition-all ${
                 filter === 'all' 
-                  ? 'bg-primary/10 text-primary' 
-                  : 'hover:'
+                  ? 'bg-primary text-primary-content' 
+                  : 'hover:bg-base-200'
               }`}
               onClick={() => setFilter('all')}
             >
@@ -85,8 +85,8 @@ export default function TripsPage() {
               role="tab"
               className={`tab rounded-lg transition-all ${
                 filter === 'active' 
-                  ? 'bg-primary/10 text-primary' 
-                  : 'hover:'
+                  ? 'bg-primary text-primary-content' 
+                  : 'hover:bg-base-200'
               }`}
               onClick={() => setFilter('active')}
             >
@@ -96,8 +96,8 @@ export default function TripsPage() {
               role="tab"
               className={`tab rounded-lg transition-all ${
                 filter === 'completed' 
-                  ? 'bg-primary/10 text-primary' 
-                  : 'hover:'
+                  ? 'bg-primary text-primary-content' 
+                  : 'hover:bg-base-200'
               }`}
               onClick={() => setFilter('completed')}
             >
@@ -107,10 +107,10 @@ export default function TripsPage() {
 
           {/* Trips List */}
           {sortedTrips.length === 0 ? (
-            <div className="card bg-base-100 shadow-xl card-hover">
+            <div className="card bg-base-200 shadow-xl card-hover border border-base-300">
               <div className="card-body items-center text-center">
                 <MapPin className="h-16 w-16 text-primary mb-4" />
-                <h2 className="card-title text-2xl">No Trips Yet</h2>
+                <h2 className="card-title text-2xl text-base-content">No Trips Yet</h2>
                 <p className="text-base-content/70">Start your first trip to begin tracking</p>
                 <div className="card-actions mt-4">
                   <Link href="/trips/new" className="btn btn-primary">
@@ -132,15 +132,11 @@ export default function TripsPage() {
                   <Link
                     key={trip.id}
                     href={`/trip-details?id=${trip.id}`}
-                    className={`card shadow-lg card-hover ${
+                    className={`card bg-base-200 shadow-lg card-hover border ${
                       trip.status === 'active' 
                         ? 'border-2 border-primary' 
-                        : 'bg-base-100'
+                        : 'border-base-300'
                     }`}
-                    style={trip.status === 'active' ? { 
-                      backgroundColor: 'var(--card-bg)',
-                      borderColor: 'var(--color-primary)'
-                    } : undefined}
                   >
                     <div className="card-body p-4">
                       <div className="flex items-center gap-3 mb-3">
@@ -149,72 +145,74 @@ export default function TripsPage() {
                         }`} />
                         <div className="flex-1">
                           <div className="flex items-center gap-2">
-                            <h3 className="font-semibold text-base line-clamp-1">
+                            <h3 className="font-semibold text-base line-clamp-1 text-base-content">
                               {trip.name}
                             </h3>
                             {trip.status === 'active' && (
                               <div className="badge badge-primary badge-sm">Active</div>
                             )}
                           </div>
-                          <div className="flex items-center gap-2 text-xs text-base-content/70 mt-1">
+                          <div className="flex items-center gap-2 text-xs text-base-content/60 mt-1">
                             <Car className="h-3 w-3" />
                             <span className="line-clamp-1">{vehicle?.name || 'Unknown Vehicle'}</span>
                           </div>
                         </div>
                       </div>
-                      <div className="flex items-center gap-2 text-xs text-base-content/70 mb-3">
+                      <div className="flex items-center gap-2 text-xs text-base-content/60 mb-3">
                         <Calendar className="h-3 w-3" />
                         <span>{format(new Date(trip.startDate), 'PP')}</span>
                       </div>
-                      <div className="stats stats-vertical shadow-sm bg-base-200/30 w-full">
-                        <div className="stat p-2">
-                          <div className="stat-figure text-primary">
-                            <MapPin className="h-5 w-5" />
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between p-2 bg-base-300 rounded-lg">
+                          <div className="flex items-center gap-2">
+                            <MapPin className="h-4 w-4 text-primary flex-shrink-0" />
+                            <span className="text-xs font-medium text-base-content/70">Distance</span>
                           </div>
-                          <div className="stat-title text-xs">Distance</div>
-                          <div className="stat-value text-sm">{formatDistance(trip.totalDistance)}</div>
+                          <span className="text-sm font-bold text-base-content">{formatDistance(trip.totalDistance)}</span>
                         </div>
-                        <div className="stat p-2">
-                          <div className="stat-figure text-secondary">
-                            <Battery className="h-5 w-5" />
+                        <div className="flex items-center justify-between p-2 bg-base-300 rounded-lg">
+                          <div className="flex items-center gap-2">
+                            <Battery className="h-4 w-4 text-primary flex-shrink-0" />
+                            <span className="text-xs font-medium text-base-content/70">Energy</span>
                           </div>
-                          <div className="stat-title text-xs">Energy</div>
-                          <div className="stat-value text-sm">{formatEnergy(trip.totalEnergyUsed)}</div>
+                          <span className="text-sm font-bold text-base-content">{formatEnergy(trip.totalEnergyUsed)}</span>
                         </div>
-                        <div className="stat p-2">
-                          <div className="stat-figure text-accent">
-                            <Zap className="h-5 w-5" />
+                        <div className="flex items-center justify-between p-2 bg-base-300 rounded-lg">
+                          <div className="flex items-center gap-2">
+                            <Zap className="h-4 w-4 text-primary flex-shrink-0" />
+                            <span className="text-xs font-medium text-base-content/70">Efficiency</span>
                           </div>
-                          <div className="stat-title text-xs">Efficiency</div>
-                          <div className="stat-value text-sm">
-                            {trip.averageEfficiency > 0
-                              ? `${(1 / trip.averageEfficiency).toFixed(2)} km/kWh`
-                              : 'N/A'}
+                          <div className="text-right">
+                            <span className="text-sm font-bold text-base-content">
+                              {trip.averageEfficiency > 0
+                                ? `${(1 / trip.averageEfficiency).toFixed(2)} km/kWh`
+                                : 'N/A'}
+                            </span>
+                            {trip.stops.length >= 2 && vehicle && (() => {
+                              const kmPerKwh = trip.averageEfficiency > 0 ? 1 / trip.averageEfficiency : 0;
+                              const kwhPerPercent = vehicle.batteryCapacity / 100;
+                              const kmPerPercent = kmPerKwh * kwhPerPercent;
+                              return kmPerPercent > 0 ? (
+                                <div className="text-[10px] text-base-content/60">
+                                  {kmPerPercent.toFixed(2)} km/%
+                                </div>
+                              ) : null;
+                            })()}
                           </div>
-                          {trip.stops.length >= 2 && vehicle && (() => {
-                            const kmPerKwh = trip.averageEfficiency > 0 ? 1 / trip.averageEfficiency : 0;
-                            const kwhPerPercent = vehicle.batteryCapacity / 100;
-                            const kmPerPercent = kmPerKwh * kwhPerPercent;
-                            return kmPerPercent > 0 ? (
-                              <div className="stat-desc text-xs opacity-70 mt-1">
-                                {kmPerPercent.toFixed(2)} km/%
-                              </div>
-                            ) : null;
-                          })()}
                         </div>
-                        <div className="stat p-2">
-                          <div className="stat-figure text-warning">
-                            <DollarSign className="h-5 w-5" />
+                        <div className="flex items-center justify-between p-2 bg-base-300 rounded-lg">
+                          <div className="flex items-center gap-2">
+                            <DollarSign className="h-4 w-4 text-primary flex-shrink-0" />
+                            <span className="text-xs font-medium text-base-content/70">Cost</span>
                           </div>
-                          <div className="stat-title text-xs">Cost</div>
-                          <div className="stat-value text-sm">₹{totalChargingCost.toFixed(2)}</div>
+                          <span className="text-sm font-bold text-base-content">₹{totalChargingCost.toFixed(2)}</span>
                         </div>
-                        <div className="stat p-2">
-                          <div className="stat-figure text-success">
-                            <MapPin className="h-5 w-5" />
+                        <div className="flex items-center justify-between p-2 bg-base-300 rounded-lg">
+                          <div className="flex items-center gap-2">
+                            <MapPin className="h-4 w-4 text-primary flex-shrink-0" />
+                            <span className="text-xs font-medium text-base-content/70">Stops</span>
                           </div>
-                          <div className="stat-title text-xs">Stops</div>
-                          <div className="stat-value text-sm">{trip.stops.length}</div>
+                          <span className="text-sm font-bold text-base-content">{trip.stops.length}</span>
                         </div>
                       </div>
                     </div>

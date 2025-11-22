@@ -3,153 +3,28 @@
 
 @plugin "daisyui";
 
-@theme {
-  --color-primary: #667eea;
-  --color-secondary: #764ba2;
-  --color-accent: #3b82f6;
-  --color-neutral: #1f2937;
-  --color-base-100: #ffffff;
-  --color-base-200: #f8fafc;
-  --color-base-300: #e2e8f0;
-  --color-info: #3b82f6;
-  --color-success: #10b981;
-  --color-warning: #f59e0b;
-  --color-error: #ef4444;
-}
-
-:root {
-  --background: #f8fafc;
-  --foreground: #0f172a;
-  --card-bg: #ffffff;
-  --card-text: #1f2937;
-  --nav-bg: #ffffff;
-  --nav-text: #1f2937;
-  --page-title: #1f2937;
-  --page-subtitle: #475569;
-  --input-bg: #ffffff;
-  --input-text: #1f2937;
-  --input-border: #e2e8f0;
-  --border-color: rgba(0, 0, 0, 0.1);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-    --card-bg: #1e293b;
-    --card-text: #f1f5f9;
-    --nav-bg: #1e293b;
-    --nav-text: #f1f5f9;
-    --page-title: #f1f5f9;
-    --page-subtitle: #e2e8f0;
-    --input-bg: #334155;
-    --input-text: #f1f5f9;
-    --input-border: #475569;
-    --border-color: rgba(255, 255, 255, 0.1);
-  }
-}
-
+/* Let DaisyUI handle theming */
 body {
-  background-color: #1e293b;
-  color: var(--foreground);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
   min-height: 100vh;
-  position: relative;
-}
-
-@media (prefers-color-scheme: light) {
-  body {
-    background-color: #f1f5f9;
-  }
 }
 
 
 /* Custom hover effect for cards */
 .card-hover {
-  transition: box-shadow 0.3s ease;
+  transition: background-color 0.4s ease-in-out;
 }
 
 .card-hover:hover {
-  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.08);
+  background-color: rgba(0, 0, 0, 0.03);
 }
 
-@media (prefers-color-scheme: dark) {
-  .card-hover:hover {
-    box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.2);
-  }
+/* Dark mode hover effect */
+[data-theme="dark"] .card-hover:hover {
+  background-color: rgba(255, 255, 255, 0.03);
 }
 
-/* Card styling for light and dark modes */
-.card {
-  background-color: var(--card-bg) !important;
-  color: var(--card-text) !important;
-  border: 1px solid var(--border-color);
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
-}
-
-@media (prefers-color-scheme: dark) {
-  .card {
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.15);
-  }
-}
-
-.card-title {
-  color: var(--card-text) !important;
-}
-
-.card-body {
-  color: var(--card-text) !important;
-}
-
-/* Base content colors */
-.text-base-content {
-  color: var(--card-text) !important;
-}
-
-.text-base-content\/70 {
-  color: var(--card-text) !important;
-  opacity: 0.7;
-}
-
-.text-base-content\/80 {
-  color: var(--card-text) !important;
-  opacity: 0.8;
-}
-
-/* Stats styling */
-.stats {
-  background-color: var(--card-bg) !important;
-  border: 1px solid var(--border-color);
-}
-
-.stat {
-  color: var(--card-text) !important;
-}
-
-.stat-title {
-  color: var(--card-text) !important;
-  opacity: 0.7;
-}
-
-.stat-value {
-  color: var(--card-text) !important;
-}
-
-.stat-desc {
-  color: var(--card-text) !important;
-  opacity: 0.6;
-}
-
-/* Navigation styling */
-.navbar {
-  background: transparent !important;
-  border-color: var(--border-color) !important;
-}
-
-/* Drawer styling */
-.drawer-side .menu {
-  background-color: var(--nav-bg) !important;
-}
+/* Let DaisyUI handle stats styling */
 
 /* Smooth scrolling */
 html {
@@ -192,61 +67,8 @@ html {
   animation: fadeIn 0.5s ease-out;
 }
 
-/* Input field styling for light and dark modes */
-input[type="text"],
-input[type="email"],
-input[type="number"],
-input[type="date"],
-input[type="datetime-local"],
-input[type="time"],
-textarea,
-select {
-  background-color: var(--input-bg) !important;
-  color: var(--input-text) !important;
-  border-color: var(--input-border) !important;
-}
-
-input[type="text"]:focus,
-input[type="email"]:focus,
-input[type="number"]:focus,
-input[type="date"]:focus,
-input[type="datetime-local"]:focus,
-input[type="time"]:focus,
-textarea:focus,
-select:focus {
-  background-color: var(--input-bg) !important;
-  color: var(--input-text) !important;
-  border-color: var(--color-primary) !important;
-  outline: none;
-}
-
-/* DaisyUI input overrides */
-.input,
-.textarea,
-.select {
-  background-color: var(--input-bg) !important;
-  color: var(--input-text) !important;
-  border-color: var(--input-border) !important;
-}
-
-.input:focus,
-.textarea:focus,
-.select:focus {
-  background-color: var(--input-bg) !important;
-  color: var(--input-text) !important;
-  border-color: var(--color-primary) !important;
-  outline: 2px solid transparent;
-  outline-offset: 2px;
-}
-
-/* Label styling */
-.label-text {
-  color: var(--card-text) !important;
-}
-
+/* Label text wrapping */
 .label-text-alt {
-  color: var(--card-text) !important;
-  opacity: 0.7;
   white-space: normal !important;
   word-wrap: break-word !important;
   overflow-wrap: break-word !important;
@@ -255,13 +77,6 @@ select:focus {
 /* React Datepicker custom styles */
 .react-datepicker-wrapper {
   width: 100%;
-}
-
-.react-datepicker__input-container input {
-  width: 100%;
-  background-color: var(--input-bg) !important;
-  color: var(--input-text) !important;
-  border-color: var(--input-border) !important;
 }
 
 /* Mobile-specific improvements */
@@ -305,17 +120,6 @@ select:focus {
   .drawer-side .menu {
     width: 80vw;
     max-width: 320px;
-  }
-}
-
-/* Background colors for data boxes */
-.bg-base-200 {
-  background-color: var(--color-base-200) !important;
-}
-
-@media (prefers-color-scheme: dark) {
-  .bg-base-200 {
-    background-color: #334155 !important;
   }
 }
 

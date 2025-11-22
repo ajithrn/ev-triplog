@@ -60,8 +60,8 @@ export default function Dashboard() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl sm:text-4xl font-bold" style={{ color: 'var(--page-title)' }}>Dashboard</h1>
-          <p className="mt-1" style={{ color: 'var(--page-subtitle)' }}>Track your EV trips and efficiency</p>
+          <h1 className="text-3xl sm:text-4xl font-bold text-base-content">Dashboard</h1>
+          <p className="mt-1 text-base-content/70">Track your EV trips and efficiency</p>
         </div>
         {vehicles.length === 0 ? (
           <Link
@@ -84,10 +84,10 @@ export default function Dashboard() {
 
       {/* No vehicles message */}
       {vehicles.length === 0 && (
-        <div className="card bg-base-100 shadow-xl card-hover">
+        <div className="card bg-base-200 shadow-xl card-hover border border-base-300">
           <div className="card-body items-center text-center">
             <Car className="h-16 w-16 text-primary mb-4" />
-            <h2 className="card-title text-2xl">No Vehicles Yet</h2>
+            <h2 className="card-title text-2xl text-base-content">No Vehicles Yet</h2>
             <p className="text-base-content/70">Add your first vehicle to start tracking trips</p>
             <div className="card-actions mt-4">
               <Link href="/vehicles/new" className="btn btn-primary">
@@ -103,119 +103,96 @@ export default function Dashboard() {
         <>
           {/* Active Trip Card */}
           {activeTrip && (
-            <div className="card bg-base-100 shadow-xl">
-              <div className="card-body">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
-                  <div className="flex items-center gap-3">
-                    <MapPin className="h-12 w-12 text-primary" />
-                    <div>
-                      <h2 className="card-title text-2xl">{activeTrip.name || 'Active Trip'}</h2>
-                      <p className="text-sm text-base-content/70">Currently in progress</p>
-                    </div>
-                  </div>
-                  <Link href={`/trip-details?id=${activeTrip.id}`} className="btn btn-primary">
-                    View Details
-                  </Link>
+            <Link 
+              href={`/trip-details?id=${activeTrip.id}`}
+              className="alert alert-info shadow-lg hover:shadow-xl transition-all cursor-pointer"
+            >
+              <MapPin className="h-8 w-8 sm:h-10 sm:w-10 flex-shrink-0" />
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 mb-1">
+                  <h3 className="font-bold text-sm sm:text-lg truncate">{activeTrip.name || 'Active Trip'}</h3>
+                  <div className="badge badge-primary badge-sm">Active</div>
                 </div>
-                <div className="stats stats-vertical sm:grid sm:grid-cols-2 lg:grid-cols-4 shadow-lg bg-base-100 w-full">
-                  <div className="stat">
-                    <div className="flex items-center gap-3 mb-2">
-                      <Calendar className="h-8 w-8 text-info" />
-                      <div className="stat-title">Started</div>
-                    </div>
-                    <div className="stat-value text-2xl">{format(new Date(activeTrip.startDate), 'PP')}</div>
-                    <div className="stat-desc">{format(new Date(activeTrip.startDate), 'p')}</div>
-                  </div>
-                  <div className="stat">
-                    <div className="flex items-center gap-3 mb-2">
-                      <MapPin className="h-8 w-8 text-primary" />
-                      <div className="stat-title">Distance</div>
-                    </div>
-                    <div className="stat-value">{activeTrip.totalDistance.toFixed(1)}</div>
-                    <div className="stat-desc">kilometers</div>
-                  </div>
-                  <div className="stat">
-                    <div className="flex items-center gap-3 mb-2">
-                      <Battery className="h-8 w-8 text-secondary" />
-                      <div className="stat-title">Energy</div>
-                    </div>
-                    <div className="stat-value">{activeTrip.totalEnergyUsed.toFixed(2)}</div>
-                    <div className="stat-desc">kWh used</div>
-                  </div>
-                  <div className="stat">
-                    <div className="flex items-center gap-3 mb-2">
-                      <MapPin className="h-8 w-8 text-success" />
-                      <div className="stat-title">Stops</div>
-                    </div>
-                    <div className="stat-value">{activeTrip.stops.length}</div>
-                    <div className="stat-desc">total stops</div>
-                  </div>
-                </div>
+                <p className="text-xs sm:text-sm opacity-80">
+                  Started {format(new Date(activeTrip.startDate), 'PP')} • Click to manage trip
+                </p>
               </div>
-            </div>
+            </Link>
           )}
 
           {/* Stats Grid */}
-          <div className="stats stats-vertical sm:grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 shadow-xl bg-base-100 w-full">
-            <div className="stat">
-              <div className="flex items-center gap-3 mb-2">
-                <MapPin className="h-8 w-8 text-primary" />
-                <div className="stat-title">Total Trips</div>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
+            <div className="card bg-base-200 shadow-lg border border-base-300">
+              <div className="card-body p-3 sm:p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <MapPin className="h-4 w-4 text-primary flex-shrink-0" />
+                  <h3 className="text-xs font-medium text-base-content/70">Total Trips</h3>
+                </div>
+                <p className="text-2xl sm:text-3xl font-bold text-base-content">{completedTrips.length}</p>
               </div>
-              <div className="stat-value">{completedTrips.length}</div>
             </div>
 
-            <div className="stat">
-              <div className="flex items-center gap-3 mb-2">
-                <TrendingUp className="h-8 w-8 text-success" />
-                <div className="stat-title">Distance</div>
+            <div className="card bg-base-200 shadow-lg border border-base-300">
+              <div className="card-body p-3 sm:p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <TrendingUp className="h-4 w-4 text-primary flex-shrink-0" />
+                  <h3 className="text-xs font-medium text-base-content/70">Distance</h3>
+                </div>
+                <p className="text-2xl sm:text-3xl font-bold text-base-content">{totalDistance.toFixed(0)}</p>
+                <p className="text-xs text-base-content/60 mt-1">kilometers</p>
               </div>
-              <div className="stat-value">{totalDistance.toFixed(0)}</div>
-              <div className="stat-desc">kilometers</div>
             </div>
 
-            <div className="stat">
-              <div className="flex items-center gap-3 mb-2">
-                <Battery className="h-8 w-8 text-warning" />
-                <div className="stat-title">Energy</div>
+            <div className="card bg-base-200 shadow-lg border border-base-300">
+              <div className="card-body p-3 sm:p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <Battery className="h-4 w-4 text-primary flex-shrink-0" />
+                  <h3 className="text-xs font-medium text-base-content/70">Energy</h3>
+                </div>
+                <p className="text-2xl sm:text-3xl font-bold text-base-content">{totalEnergy.toFixed(1)}</p>
+                <p className="text-xs text-base-content/60 mt-1">kWh used</p>
               </div>
-              <div className="stat-value">{totalEnergy.toFixed(1)}</div>
-              <div className="stat-desc">kWh used</div>
             </div>
 
-            <div className="stat">
-              <div className="flex items-center gap-3 mb-2">
-                <Zap className="h-8 w-8 text-info" />
-                <div className="stat-title">Efficiency</div>
+            <div className="card bg-base-200 shadow-lg border border-base-300">
+              <div className="card-body p-3 sm:p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <Zap className="h-4 w-4 text-primary flex-shrink-0" />
+                  <h3 className="text-xs font-medium text-base-content/70">Efficiency</h3>
+                </div>
+                <p className="text-2xl sm:text-3xl font-bold text-base-content">{avgEfficiency > 0 ? (1 / avgEfficiency).toFixed(2) : '0.00'}</p>
+                <p className="text-xs text-base-content/60 mt-1">{kmPerPercent > 0 ? `${kmPerPercent.toFixed(2)} km/%` : 'km/kWh'}</p>
               </div>
-              <div className="stat-value">{avgEfficiency > 0 ? (1 / avgEfficiency).toFixed(2) : '0.00'}</div>
-              <div className="stat-desc">{kmPerPercent > 0 ? `km/kWh (${kmPerPercent.toFixed(2)} km/%)` : 'km/kWh'}</div>
             </div>
 
-            <div className="stat">
-              <div className="flex items-center gap-3 mb-2">
-                <DollarSign className="h-8 w-8 text-accent" />
-                <div className="stat-title">Charging Cost</div>
+            <div className="card bg-base-200 shadow-lg border border-base-300">
+              <div className="card-body p-3 sm:p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <DollarSign className="h-4 w-4 text-primary flex-shrink-0" />
+                  <h3 className="text-xs font-medium text-base-content/70">Charging Cost</h3>
+                </div>
+                <p className="text-2xl sm:text-3xl font-bold text-base-content">₹{totalChargingCost.toFixed(0)}</p>
+                <p className="text-xs text-base-content/60 mt-1">total cost</p>
               </div>
-              <div className="stat-value">₹{totalChargingCost.toFixed(0)}</div>
-              <div className="stat-desc">total charging cost</div>
             </div>
 
-            <div className="stat">
-              <div className="flex items-center gap-3 mb-2">
-                <DollarSign className="h-8 w-8 text-secondary" />
-                <div className="stat-title">Cost per km</div>
+            <div className="card bg-base-200 shadow-lg border border-base-300">
+              <div className="card-body p-3 sm:p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <DollarSign className="h-4 w-4 text-primary flex-shrink-0" />
+                  <h3 className="text-xs font-medium text-base-content/70">Cost/km</h3>
+                </div>
+                <p className="text-2xl sm:text-3xl font-bold text-base-content">₹{costPerKm.toFixed(2)}</p>
+                <p className="text-xs text-base-content/60 mt-1">per kilometer</p>
               </div>
-              <div className="stat-value">₹{costPerKm.toFixed(2)}</div>
-              <div className="stat-desc">charging cost/km</div>
             </div>
           </div>
 
           {/* Recent Trips */}
-          <div className="card bg-base-100 shadow-xl">
+          <div className="card bg-base-200 shadow-xl border border-base-300">
             <div className="card-body">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="card-title">Recent Trips</h2>
+                <h2 className="card-title text-base-content">Recent Trips</h2>
                 <Link href="/trips" className="btn btn-ghost btn-sm">
                   View All
                 </Link>
@@ -233,15 +210,15 @@ export default function Dashboard() {
                       <Link
                         key={trip.id}
                         href={`/trip-details?id=${trip.id}`}
-                        className="card bg-base-100 shadow-lg card-hover"
+                        className="card bg-base-200 shadow-lg card-hover border border-base-300"
                       >
                         <div className="card-body p-4">
                           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
                             <div className="flex items-center gap-3 flex-shrink-0">
                               <MapPin className="h-8 w-8 text-primary" />
                               <div>
-                                <h3 className="font-semibold text-base">{trip.name || 'Trip'}</h3>
-                                <div className="flex items-center gap-2 text-xs text-base-content/70">
+                                <h3 className="font-semibold text-base text-base-content">{trip.name || 'Trip'}</h3>
+                                <div className="flex items-center gap-2 text-xs text-base-content/60">
                                   <Car className="h-3 w-3" />
                                   <span>{vehicle?.name || 'Unknown Vehicle'}</span>
                                   <span>•</span>
@@ -251,35 +228,35 @@ export default function Dashboard() {
                               </div>
                             </div>
                             <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 lg:gap-3">
-                              <div className="bg-base-200/30 rounded-lg p-2 flex items-center gap-2">
-                                <MapPin className="h-5 w-5 text-primary flex-shrink-0" />
-                                <div>
-                                  <div className="text-xs opacity-70">Distance</div>
-                                  <div className="font-semibold text-sm">{formatDistance(trip.totalDistance)}</div>
+                              <div className="bg-base-300 rounded-lg p-2">
+                                <div className="flex items-center gap-1 mb-1">
+                                  <MapPin className="h-3 w-3 text-primary flex-shrink-0" />
+                                  <div className="text-xs text-base-content/60">Distance</div>
+                                </div>
+                                <div className="font-semibold text-sm text-base-content">{formatDistance(trip.totalDistance)}</div>
+                              </div>
+                              <div className="bg-base-300 rounded-lg p-2">
+                                <div className="flex items-center gap-1 mb-1">
+                                  <Battery className="h-3 w-3 text-secondary flex-shrink-0" />
+                                  <div className="text-xs text-base-content/60">Energy</div>
+                                </div>
+                                <div className="font-semibold text-sm text-base-content">{formatEnergy(trip.totalEnergyUsed)}</div>
+                              </div>
+                              <div className="bg-base-300 rounded-lg p-2">
+                                <div className="flex items-center gap-1 mb-1">
+                                  <Zap className="h-3 w-3 text-accent flex-shrink-0" />
+                                  <div className="text-xs text-base-content/60">Efficiency</div>
+                                </div>
+                                <div className="font-semibold text-sm text-base-content">
+                                  {trip.averageEfficiency > 0 ? `${(1 / trip.averageEfficiency).toFixed(2)} km/kWh` : 'N/A'}
                                 </div>
                               </div>
-                              <div className="bg-base-200/30 rounded-lg p-2 flex items-center gap-2">
-                                <Battery className="h-5 w-5 text-secondary flex-shrink-0" />
-                                <div>
-                                  <div className="text-xs opacity-70">Energy</div>
-                                  <div className="font-semibold text-sm">{formatEnergy(trip.totalEnergyUsed)}</div>
+                              <div className="bg-base-300 rounded-lg p-2">
+                                <div className="flex items-center gap-1 mb-1">
+                                  <MapPin className="h-3 w-3 text-success flex-shrink-0" />
+                                  <div className="text-xs text-base-content/60">Stops</div>
                                 </div>
-                              </div>
-                              <div className="bg-base-200/30 rounded-lg p-2 flex items-center gap-2">
-                                <Zap className="h-5 w-5 text-accent flex-shrink-0" />
-                                <div>
-                                  <div className="text-xs opacity-70">Efficiency</div>
-                                  <div className="font-semibold text-sm">
-                                    {trip.averageEfficiency > 0 ? `${(1 / trip.averageEfficiency).toFixed(2)} km/kWh` : 'N/A'}
-                                  </div>
-                                </div>
-                              </div>
-                              <div className="bg-base-200/30 rounded-lg p-2 flex items-center gap-2">
-                                <MapPin className="h-5 w-5 text-success flex-shrink-0" />
-                                <div>
-                                  <div className="text-xs opacity-70">Stops</div>
-                                  <div className="font-semibold text-sm">{trip.stops.length}</div>
-                                </div>
+                                <div className="font-semibold text-sm text-base-content">{trip.stops.length}</div>
                               </div>
                             </div>
                           </div>
