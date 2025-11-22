@@ -31,7 +31,7 @@ export default function Navigation() {
         {/* Navbar */}
         <div className="navbar sticky top-0 z-50 border-b" style={{ borderColor: 'var(--border-color)' }}>
           <div className="container mx-auto px-4">
-            <div className="navbar w-full">
+            <div className="navbar w-full pb-0">
               {/* Logo - Left */}
               <div className="flex-1">
             <Link href="/" className="flex items-end gap-2 hover:opacity-80 transition-opacity pb-2">

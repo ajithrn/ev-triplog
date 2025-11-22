@@ -17,6 +17,8 @@ import {
   Trash2,
   DollarSign,
   Edit,
+  X,
+  AlertCircle,
 } from 'lucide-react';
 import {
   calculateTripStretches,
@@ -43,10 +45,16 @@ export default function TripDetailsClient() {
   const [deleteConfirm, setDeleteConfirm] = useState(false);
   const [deleteStopConfirm, setDeleteStopConfirm] = useState<string | null>(null);
   const [isEditMode, setIsEditMode] = useState(false);
+  const [showRedirectNotification, setShowRedirectNotification] = useState(false);
 
   useEffect(() => {
     setMounted(true);
-  }, []);
+    // Check if redirected from new trip page
+    const fromNewTrip = searchParams.get('from');
+    if (fromNewTrip === 'new-trip') {
+      setShowRedirectNotification(true);
+    }
+  }, [searchParams]);
 
   if (!mounted) {
     return (
@@ -131,6 +139,24 @@ export default function TripDetailsClient() {
 
   return (
     <div className="space-y-6 animate-fade-in">
+      {/* Redirect Notification */}
+      {showRedirectNotification && (
+        <div className="alert alert-info shadow-lg">
+          <AlertCircle className="h-5 w-5 flex-shrink-0" />
+          <div className="flex-1">
+            <h3 className="font-semibold">Active Trip in Progress</h3>
+            <p className="text-sm">You already have an active trip. Please complete or manage this trip before starting a new one.</p>
+          </div>
+          <button
+            onClick={() => setShowRedirectNotification(false)}
+            className="btn btn-sm btn-circle btn-ghost"
+            aria-label="Dismiss notification"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+      )}
+
       {/* Header */}
       <div>
         <Link

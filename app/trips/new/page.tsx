@@ -44,7 +44,7 @@ export default function NewTripPage() {
 
   // Redirect if there's already an active trip
   if (activeTrip) {
-    router.push(`/trip-details?id=${activeTrip.id}`);
+    router.push(`/trip-details?id=${activeTrip.id}&from=new-trip`);
     return null;
   }
 

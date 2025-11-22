@@ -25,6 +25,11 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
         if (stored) {
           const parsedSettings = JSON.parse(stored);
           setSettings({ ...DEFAULT_SETTINGS, ...parsedSettings });
+        } else {
+          // No stored settings, detect system theme preference
+          const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          const systemTheme = prefersDark ? 'dark' : 'light';
+          setSettings({ ...DEFAULT_SETTINGS, theme: systemTheme });
         }
         setIsLoaded(true);
       } catch (error) {
