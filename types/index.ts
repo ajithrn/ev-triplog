@@ -60,6 +60,8 @@ export interface Stretch {
   efficiencyKwhPerKm: number; // kWh/km
   efficiencyKmPerKwh: number; // km/kWh
   kmPerPercent: number; // km per %
+  estimatedCost: number; // estimated cost for this stretch
+  costPerKm: number; // cost per km for this stretch
 }
 
 // Form Types

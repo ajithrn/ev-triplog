@@ -1,18 +1,19 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useTrips } from '@/contexts/TripContext';
-import { useVehicles } from '@/contexts/VehicleContext';
-import { useSettings } from '@/contexts/SettingsContext';
-import { BarChart3, TrendingUp, DollarSign, Battery } from 'lucide-react';
-import { format } from 'date-fns';
-import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { formatCurrency } from '@/utils/formatters';
+import { AnalyticsProvider } from '@/contexts/AnalyticsContext';
+import DateRangeFilter from '@/components/analytics/DateRangeFilter';
+import TabNavigation from '@/components/analytics/TabNavigation';
+import OverviewTab from '@/components/analytics/tabs/OverviewTab';
+import TripsTab from '@/components/analytics/tabs/TripsTab';
+import ChargingTab from '@/components/analytics/tabs/ChargingTab';
+import CostsTab from '@/components/analytics/tabs/CostsTab';
+import BatteryTab from '@/components/analytics/tabs/BatteryTab';
+import CompareTab from '@/components/analytics/tabs/CompareTab';
+import { useAnalytics } from '@/contexts/AnalyticsContext';
 
-export default function AnalyticsPage() {
-  const { trips } = useTrips();
-  const { vehicles } = useVehicles();
-  const { settings } = useSettings();
+function AnalyticsContent() {
+  const { activeTab } = useAnalytics();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -27,220 +28,39 @@ export default function AnalyticsPage() {
     );
   }
 
-  const completedTrips = trips.filter((t) => t.status === 'completed');
-
-  // Calculate statistics
-  const totalTrips = completedTrips.length;
-  const totalDistance = completedTrips.reduce((sum, t) => sum + t.totalDistance, 0);
-  const totalEnergy = completedTrips.reduce((sum, t) => sum + t.totalEnergyUsed, 0);
-  const avgEfficiency = totalDistance > 0 ? totalEnergy / totalDistance : 0;
-
-  // Calculate charging costs
-  let totalChargingCost = 0;
-  let totalChargingSessions = 0;
-  completedTrips.forEach((trip) => {
-    trip.stops.forEach((stop) => {
-      if (stop.chargingSession) {
-        totalChargingCost += stop.chargingSession.cost;
-        totalChargingSessions++;
-      }
-    });
-  });
-
-  // Prepare chart data
-  const efficiencyData = completedTrips
-    .sort((a, b) => a.startDate - b.startDate)
-    .map((trip) => ({
-      date: format(new Date(trip.startDate), 'MMM dd'),
-      efficiency: trip.averageEfficiency > 0 ? 1 / trip.averageEfficiency : 0,
-      distance: trip.totalDistance,
-    }));
-
-  const distanceData = completedTrips
-    .sort((a, b) => a.startDate - b.startDate)
-    .map((trip) => ({
-      date: format(new Date(trip.startDate), 'MMM dd'),
-      distance: trip.totalDistance,
-      energy: trip.totalEnergyUsed,
-    }));
-
   return (
     <div className="space-y-6 animate-fade-in">
       {/* Header */}
       <div>
         <h1 className="text-3xl sm:text-4xl font-bold text-base-content">Analytics</h1>
-        <p className="mt-1 text-base-content/70">View your EV performance trends and statistics</p>
+        <p className="mt-1 text-base-content/70">
+          Comprehensive insights into your EV performance and usage patterns
+        </p>
       </div>
 
-      {completedTrips.length === 0 ? (
-        <div className="card bg-base-200 shadow-xl card-hover border border-base-300">
-          <div className="card-body items-center text-center">
-            <BarChart3 className="h-16 w-16 text-primary mb-4" />
-            <h2 className="card-title text-2xl">No Data Yet</h2>
-            <p className="text-base-content/70">Complete some trips to see analytics and trends</p>
-          </div>
-        </div>
-      ) : (
-        <>
-          {/* Stats Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
-            <div className="card bg-base-200 shadow-lg border border-base-300">
-              <div className="card-body p-3 sm:p-4">
-                <div className="flex items-center gap-2 mb-2">
-                  <BarChart3 className="h-4 w-4 text-primary flex-shrink-0" />
-                  <h3 className="text-xs font-medium text-base-content/70">Total Trips</h3>
-                </div>
-                <p className="text-2xl sm:text-3xl font-bold text-base-content">{totalTrips}</p>
-              </div>
-            </div>
+      {/* Date Range Filter */}
+      <DateRangeFilter />
 
-            <div className="card bg-base-200 shadow-lg border border-base-300">
-              <div className="card-body p-3 sm:p-4">
-                <div className="flex items-center gap-2 mb-2">
-                  <TrendingUp className="h-4 w-4 text-primary flex-shrink-0" />
-                  <h3 className="text-xs font-medium text-base-content/70">Distance</h3>
-                </div>
-                <p className="text-2xl sm:text-3xl font-bold text-base-content">{totalDistance.toFixed(0)}</p>
-                <p className="text-xs text-base-content/60 mt-1">kilometers</p>
-              </div>
-            </div>
+      {/* Tab Navigation */}
+      <TabNavigation />
 
-            <div className="card bg-base-200 shadow-lg border border-base-300">
-              <div className="card-body p-3 sm:p-4">
-                <div className="flex items-center gap-2 mb-2">
-                  <Battery className="h-4 w-4 text-primary flex-shrink-0" />
-                  <h3 className="text-xs font-medium text-base-content/70">Efficiency</h3>
-                </div>
-                <p className="text-2xl sm:text-3xl font-bold text-base-content">{avgEfficiency > 0 ? (1 / avgEfficiency).toFixed(2) : '0.00'}</p>
-                <p className="text-xs text-base-content/60 mt-1">km/kWh</p>
-              </div>
-            </div>
-
-            <div className="card bg-base-200 shadow-lg border border-base-300">
-              <div className="card-body p-3 sm:p-4">
-                <div className="flex items-center gap-2 mb-2">
-                  <DollarSign className="h-4 w-4 text-primary flex-shrink-0" />
-                  <h3 className="text-xs font-medium text-base-content/70">Charging</h3>
-                </div>
-                <p className="text-2xl sm:text-3xl font-bold text-base-content">{formatCurrency(totalChargingCost, settings)}</p>
-                <p className="text-xs text-base-content/60 mt-1">{totalChargingSessions} sessions</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Efficiency Trend Chart */}
-          <div className="card bg-base-200 shadow-xl card-hover border border-base-300">
-            <div className="card-body">
-              <h2 className="card-title">Efficiency Trend</h2>
-              <div className="divider mt-0"></div>
-              <div className=" rounded-xl p-4">
-                <ResponsiveContainer width="100%" height={300}>
-                  <LineChart data={efficiencyData}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                    <XAxis dataKey="date" stroke="#6b7280" />
-                    <YAxis label={{ value: 'km/kWh', angle: -90, position: 'insideLeft' }} stroke="#6b7280" />
-                    <Tooltip 
-                      contentStyle={{ 
-                        backgroundColor: 'rgba(255, 255, 255, 0.95)', 
-                        border: '1px solid rgba(255, 255, 255, 0.3)',
-                        borderRadius: '12px',
-                        backdropFilter: 'blur(10px)'
-                      }} 
-                    />
-                    <Legend />
-                    <Line
-                      type="monotone"
-                      dataKey="efficiency"
-                      stroke="url(#colorGradient)"
-                      strokeWidth={3}
-                      name="Efficiency (km/kWh)"
-                      dot={{ fill: '#3b82f6', r: 4 }}
-                    />
-                    <defs>
-                      <linearGradient id="colorGradient" x1="0" y1="0" x2="1" y2="0">
-                        <stop offset="0%" stopColor="#3b82f6" />
-                        <stop offset="100%" stopColor="#8b5cf6" />
-                      </linearGradient>
-                    </defs>
-                  </LineChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
-          </div>
-
-          {/* Distance & Energy Chart */}
-          <div className="card bg-base-200 shadow-xl card-hover border border-base-300">
-            <div className="card-body">
-              <h2 className="card-title">Distance & Energy Usage</h2>
-              <div className="divider mt-0"></div>
-              <div className=" rounded-xl p-4">
-                <ResponsiveContainer width="100%" height={300}>
-                  <BarChart data={distanceData}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                    <XAxis dataKey="date" stroke="#6b7280" />
-                    <YAxis stroke="#6b7280" />
-                    <Tooltip 
-                      contentStyle={{ 
-                        backgroundColor: 'rgba(255, 255, 255, 0.95)', 
-                        border: '1px solid rgba(255, 255, 255, 0.3)',
-                        borderRadius: '12px',
-                        backdropFilter: 'blur(10px)'
-                      }} 
-                    />
-                    <Legend />
-                    <Bar dataKey="distance" fill="#10b981" name="Distance (km)" radius={[8, 8, 0, 0]} />
-                    <Bar dataKey="energy" fill="#f59e0b" name="Energy (kWh)" radius={[8, 8, 0, 0]} />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
-          </div>
-
-          {/* Vehicle Breakdown */}
-          {vehicles.length > 1 && (
-            <div className="card bg-base-200 shadow-xl card-hover border border-base-300">
-              <div className="card-body">
-                <h2 className="card-title">Vehicle Breakdown</h2>
-                <div className="divider mt-0"></div>
-                <div className="space-y-4">
-                  {vehicles.map((vehicle) => {
-                    const vehicleTrips = completedTrips.filter((t) => t.vehicleId === vehicle.id);
-                    const vehicleDistance = vehicleTrips.reduce((sum, t) => sum + t.totalDistance, 0);
-                    const vehicleEnergy = vehicleTrips.reduce((sum, t) => sum + t.totalEnergyUsed, 0);
-                    const vehicleEfficiency = vehicleDistance > 0 ? vehicleEnergy / vehicleDistance : 0;
-
-                    return (
-                      <div key={vehicle.id} className="card bg-base-300">
-                        <div className="card-body">
-                          <h3 className="card-title text-base">{vehicle.name}</h3>
-                          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm mt-2">
-                            <div>
-                              <p className="text-base-content/70 mb-1">Trips</p>
-                              <p className="font-bold">{vehicleTrips.length}</p>
-                            </div>
-                            <div>
-                              <p className="text-base-content/70 mb-1">Distance</p>
-                              <p className="font-bold">{vehicleDistance.toFixed(0)} km</p>
-                            </div>
-                            <div>
-                              <p className="text-base-content/70 mb-1">Energy</p>
-                              <p className="font-bold">{vehicleEnergy.toFixed(1)} kWh</p>
-                            </div>
-                            <div>
-                              <p className="text-base-content/70 mb-1">Efficiency</p>
-                              <p className="font-bold">{vehicleEfficiency > 0 ? (1 / vehicleEfficiency).toFixed(2) : '0.00'} km/kWh</p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
-          )}
-        </>
-      )}
+      {/* Tab Content */}
+      <div className="mt-6">
+        {activeTab === 'overview' && <OverviewTab />}
+        {activeTab === 'trips' && <TripsTab />}
+        {activeTab === 'charging' && <ChargingTab />}
+        {activeTab === 'costs' && <CostsTab />}
+        {activeTab === 'battery' && <BatteryTab />}
+        {activeTab === 'compare' && <CompareTab />}
+      </div>
     </div>
+  );
+}
+
+export default function AnalyticsPage() {
+  return (
+    <AnalyticsProvider>
+      <AnalyticsContent />
+    </AnalyticsProvider>
   );
 }

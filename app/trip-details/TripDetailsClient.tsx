@@ -83,15 +83,49 @@ export default function TripDetailsClient() {
   }
 
   const vehicle = vehicles.find((v) => v.id === trip.vehicleId);
+  
+  // Get all trips for this vehicle sorted by date to find last charging session
+  const vehicleTrips = trips
+    .filter(t => t.vehicleId === trip.vehicleId && t.status === 'completed')
+    .sort((a, b) => a.startDate - b.startDate);
+  
+  // Find the last charging session cost per kWh from all trips
+  let globalLastCostPerKwh = 0;
+  for (const t of vehicleTrips) {
+    for (const stop of t.stops) {
+      if (stop.chargingSession) {
+        const energy = stop.chargingSession.endKwh - stop.chargingSession.startKwh;
+        if (energy > 0) {
+          globalLastCostPerKwh = stop.chargingSession.cost / energy;
+        }
+      }
+      // Stop when we reach the current trip
+      if (t.id === trip.id) break;
+    }
+    if (t.id === trip.id) break;
+  }
+  
+  // Calculate stretches with the global cost per kWh context
   const stretches = calculateTripStretches(trip.stops);
+  
+  // If no charging in current trip, apply global cost to stretches
+  if (globalLastCostPerKwh > 0 && stretches.every(s => s.costPerKm === 0)) {
+    stretches.forEach(stretch => {
+      stretch.estimatedCost = stretch.energyUsed * globalLastCostPerKwh;
+      stretch.costPerKm = stretch.distance > 0 ? stretch.estimatedCost / stretch.distance : 0;
+    });
+  }
   
   // Calculate total charging cost
   const totalChargingCost = trip.stops.reduce((sum, stop) => {
     return sum + (stop.chargingSession?.cost || 0);
   }, 0);
 
-  // Calculate cost per km
-  const costPerKm = trip.totalDistance > 0 ? totalChargingCost / trip.totalDistance : 0;
+  // Calculate cost per km using average from stretches (more accurate)
+  const stretchesWithCost = stretches.filter(s => s.costPerKm > 0);
+  const costPerKm = stretchesWithCost.length > 0
+    ? stretchesWithCost.reduce((sum, s) => sum + s.costPerKm, 0) / stretchesWithCost.length
+    : 0;
 
   const handleCompleteTrip = () => {
     completeTrip(trip.id);
@@ -336,8 +370,10 @@ export default function TripDetailsClient() {
               {stretch && (
                 <div className="card bg-info/10 border border-info/20 shadow-lg mb-4">
                   <div className="card-body p-4">
-                    <h4 className="card-title text-xs sm:text-sm mb-2 text-base-content">Stretch {index + 1}</h4>
-                    <div className="grid grid-cols-2 md:grid-cols-5 gap-2 sm:gap-3">
+                    <h4 className="card-title text-xs sm:text-sm mb-2 text-base-content">
+                      Stretch {index + 1}: {trip.stops[index].location || 'Unknown'} → {trip.stops[index + 1].location || 'Unknown'}
+                    </h4>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3">
                       <div className="rounded-lg p-2 sm:p-3 bg-info/5">
                         <p className="text-[10px] sm:text-xs text-base-content/60 mb-1">Distance</p>
                         <p className="font-semibold text-xs sm:text-sm text-base-content">{formatDistance(stretch.distance)}</p>
@@ -347,16 +383,21 @@ export default function TripDetailsClient() {
                         <p className="font-semibold text-xs sm:text-sm text-base-content">{formatEnergy(stretch.energyUsed)}</p>
                       </div>
                       <div className="rounded-lg p-2 sm:p-3 bg-info/5">
-                        <p className="text-[10px] sm:text-xs text-base-content/60 mb-1">kWh/km</p>
-                        <p className="font-semibold text-xs sm:text-sm text-base-content">{stretch.efficiencyKwhPerKm.toFixed(3)}</p>
+                        <p className="text-[10px] sm:text-xs text-base-content/60 mb-1">Efficiency</p>
+                        <p className="font-semibold text-xs sm:text-sm text-base-content">
+                          {stretch.efficiencyKmPerKwh.toFixed(2)} km/kWh
+                          {stretch.kmPerPercent > 0 && (
+                            <span className="text-[10px] sm:text-xs text-base-content/60 ml-1">
+                              ({stretch.kmPerPercent.toFixed(2)} km/%)
+                            </span>
+                          )}
+                        </p>
                       </div>
                       <div className="rounded-lg p-2 sm:p-3 bg-info/5">
-                        <p className="text-[10px] sm:text-xs text-base-content/60 mb-1">km/kWh</p>
-                        <p className="font-semibold text-xs sm:text-sm text-base-content">{stretch.efficiencyKmPerKwh.toFixed(2)}</p>
-                      </div>
-                      <div className="rounded-lg p-2 sm:p-3 bg-info/5">
-                        <p className="text-[10px] sm:text-xs text-base-content/60 mb-1">km per %</p>
-                        <p className="font-semibold text-xs sm:text-sm text-base-content">{stretch.kmPerPercent.toFixed(2)} km</p>
+                        <p className="text-[10px] sm:text-xs text-base-content/60 mb-1">Cost/km</p>
+                        <p className="font-semibold text-xs sm:text-sm text-base-content">
+                          {stretch.costPerKm > 0 ? formatCurrency(stretch.costPerKm, settings) : 'N/A'}
+                        </p>
                       </div>
                     </div>
                   </div>

@@ -33,16 +33,21 @@ export default function Dashboard() {
   const totalEnergy = completedTrips.reduce((sum, t) => sum + t.totalEnergyUsed, 0);
   const avgEfficiency = totalDistance > 0 ? totalEnergy / totalDistance : 0;
   
-  // Calculate total battery percentage used across all trips
-  const totalBatteryPercentUsed = completedTrips.reduce((sum, trip) => {
-    if (trip.stops.length < 2) return sum;
-    const firstStop = trip.stops[0];
-    const lastStop = trip.stops[trip.stops.length - 1];
-    return sum + (firstStop.batteryPercent - lastStop.batteryPercent);
-  }, 0);
+  // Calculate km per % using the same method as trips page
+  // km/kWh * kWh/% = km/%
+  const kmPerKwh = avgEfficiency > 0 ? 1 / avgEfficiency : 0;
   
-  // Calculate km per % (average across all trips)
-  const kmPerPercent = totalBatteryPercentUsed > 0 ? totalDistance / totalBatteryPercentUsed : 0;
+  // Get average battery capacity across all vehicles used in trips
+  const vehiclesUsed = new Set(completedTrips.map(t => t.vehicleId));
+  const avgBatteryCapacity = vehiclesUsed.size > 0
+    ? Array.from(vehiclesUsed).reduce((sum, vehicleId) => {
+        const vehicle = vehicles.find(v => v.id === vehicleId);
+        return sum + (vehicle?.batteryCapacity || 0);
+      }, 0) / vehiclesUsed.size
+    : 0;
+  
+  const kwhPerPercent = avgBatteryCapacity / 100;
+  const kmPerPercent = kmPerKwh * kwhPerPercent;
   
   // Calculate total charging cost
   const totalChargingCost = completedTrips.reduce((sum, trip) => {

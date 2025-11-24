@@ -26,17 +26,42 @@ export function calculateStretch(fromStop: Stop, toStop: Stop): Stretch {
     efficiencyKwhPerKm: distance > 0 ? energyUsed / distance : 0,
     efficiencyKmPerKwh: energyUsed > 0 ? distance / energyUsed : 0,
     kmPerPercent: batteryPercentUsed > 0 ? distance / batteryPercentUsed : 0,
+    estimatedCost: 0, // Will be calculated in calculateTripStretches
+    costPerKm: 0, // Will be calculated in calculateTripStretches
   };
 }
 
 /**
- * Calculate all stretches for a trip
+ * Calculate all stretches for a trip with cost tracking
  */
 export function calculateTripStretches(stops: Stop[]): Stretch[] {
   const stretches: Stretch[] = [];
+  let lastKnownCostPerKwh = 0;
   
   for (let i = 0; i < stops.length - 1; i++) {
-    stretches.push(calculateStretch(stops[i], stops[i + 1]));
+    const fromStop = stops[i];
+    const toStop = stops[i + 1];
+    
+    // Update cost per kWh if this stop has charging
+    if (fromStop.chargingSession) {
+      const chargingEnergy = fromStop.chargingSession.endKwh - fromStop.chargingSession.startKwh;
+      if (chargingEnergy > 0) {
+        lastKnownCostPerKwh = fromStop.chargingSession.cost / chargingEnergy;
+      }
+    }
+    
+    // Calculate basic stretch metrics
+    const stretch = calculateStretch(fromStop, toStop);
+    
+    // Calculate estimated cost for this stretch
+    const estimatedCost = stretch.energyUsed * lastKnownCostPerKwh;
+    const costPerKm = stretch.distance > 0 ? estimatedCost / stretch.distance : 0;
+    
+    stretches.push({
+      ...stretch,
+      estimatedCost,
+      costPerKm,
+    });
   }
   
   return stretches;
