@@ -1,5 +1,5 @@
 // Service Worker for EV Trip Log PWA
-const CACHE_VERSION = 'v1';
+const CACHE_VERSION = 'v2';
 const CACHE_NAME = `ev-triplog-${CACHE_VERSION}`;
 const RUNTIME_CACHE = `ev-triplog-runtime-${CACHE_VERSION}`;
 
@@ -17,6 +17,12 @@ const PRECACHE_ASSETS = [
   '/trips/new/index.html',
   '/vehicles/new/',
   '/vehicles/new/index.html',
+  '/trip-details/',
+  '/trip-details/index.html',
+  '/edit-vehicle/',
+  '/edit-vehicle/index.html',
+  '/settings/',
+  '/settings/index.html',
   '/manifest.json',
   '/ev-trip-log-app-icon.png',
   '/ev-trip-log-logo.png',
@@ -94,6 +100,24 @@ self.addEventListener('fetch', (event) => {
             if (cachedResponse) {
               return cachedResponse;
             }
+
+            // Check for query parameters and try to match the base URL
+            const url = new URL(request.url);
+            if (url.search) {
+              return caches.match(url.pathname).then((baseResponse) => {
+                if (baseResponse) return baseResponse;
+                // Try with trailing slash
+                return caches.match(url.pathname + '/').then((slashResponse) => {
+                  if (slashResponse) return slashResponse;
+                  // Try with /index.html
+                  return caches.match(url.pathname + '/index.html').then((indexResponse) => {
+                    if (indexResponse) return indexResponse;
+                    return caches.match('/');
+                  });
+                });
+              });
+            }
+
             // If not in cache, return the root page
             return caches.match('/');
           });
