@@ -1,7 +1,6 @@
 'use client';
 
-import { useTrips } from '@/contexts/TripContext';
-import { useAnalytics } from '@/contexts/AnalyticsContext';
+import { useTrips, useAnalytics } from '@/src/presentation/hooks';
 import { Battery, AlertTriangle, TrendingUp, Activity, Gauge, Shield, Thermometer } from 'lucide-react';
 import { filterTripsByDateRange, analyzeBatteryUsage, calculateTripStats } from '@/utils/analyticsCalculations';
 import StatCard from '../shared/StatCard';

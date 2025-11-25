@@ -1,31 +1,20 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useVehicles } from '@/contexts/VehicleContext';
-import { useTrips } from '@/contexts/TripContext';
-import { useSettings } from '@/contexts/SettingsContext';
+import { useVehicles, useTrips, useSettings } from '@/src/presentation/hooks';
 import Link from 'next/link';
-import { Car, Plus, MapPin, Battery, TrendingUp, Zap, Calendar, DollarSign } from 'lucide-react';
-import { formatDistance, formatEnergy, formatBatteryPercent, formatEfficiency } from '@/utils/calculations';
+import { Car, Plus, MapPin, Battery, TrendingUp, Zap, DollarSign } from 'lucide-react';
+import { formatDistance, formatEnergy } from '@/utils/calculations';
 import { formatCurrency } from '@/utils/formatters';
 import { formatDate } from '@/utils/dateFormatters';
+import { LoadingSkeleton, EmptyState } from '@/components/shared';
 
 export default function Dashboard() {
-  const { vehicles } = useVehicles();
-  const { trips, activeTrip } = useTrips();
+  const { vehicles, isLoading: vehiclesLoading } = useVehicles();
+  const { trips, activeTrip, isLoading: tripsLoading } = useTrips();
   const { settings } = useSettings();
-  const [mounted, setMounted] = useState(false);
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) {
-    return (
-      <div className="flex items-center justify-center min-h-[60vh]">
-        <span className="loading loading-spinner loading-lg text-primary"></span>
-      </div>
-    );
+  if (vehiclesLoading || tripsLoading) {
+    return <LoadingSkeleton type="card" count={3} />;
   }
 
   const completedTrips = trips.filter((t) => t.status === 'completed');
@@ -92,19 +81,15 @@ export default function Dashboard() {
 
       {/* No vehicles message */}
       {vehicles.length === 0 && (
-        <div className="card bg-base-200 shadow-xl card-hover border border-base-300">
-          <div className="card-body items-center text-center">
-            <Car className="h-16 w-16 text-primary mb-4" />
-            <h2 className="card-title text-2xl text-base-content">No Vehicles Yet</h2>
-            <p className="text-base-content/70">Add your first vehicle to start tracking trips</p>
-            <div className="card-actions mt-4">
-              <Link href="/vehicles/new" className="btn btn-primary">
-                <Plus className="h-5 w-5" />
-                Add Vehicle
-              </Link>
-            </div>
-          </div>
-        </div>
+        <EmptyState
+          icon={Car}
+          title="No Vehicles Yet"
+          description="Add your first vehicle to start tracking trips"
+          action={{
+            label: "Add Vehicle",
+            onClick: () => window.location.href = '/vehicles/new'
+          }}
+        />
       )}
 
       {vehicles.length > 0 && (

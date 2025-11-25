@@ -3,8 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import DatePicker from 'react-datepicker';
-import { useTrips } from '@/contexts/TripContext';
-import { useVehicles } from '@/contexts/VehicleContext';
+import { useTrips, useVehicles } from '@/src/presentation/hooks';
 import { MapPin, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 
@@ -34,6 +33,13 @@ export default function NewTripPage() {
     }
   }, [vehicles, formData.vehicleId]);
 
+  // Redirect if there's already an active trip
+  useEffect(() => {
+    if (mounted && activeTrip) {
+      router.push(`/trip-details?id=${activeTrip.id}&from=new-trip`);
+    }
+  }, [mounted, activeTrip, router]);
+
   if (!mounted) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
@@ -42,10 +48,13 @@ export default function NewTripPage() {
     );
   }
 
-  // Redirect if there's already an active trip
+  // Show loading while redirecting
   if (activeTrip) {
-    router.push(`/trip-details?id=${activeTrip.id}&from=new-trip`);
-    return null;
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="text-white">Redirecting to active trip...</div>
+      </div>
+    );
   }
 
   const handleSubmit = (e: React.FormEvent) => {

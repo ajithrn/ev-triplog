@@ -2,13 +2,13 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useVehicles } from '@/contexts/VehicleContext';
+import { useVehicles } from '@/src/presentation/hooks';
 import { Car, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 
 export default function NewVehiclePage() {
   const router = useRouter();
-  const { addVehicle } = useVehicles();
+  const { addVehicle, error } = useVehicles();
   const [formData, setFormData] = useState({
     name: '',
     make: '',
@@ -20,8 +20,12 @@ export default function NewVehiclePage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    addVehicle(formData);
-    router.push('/vehicles');
+    try {
+      addVehicle(formData);
+      router.push('/vehicles');
+    } catch (err) {
+      console.error('Failed to add vehicle:', err);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -46,6 +50,13 @@ export default function NewVehiclePage() {
         <h1 className="text-3xl sm:text-4xl font-bold text-base-content">Add New Vehicle</h1>
         <p className="mt-1 text-base-content/70">Enter your electric vehicle details</p>
       </div>
+
+      {/* Error Alert */}
+      {error && (
+        <div className="alert alert-error">
+          <span>{error}</span>
+        </div>
+      )}
 
       {/* Form */}
       <div className="card bg-base-200 shadow-xl border border-base-300">

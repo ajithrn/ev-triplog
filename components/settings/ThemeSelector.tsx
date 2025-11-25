@@ -1,14 +1,14 @@
 'use client';
 
 import { AVAILABLE_THEMES } from '@/types/settings';
-import { useSettings } from '@/contexts/SettingsContext';
+import { useSettings } from '@/src/presentation/hooks';
 import { Check } from 'lucide-react';
 
 export default function ThemeSelector() {
-  const { settings, updateSettings } = useSettings();
+  const { settings, updateTheme } = useSettings();
 
   const handleThemeChange = (theme: string) => {
-    updateSettings({ theme });
+    updateTheme(theme as 'light' | 'dark' | 'system');
   };
 
   return (

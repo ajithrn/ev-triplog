@@ -2,8 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { useTrips } from '@/contexts/TripContext';
-import { useVehicles } from '@/contexts/VehicleContext';
+import { useTrips, useVehicles } from '@/src/presentation/hooks';
 import Link from 'next/link';
 import {
   ArrowLeft,

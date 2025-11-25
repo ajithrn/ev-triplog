@@ -1,8 +1,6 @@
 'use client';
 
-import { useTrips } from '@/contexts/TripContext';
-import { useSettings } from '@/contexts/SettingsContext';
-import { useAnalytics } from '@/contexts/AnalyticsContext';
+import { useTrips, useSettings, useAnalytics } from '@/src/presentation/hooks';
 import { Trophy, TrendingDown, MapPin, Clock, Calendar } from 'lucide-react';
 import { format } from 'date-fns';
 import { filterTripsByDateRange, getTopTrips, analyzeDrivingPatterns, calculateTripStats } from '@/utils/analyticsCalculations';
@@ -88,7 +86,7 @@ export default function TripsTab() {
         <StatCard
           title="Total Trips"
           value={stats.totalTrips}
-          subtitle={`${dateRange.label.toLowerCase()}`}
+          subtitle={`${dateRange.label?.toLowerCase() || 'selected period'}`}
           icon={Calendar}
         />
       </div>
@@ -244,7 +242,7 @@ export default function TripsTab() {
             <div className="stat bg-base-300 rounded-lg">
               <div className="stat-title">Trip Frequency</div>
               <div className="stat-value text-2xl">
-                {(stats.totalTrips / Math.max(1, Math.ceil((dateRange.end.getTime() - dateRange.start.getTime()) / (1000 * 60 * 60 * 24)))).toFixed(1)}
+                {(stats.totalTrips / Math.max(1, Math.ceil((dateRange.end - dateRange.start) / (1000 * 60 * 60 * 24)))).toFixed(1)}
               </div>
               <div className="stat-desc">Trips per day</div>
             </div>

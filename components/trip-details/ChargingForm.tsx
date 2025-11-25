@@ -1,9 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useTrips } from '@/contexts/TripContext';
-import { useVehicles } from '@/contexts/VehicleContext';
-import { useSettings } from '@/contexts/SettingsContext';
+import { useTrips, useVehicles, useSettings } from '@/src/presentation/hooks';
 import { getCurrencySymbol } from '@/utils/formatters';
 
 interface ChargingFormProps {

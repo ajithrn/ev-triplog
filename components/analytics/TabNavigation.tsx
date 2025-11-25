@@ -1,6 +1,6 @@
 'use client';
 
-import { useAnalytics } from '@/contexts/AnalyticsContext';
+import { useAnalytics } from '@/src/presentation/hooks';
 import { BarChart3, Car, Zap, DollarSign, Battery, ArrowLeftRight } from 'lucide-react';
 import { useState, useEffect } from 'react';
 

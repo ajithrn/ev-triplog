@@ -1,24 +1,24 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useVehicles } from '@/contexts/VehicleContext';
+import { useState } from 'react';
+import { useVehicles } from '@/src/presentation/hooks';
 import Link from 'next/link';
 import { Car, Plus, Edit, Trash2, Battery } from 'lucide-react';
 import { format } from 'date-fns';
+import { LoadingSkeleton, EmptyState } from '@/components/shared';
 
 export default function VehiclesPage() {
-  const { vehicles, deleteVehicle } = useVehicles();
-  const [mounted, setMounted] = useState(false);
+  const { vehicles, deleteVehicle, isLoading, error } = useVehicles();
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  if (isLoading) {
+    return <LoadingSkeleton type="list" count={3} />;
+  }
 
-  if (!mounted) {
+  if (error) {
     return (
-      <div className="flex items-center justify-center min-h-[60vh]">
-        <span className="loading loading-spinner loading-lg text-primary"></span>
+      <div className="alert alert-error">
+        <span>{error}</span>
       </div>
     );
   }

@@ -1,8 +1,6 @@
 'use client';
 
-import { useTrips } from '@/contexts/TripContext';
-import { useSettings } from '@/contexts/SettingsContext';
-import { useAnalytics } from '@/contexts/AnalyticsContext';
+import { useTrips, useSettings, useAnalytics } from '@/src/presentation/hooks';
 import { DollarSign, TrendingDown, TrendingUp, Fuel, Clock, Zap, MapPin } from 'lucide-react';
 import { filterTripsByDateRange, calculateTripStats, calculateCostPerKmTrend } from '@/utils/analyticsCalculations';
 import { calculateICESavings } from '@/utils/analyticsHelpers';
@@ -44,7 +42,7 @@ export default function CostsTab() {
         <StatCard
           title="Total Cost"
           value={formatCurrency(stats.totalChargingCost, settings)}
-          subtitle={`${dateRange.label.toLowerCase()}`}
+          subtitle={`${(dateRange.label || 'selected period').toLowerCase()}`}
           icon={DollarSign}
         />
         <StatCard
@@ -191,7 +189,7 @@ export default function CostsTab() {
               <div className="stat-value text-2xl">
                 {formatCurrency(
                   stats.totalChargingCost /
-                    Math.max(1, Math.ceil((dateRange.end.getTime() - dateRange.start.getTime()) / (1000 * 60 * 60 * 24))),
+                    Math.max(1, Math.ceil((dateRange.end - dateRange.start) / (1000 * 60 * 60 * 24))),
                   settings
                 )}
               </div>
@@ -209,7 +207,7 @@ export default function CostsTab() {
               <div className="stat-value text-2xl">
                 {formatCurrency(
                   (stats.totalChargingCost /
-                    Math.max(1, Math.ceil((dateRange.end.getTime() - dateRange.start.getTime()) / (1000 * 60 * 60 * 24)))) *
+                    Math.max(1, Math.ceil((dateRange.end - dateRange.start) / (1000 * 60 * 60 * 24)))) *
                     30,
                   settings
                 )}

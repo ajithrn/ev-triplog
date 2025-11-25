@@ -1,13 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import { useSettings } from '@/contexts/SettingsContext';
-import { useVehicles } from '@/contexts/VehicleContext';
+import { useSettings, useVehicles } from '@/src/presentation/hooks';
 import { Save, CheckCircle } from 'lucide-react';
 
 export default function AppPreferences() {
   const { settings, updateSettings } = useSettings();
-  const { vehicles } = useVehicles();
+  const { vehicles, isLoading } = useVehicles();
   const [localSettings, setLocalSettings] = useState(settings);
   const [showSaved, setShowSaved] = useState(false);
   const [hasChanges, setHasChanges] = useState(false);
@@ -18,10 +17,14 @@ export default function AppPreferences() {
   };
 
   const handleSave = () => {
-    updateSettings(localSettings);
-    setHasChanges(false);
-    setShowSaved(true);
-    setTimeout(() => setShowSaved(false), 3000);
+    try {
+      updateSettings(localSettings);
+      setHasChanges(false);
+      setShowSaved(true);
+      setTimeout(() => setShowSaved(false), 3000);
+    } catch (err) {
+      console.error('Failed to save preferences:', err);
+    }
   };
 
   return (
@@ -112,6 +115,7 @@ export default function AppPreferences() {
             className="select select-bordered w-full"
             value={localSettings.defaultVehicleId || ''}
             onChange={(e) => handleChange('defaultVehicleId', e.target.value || undefined)}
+            disabled={isLoading}
           >
             <option value="">None (Select manually)</option>
             {vehicles.map((vehicle) => (
@@ -122,7 +126,9 @@ export default function AppPreferences() {
           </select>
           <label className="label">
             <span className="label-text-alt opacity-70">
-              {vehicles.length === 0
+              {isLoading
+                ? 'Loading vehicles...'
+                : vehicles.length === 0
                 ? 'Add a vehicle first to set as default'
                 : 'Pre-select a vehicle for new trips'}
             </span>

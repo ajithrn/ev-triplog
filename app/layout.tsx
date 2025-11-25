@@ -1,14 +1,13 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { VehicleProvider } from "@/contexts/VehicleContext";
-import { TripProvider } from "@/contexts/TripContext";
-import { SettingsProvider } from "@/contexts/SettingsContext";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import RegisterServiceWorker from "./register-sw";
 import InstallPrompt from "@/components/InstallPrompt";
 import ClientRedirect from "./ClientRedirect";
+import StoreInitializer from "./StoreInitializer";
+import { ErrorBoundary } from "@/components/shared";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -68,19 +67,16 @@ export default function RootLayout({
         <RegisterServiceWorker />
         <InstallPrompt />
         <ClientRedirect />
-        <SettingsProvider>
-          <VehicleProvider>
-            <TripProvider>
-              <div className="min-h-screen flex flex-col">
-                <Navigation />
-                <main className="relative z-10 container mx-auto px-4 py-8 flex-1">
-                  {children}
-                </main>
-                <Footer />
-              </div>
-            </TripProvider>
-          </VehicleProvider>
-        </SettingsProvider>
+        <StoreInitializer />
+        <ErrorBoundary>
+          <div className="min-h-screen flex flex-col">
+            <Navigation />
+            <main className="relative z-10 container mx-auto px-4 py-8 flex-1">
+              {children}
+            </main>
+            <Footer />
+          </div>
+        </ErrorBoundary>
       </body>
     </html>
   );

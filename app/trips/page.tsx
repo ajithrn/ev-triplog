@@ -1,32 +1,22 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useTrips } from '@/contexts/TripContext';
-import { useVehicles } from '@/contexts/VehicleContext';
-import { useSettings } from '@/contexts/SettingsContext';
+import { useState } from 'react';
+import { useTrips, useVehicles, useSettings } from '@/src/presentation/hooks';
 import Link from 'next/link';
 import { Car, Plus, MapPin, Calendar, Battery, Zap, DollarSign } from 'lucide-react';
 import { formatDistance, formatEnergy } from '@/utils/calculations';
 import { formatCurrency } from '@/utils/formatters';
 import { formatDate } from '@/utils/dateFormatters';
+import { LoadingSkeleton, EmptyState } from '@/components/shared';
 
 export default function TripsPage() {
-  const { trips } = useTrips();
-  const { vehicles } = useVehicles();
+  const { trips, isLoading: tripsLoading } = useTrips();
+  const { vehicles, isLoading: vehiclesLoading } = useVehicles();
   const { settings } = useSettings();
-  const [mounted, setMounted] = useState(false);
   const [filter, setFilter] = useState<'all' | 'active' | 'completed'>('all');
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) {
-    return (
-      <div className="flex items-center justify-center min-h-[60vh]">
-        <span className="loading loading-spinner loading-lg text-primary"></span>
-      </div>
-    );
+  if (tripsLoading || vehiclesLoading) {
+    return <LoadingSkeleton type="list" count={3} />;
   }
 
   const filteredTrips = trips.filter((trip) => {
@@ -54,19 +44,15 @@ export default function TripsPage() {
 
       {/* No vehicles message */}
       {vehicles.length === 0 && (
-        <div className="card bg-base-200 shadow-xl card-hover border border-base-300">
-          <div className="card-body items-center text-center">
-            <Car className="h-16 w-16 text-primary mb-4" />
-            <h2 className="card-title text-2xl text-base-content">No Vehicles Yet</h2>
-            <p className="text-base-content/70">Add a vehicle first to start tracking trips</p>
-            <div className="card-actions mt-4">
-              <Link href="/vehicles/new" className="btn btn-primary">
-                <Plus className="h-5 w-5" />
-                Add Vehicle
-              </Link>
-            </div>
-          </div>
-        </div>
+        <EmptyState
+          icon={Car}
+          title="No Vehicles Yet"
+          description="Add a vehicle first to start tracking trips"
+          action={{
+            label: "Add Vehicle",
+            onClick: () => window.location.href = '/vehicles/new'
+          }}
+        />
       )}
 
       {vehicles.length > 0 && (
@@ -110,19 +96,15 @@ export default function TripsPage() {
 
           {/* Trips List */}
           {sortedTrips.length === 0 ? (
-            <div className="card bg-base-200 shadow-xl card-hover border border-base-300">
-              <div className="card-body items-center text-center">
-                <MapPin className="h-16 w-16 text-primary mb-4" />
-                <h2 className="card-title text-2xl text-base-content">No Trips Yet</h2>
-                <p className="text-base-content/70">Start your first trip to begin tracking</p>
-                <div className="card-actions mt-4">
-                  <Link href="/trips/new" className="btn btn-primary">
-                    <Plus className="h-5 w-5" />
-                    New Trip
-                  </Link>
-                </div>
-              </div>
-            </div>
+            <EmptyState
+              icon={MapPin}
+              title="No Trips Yet"
+              description="Start your first trip to begin tracking"
+              action={{
+                label: "New Trip",
+                onClick: () => window.location.href = '/trips/new'
+              }}
+            />
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {sortedTrips.map((trip) => {

@@ -1,9 +1,6 @@
 'use client';
 
-import { useTrips } from '@/contexts/TripContext';
-import { useVehicles } from '@/contexts/VehicleContext';
-import { useSettings } from '@/contexts/SettingsContext';
-import { useAnalytics } from '@/contexts/AnalyticsContext';
+import { useTrips, useVehicles, useSettings, useAnalytics } from '@/src/presentation/hooks';
 import { ArrowLeftRight, Car, TrendingUp, TrendingDown } from 'lucide-react';
 import { filterTripsByDateRange, calculateTripStats, comparePeriods } from '@/utils/analyticsCalculations';
 import { formatCurrency } from '@/utils/formatters';
@@ -33,9 +30,9 @@ export default function CompareTab() {
   }
 
   // Calculate previous period for comparison
-  const periodLength = dateRange.end.getTime() - dateRange.start.getTime();
-  const previousStart = new Date(dateRange.start.getTime() - periodLength);
-  const previousEnd = new Date(dateRange.start.getTime());
+  const periodLength = dateRange.end - dateRange.start;
+  const previousStart = new Date(dateRange.start - periodLength);
+  const previousEnd = new Date(dateRange.start);
   const previousTrips = filterTripsByDateRange(trips, previousStart, previousEnd);
 
   const comparison = comparePeriods(filteredTrips, previousTrips);

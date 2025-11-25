@@ -1,7 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { AnalyticsProvider } from '@/contexts/AnalyticsContext';
+import { useAnalytics } from '@/src/presentation/hooks';
 import DateRangeFilter from '@/components/analytics/DateRangeFilter';
 import TabNavigation from '@/components/analytics/TabNavigation';
 import OverviewTab from '@/components/analytics/tabs/OverviewTab';
@@ -10,22 +9,13 @@ import ChargingTab from '@/components/analytics/tabs/ChargingTab';
 import CostsTab from '@/components/analytics/tabs/CostsTab';
 import BatteryTab from '@/components/analytics/tabs/BatteryTab';
 import CompareTab from '@/components/analytics/tabs/CompareTab';
-import { useAnalytics } from '@/contexts/AnalyticsContext';
+import { LoadingSkeleton } from '@/components/shared';
 
-function AnalyticsContent() {
-  const { activeTab } = useAnalytics();
-  const [mounted, setMounted] = useState(false);
+export default function AnalyticsPage() {
+  const { activeTab, isLoading } = useAnalytics();
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) {
-    return (
-      <div className="flex items-center justify-center min-h-[60vh]">
-        <span className="loading loading-spinner loading-lg text-primary"></span>
-      </div>
-    );
+  if (isLoading) {
+    return <LoadingSkeleton type="card" count={3} />;
   }
 
   return (
@@ -54,13 +44,5 @@ function AnalyticsContent() {
         {activeTab === 'compare' && <CompareTab />}
       </div>
     </div>
-  );
-}
-
-export default function AnalyticsPage() {
-  return (
-    <AnalyticsProvider>
-      <AnalyticsContent />
-    </AnalyticsProvider>
   );
 }

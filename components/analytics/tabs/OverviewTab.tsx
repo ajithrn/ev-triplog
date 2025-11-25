@@ -1,9 +1,6 @@
 'use client';
 
-import { useTrips } from '@/contexts/TripContext';
-import { useVehicles } from '@/contexts/VehicleContext';
-import { useSettings } from '@/contexts/SettingsContext';
-import { useAnalytics } from '@/contexts/AnalyticsContext';
+import { useTrips, useVehicles, useSettings, useAnalytics } from '@/src/presentation/hooks';
 import { BarChart3, TrendingUp, DollarSign, Battery, Activity, Clock, Bolt } from 'lucide-react';
 import { format, startOfWeek, startOfMonth } from 'date-fns';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell, Area, AreaChart, ComposedChart } from 'recharts';

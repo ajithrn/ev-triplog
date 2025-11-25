@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { useVehicles } from '@/contexts/VehicleContext';
+import { useVehicles } from '@/src/presentation/hooks';
 import { Car, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 

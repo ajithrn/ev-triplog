@@ -1,8 +1,6 @@
 'use client';
 
-import { useTrips } from '@/contexts/TripContext';
-import { useSettings } from '@/contexts/SettingsContext';
-import { useAnalytics } from '@/contexts/AnalyticsContext';
+import { useTrips, useSettings, useAnalytics } from '@/src/presentation/hooks';
 import { Zap, MapPin, Clock, DollarSign } from 'lucide-react';
 import { filterTripsByDateRange, analyzeChargingPatterns, calculateTripStats } from '@/utils/analyticsCalculations';
 import { formatCurrency } from '@/utils/formatters';
@@ -51,7 +49,7 @@ export default function ChargingTab() {
         <StatCard
           title="Total Sessions"
           value={stats.totalChargingSessions}
-          subtitle={`${dateRange.label.toLowerCase()}`}
+          subtitle={`${dateRange.label?.toLowerCase() || 'selected period'}`}
           icon={Zap}
         />
         <StatCard

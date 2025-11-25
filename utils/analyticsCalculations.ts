@@ -42,13 +42,16 @@ export interface DrivingPattern {
  */
 export function filterTripsByDateRange(
   trips: Trip[],
-  startDate: Date,
-  endDate: Date
+  startDate: number | Date,
+  endDate: number | Date
 ): Trip[] {
+  const start = typeof startDate === 'number' ? new Date(startDate) : startDate;
+  const end = typeof endDate === 'number' ? new Date(endDate) : endDate;
+  
   return trips.filter((trip) =>
     isWithinInterval(new Date(trip.startDate), {
-      start: startDate,
-      end: endDate,
+      start,
+      end,
     })
   );
 }

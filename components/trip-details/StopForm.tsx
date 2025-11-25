@@ -2,8 +2,7 @@
 
 import { useState } from 'react';
 import DatePicker from 'react-datepicker';
-import { useTrips } from '@/contexts/TripContext';
-import { useVehicles } from '@/contexts/VehicleContext';
+import { useTrips, useVehicles } from '@/src/presentation/hooks';
 
 interface StopFormProps {
   tripId: string;

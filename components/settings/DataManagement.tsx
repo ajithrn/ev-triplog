@@ -5,7 +5,7 @@ import { Download, Upload, Trash2, AlertTriangle, CheckCircle, XCircle } from 'l
 import { exportAllDataToJSON } from '@/utils/export';
 import { exportAllData, importAllData, mergeImportedData, clearAllData } from '@/utils/storage';
 import { parseAndValidateJSON } from '@/utils/validation';
-import { useSettings } from '@/contexts/SettingsContext';
+import { useSettings } from '@/src/presentation/hooks';
 import { format } from 'date-fns';
 
 export default function DataManagement() {

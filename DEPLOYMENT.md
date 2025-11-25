@@ -1,36 +1,34 @@
-# Deployment Guide for GitHub Pages
+# Deployment Guide
 
-This guide explains how to deploy the E-TripLog application to GitHub Pages with a custom domain.
+Guide for deploying EV Trip Log to GitHub Pages with optional custom domain support.
 
 ## Prerequisites
 
-1. A GitHub account
-2. A repository for this project
-3. A custom domain (optional)
+- GitHub account
+- Repository for this project
+- Custom domain (optional)
 
 ## Configuration Files
 
-The following files have been configured for GitHub Pages deployment:
+The following files are configured for GitHub Pages:
 
-### 1. `next.config.ts`
-- Configured for static export (`output: 'export'`)
-- Images set to unoptimized mode
-- Trailing slashes enabled for better compatibility
+next.config.ts:
+- Static export enabled
+- Images unoptimized
+- Trailing slashes enabled
 
-### 2. `.github/workflows/deploy.yml`
-- Automated CI/CD pipeline using GitHub Actions
-- Triggers on push to `main` branch
-- Builds the Next.js application
-- Deploys to GitHub Pages
+.github/workflows/deploy.yml:
+- Automated CI/CD pipeline
+- Triggers on push to main branch
+- Builds and deploys automatically
 
-### 3. `public/CNAME` (Optional - for custom domains only)
-- Contains your custom domain (e.g., `yourdomain.com` or `subdomain.yourdomain.com`)
-- Automatically copied to the output directory during build
-- **If not using a custom domain**, delete this file and skip Step 3 and Step 4
+public/CNAME (optional):
+- Contains custom domain
+- Delete if not using custom domain
 
-### 4. `public/.nojekyll`
-- Prevents GitHub Pages from processing files with Jekyll
-- Ensures proper serving of Next.js static files
+public/.nojekyll:
+- Prevents Jekyll processing
+- Ensures proper file serving
 
 ## Setup Instructions
 
@@ -38,24 +36,25 @@ The following files have been configured for GitHub Pages deployment:
 
 ```bash
 git add .
-git commit -m "Configure GitHub Pages deployment with custom domain"
+git commit -m "Configure GitHub Pages deployment"
 git push origin main
 ```
 
 ### Step 2: Enable GitHub Pages
 
-1. Go to your repository on GitHub
-2. Navigate to **Settings** → **Pages**
-3. Under **Source**, select **GitHub Actions**
-4. The workflow will automatically deploy on the next push
+1. Go to repository Settings
+2. Navigate to Pages section
+3. Under Source, select GitHub Actions
+4. Workflow deploys automatically on next push
 
-### Step 3: Configure Custom Domain DNS (Optional)
+### Step 3: Configure Custom Domain (Optional)
 
-**Skip this step if you're not using a custom domain. Your site will be available at `https://<your-github-username>.github.io/<repository-name>`**
+Skip if not using custom domain. Site will be at:
+https://username.github.io/repository-name
 
-#### Option A: Using an Apex Domain (e.g., `yourdomain.com`)
+For Apex Domain (yourdomain.com):
 
-Add these A records to your DNS provider:
+Add A records to DNS:
 ```
 A     185.199.108.153
 A     185.199.109.153
@@ -63,110 +62,101 @@ A     185.199.110.153
 A     185.199.111.153
 ```
 
-Then update `public/CNAME` to contain your apex domain:
+Update public/CNAME:
 ```
 yourdomain.com
 ```
 
-#### Option B: Using a Subdomain (e.g., `app.yourdomain.com`)
+For Subdomain (app.yourdomain.com):
 
-Add a CNAME record to your DNS provider:
+Add CNAME record to DNS:
 ```
-CNAME app.yourdomain.com → <your-github-username>.github.io
-```
-
-Or use an ALIAS/ANAME record pointing to:
-```
-<your-github-username>.github.io
+CNAME app.yourdomain.com -> username.github.io
 ```
 
-Then update `public/CNAME` to contain your subdomain:
+Update public/CNAME:
 ```
 app.yourdomain.com
 ```
 
 ### Step 4: Verify Custom Domain (Optional)
 
-**Skip this step if you're not using a custom domain.**
+Skip if not using custom domain.
 
-1. Go to **Settings** → **Pages** in your GitHub repository
-2. Under **Custom domain**, enter your domain (e.g., `yourdomain.com` or `app.yourdomain.com`)
-3. Click **Save**
-4. Wait for DNS check to complete (may take a few minutes to 48 hours)
-5. Enable **Enforce HTTPS** once DNS is verified
+1. Go to Settings > Pages
+2. Enter domain under Custom domain
+3. Click Save
+4. Wait for DNS check (few minutes to 48 hours)
+5. Enable Enforce HTTPS once verified
 
 ## Build and Test Locally
-
-To test the static export locally:
 
 ```bash
 # Install dependencies
 npm install
 
-# Build the static site
+# Build static site
 npm run build
 
-# The output will be in the 'out' directory
-# You can serve it locally with:
+# Serve locally
 npx serve out
 ```
 
 ## Deployment Process
 
-Once configured, the deployment process is automatic:
+Automatic deployment on push to main:
 
-1. Push changes to the `main` branch
-2. GitHub Actions workflow triggers automatically
-3. Application is built and tested
-4. Static files are deployed to GitHub Pages
-5. Site is available at:
-   - **With custom domain**: `https://yourdomain.com`
-   - **Without custom domain**: `https://<your-github-username>.github.io/<repository-name>`
+1. Push changes to main branch
+2. GitHub Actions triggers
+3. Application builds
+4. Static files deploy to GitHub Pages
+5. Site available at configured URL
 
 ## Troubleshooting
 
 ### Build Fails
-- Check the Actions tab in GitHub for error logs
-- Ensure all dependencies are listed in `package.json`
-- Verify Node.js version compatibility (using Node 20)
+
+- Check Actions tab for error logs
+- Verify dependencies in package.json
+- Check Node.js version compatibility
 
 ### Custom Domain Not Working
-- Verify DNS records are correctly configured
-- Wait up to 24-48 hours for DNS propagation
-- Check that CNAME file exists in the `public` directory
-- Ensure custom domain is set in GitHub Pages settings
+
+- Verify DNS records
+- Wait 24-48 hours for DNS propagation
+- Check CNAME file in public directory
+- Verify custom domain in GitHub Pages settings
 
 ### 404 Errors
-- Verify `trailingSlash: true` is set in `next.config.ts`
-- Check that `.nojekyll` file exists in the `public` directory
-- Ensure all routes are properly exported as static pages
+
+- Verify trailingSlash: true in next.config.ts
+- Check .nojekyll file exists
+- Ensure routes exported as static pages
 
 ### Images Not Loading
-- Verify `images.unoptimized: true` is set in `next.config.ts`
-- Use relative paths for images in the `public` directory
-- Check that image files are included in the build output
+
+- Verify images.unoptimized: true in next.config.ts
+- Use relative paths for public directory images
+- Check images in build output
 
 ## Monitoring
 
-- View deployment status in the **Actions** tab
-- Check build logs for any warnings or errors
-- Monitor site performance using browser developer tools
+- View deployment status in Actions tab
+- Check build logs for warnings
+- Monitor performance with browser dev tools
 
 ## Updating the Site
 
-To update the deployed site:
-
 ```bash
-# Make your changes
 git add .
-git commit -m "Your commit message"
+git commit -m "Update message"
 git push origin main
 ```
 
-The site will automatically rebuild and redeploy within a few minutes.
+Site rebuilds and redeploys automatically within minutes.
 
-## Additional Resources
+## Resources
 
-- [Next.js Static Exports Documentation](https://nextjs.org/docs/app/building-your-application/deploying/static-exports)
-- [GitHub Pages Documentation](https://docs.github.com/en/pages)
-- [GitHub Actions Documentation](https://docs.github.com/en/actions)
+- Next.js Static Exports: https://nextjs.org/docs/app/building-your-application/deploying/static-exports
+- GitHub Pages: https://docs.github.com/en/pages
+- GitHub Actions: https://docs.github.com/en/actions

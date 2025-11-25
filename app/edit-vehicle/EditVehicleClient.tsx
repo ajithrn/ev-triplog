@@ -2,15 +2,15 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useVehicles } from '@/contexts/VehicleContext';
+import { useVehicles } from '@/src/presentation/hooks';
 import { Car, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
+import { LoadingSkeleton, EmptyState } from '@/components/shared';
 
 export default function EditVehicleClient() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const { vehicles, updateVehicle } = useVehicles();
-  const [mounted, setMounted] = useState(false);
+  const { vehicles, updateVehicle, isLoading, error } = useVehicles();
   const [formData, setFormData] = useState({
     name: '',
     make: '',
@@ -21,7 +21,6 @@ export default function EditVehicleClient() {
   });
 
   useEffect(() => {
-    setMounted(true);
     const vehicleId = searchParams.get('id');
     const vehicle = vehicleId ? vehicles.find((v) => v.id === vehicleId) : null;
     if (vehicle) {
@@ -36,12 +35,8 @@ export default function EditVehicleClient() {
     }
   }, [vehicles, searchParams]);
 
-  if (!mounted) {
-    return (
-      <div className="flex items-center justify-center min-h-[60vh]">
-        <span className="loading loading-spinner loading-lg text-primary"></span>
-      </div>
-    );
+  if (isLoading) {
+    return <LoadingSkeleton type="card" />;
   }
 
   const vehicleId = searchParams.get('id');
@@ -49,24 +44,27 @@ export default function EditVehicleClient() {
 
   if (!vehicle) {
     return (
-      <div className="card bg-base-100 shadow-xl max-w-md mx-auto mt-12">
-        <div className="card-body items-center text-center">
-          <h2 className="card-title">Vehicle not found</h2>
-          <div className="card-actions mt-4">
-            <Link href="/vehicles" className="btn btn-primary">
-              Back to Vehicles
-            </Link>
-          </div>
-        </div>
-      </div>
+      <EmptyState
+        icon={Car}
+        title="Vehicle not found"
+        description="The vehicle you're looking for doesn't exist."
+        action={{
+          label: "Back to Vehicles",
+          onClick: () => router.push('/vehicles')
+        }}
+      />
     );
   }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (vehicleId) {
-      updateVehicle(vehicleId, formData);
-      router.push('/vehicles');
+      try {
+        updateVehicle(vehicleId, formData);
+        router.push('/vehicles');
+      } catch (err) {
+        console.error('Failed to update vehicle:', err);
+      }
     }
   };
 
@@ -93,6 +91,13 @@ export default function EditVehicleClient() {
         <h1 className="text-3xl sm:text-4xl font-bold text-base-content">Edit Vehicle</h1>
         <p className="mt-1 text-base-content/70">Update your vehicle details</p>
       </div>
+
+      {/* Error Alert */}
+      {error && (
+        <div className="alert alert-error">
+          <span>{error}</span>
+        </div>
+      )}
 
       {/* Form */}
       <div className="card bg-base-200 shadow-xl border border-base-300">

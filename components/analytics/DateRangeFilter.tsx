@@ -1,15 +1,29 @@
 'use client';
 
-import { useAnalytics } from '@/contexts/AnalyticsContext';
+import { useAnalytics } from '@/src/presentation/hooks';
 import { getDateRangePresets } from '@/utils/analyticsHelpers';
 import { Calendar } from 'lucide-react';
+import { useState } from 'react';
 
 export default function DateRangeFilter() {
-  const { dateRange, setDateRange } = useAnalytics();
+  const { dateRange, setPresetRange } = useAnalytics();
   const presets = getDateRangePresets();
 
   const handlePresetChange = (preset: { label: string; start: Date; end: Date }) => {
-    setDateRange(preset);
+    // Map preset labels to store preset types
+    const presetMap: Record<string, 'last7Days' | 'last14Days' | 'last30Days' | 'last3Months' | 'last6Months' | 'lastYear' | 'allTime'> = {
+      'Last 7 Days': 'last7Days',
+      'Last 14 Days': 'last14Days',
+      'Last 30 Days': 'last30Days',
+      'Last 3 Months': 'last3Months',
+      'Last 6 Months': 'last6Months',
+      'Last Year': 'lastYear',
+      'All Time': 'allTime',
+    };
+    const storePreset = presetMap[preset.label];
+    if (storePreset) {
+      setPresetRange(storePreset);
+    }
   };
 
   return (

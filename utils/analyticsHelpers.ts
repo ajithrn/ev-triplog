@@ -135,29 +135,35 @@ export function getEfficiencyRating(kmPerKwh: number): {
   color: string;
   description: string;
 } {
-  if (kmPerKwh >= 6) {
+  if (kmPerKwh >= 7.3) {
     return {
       rating: 'Excellent',
       color: 'text-success',
       description: 'Outstanding efficiency!',
     };
-  } else if (kmPerKwh >= 5) {
+  } else if (kmPerKwh >= 6.0) {
     return {
       rating: 'Good',
       color: 'text-success',
       description: 'Above average efficiency',
     };
-  } else if (kmPerKwh >= 4) {
+  } else if (kmPerKwh >= 4.8) {
     return {
       rating: 'Average',
       color: 'text-warning',
       description: 'Typical efficiency',
     };
-  } else {
+  } else if (kmPerKwh >= 3.8) {
     return {
       rating: 'Below Average',
       color: 'text-error',
       description: 'Room for improvement',
+    };
+  } else {
+    return {
+      rating: 'Poor',
+      color: 'text-error',
+      description: 'Needs attention',
     };
   }
 }
@@ -243,32 +249,37 @@ export function getDateRangePresets(): Array<{
 
   return [
     {
-      label: 'Last 7 days',
+      label: 'Last 7 Days',
       start: new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000),
       end: now,
     },
     {
-      label: 'Last 30 days',
+      label: 'Last 14 Days',
+      start: new Date(today.getTime() - 14 * 24 * 60 * 60 * 1000),
+      end: now,
+    },
+    {
+      label: 'Last 30 Days',
       start: new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000),
       end: now,
     },
     {
-      label: 'Last 3 months',
+      label: 'Last 3 Months',
       start: new Date(today.getTime() - 90 * 24 * 60 * 60 * 1000),
       end: now,
     },
     {
-      label: 'Last 6 months',
+      label: 'Last 6 Months',
       start: new Date(today.getTime() - 180 * 24 * 60 * 60 * 1000),
       end: now,
     },
     {
-      label: 'Last year',
+      label: 'Last Year',
       start: new Date(today.getTime() - 365 * 24 * 60 * 60 * 1000),
       end: now,
     },
     {
-      label: 'All time',
+      label: 'All Time',
       start: new Date(2020, 0, 1), // Arbitrary old date
       end: now,
     },

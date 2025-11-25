@@ -1,32 +1,27 @@
 # EV Trip Log
 
-A comprehensive web application for tracking electric vehicle trips, charging sessions, and efficiency metrics. Built with Next.js 16, TypeScript, and modern web technologies.
+A web application for tracking electric vehicle trips, charging sessions, and efficiency metrics. Built with Next.js, TypeScript, and Clean Architecture principles.
 
-## Overview
+## Features
 
-EV Trip Log is designed for electric vehicle owners who want to track their driving efficiency, charging costs, and trip details. The application provides real-time analytics, detailed trip breakdowns, and comprehensive charging session management—all stored locally in your browser for privacy and offline access.
-
-## Key Features
-
-- **Multi-Vehicle Management** - Add and manage multiple electric vehicles with detailed profiles
-- **Trip Tracking** - Create named trips with multiple stops and automatic efficiency calculations
-- **Charging Sessions** - Log detailed charging data including costs, duration, and energy added
-- **Efficiency Analytics** - Calculate kWh/km, km/kWh, and battery usage metrics for each stretch
-- **Visual Analytics** - View trends, statistics, and performance charts across all trips
-- **Data Export** - Export trip data to CSV, PDF reports, or JSON backup
-- **Progressive Web App (PWA)** - Install on any device and use offline with full functionality
-- **Offline-First** - Works completely offline after first visit, no internet required
+- Multi-vehicle management with detailed profiles
+- Trip tracking with multiple stops and automatic calculations
+- Charging session logging with cost and energy tracking
+- Real-time efficiency analytics and performance metrics
+- Visual charts and statistics across all trips
+- Data export to CSV, PDF, and JSON
+- Progressive Web App with offline support
+- Privacy-focused with local storage only
 
 ## Tech Stack
 
-- Next.js 16.0.1 with App Router
-- React 19.2.0
-- TypeScript 5.x
-- Tailwind CSS 4.1.14
-- DaisyUI 5.4.7
-- Recharts 3.3.0 for data visualization
-- Local Storage for data persistence
-
+- Next.js 16 with App Router
+- React 19
+- TypeScript 5
+- Zustand for state management
+- Tailwind CSS with DaisyUI
+- Recharts for visualizations
+- Clean Architecture pattern
 ## Live Demo
 
 🚀 **Try it now**: [https://trip.evaluate.autos/](https://trip.evaluate.autos/)
@@ -52,49 +47,59 @@ npm install
 
 # Run development server
 npm run dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.
-
-### Production Build
-
-```bash
+# Build for production
 npm run build
+
+# Start production server
 npm start
 ```
 
+Open http://localhost:3000 in your browser.
+
 ## Documentation
 
-- [Usage Guide](./USAGE.md) - Detailed instructions for using the application
-- [Contributing Guide](./CONTRIBUTING.md) - Developer documentation and contribution guidelines
+- USAGE.md - User guide and features
+- DEPLOYMENT.md - Deployment instructions
+- CONTRIBUTING.md - Development guide
+
+## Architecture
+
+The application follows Clean Architecture principles:
+
+- Domain Layer: Core business logic and entities
+- Application Layer: Use cases and business rules
+- Infrastructure Layer: External services and data access
+- Presentation Layer: UI components and state management
+
+State management uses Zustand with separate stores for:
+- Vehicles
+- Trips
+- Settings
+- Analytics
 
 ## Data Storage
 
-All data is stored locally in your browser's Local Storage. This means:
-- Complete privacy - data never leaves your device
-- No internet connection required
+All data is stored locally in browser Local Storage:
+- Complete privacy, data never leaves your device
+- No internet required after first load
 - Fast performance with no network latency
-- Data is device and browser specific
+- Regular JSON exports recommended for backup
 
-**Important**: Regular exports to JSON are recommended for backup purposes.
-
-## Browser Compatibility
+## Browser Support
 
 - Chrome/Edge 90+
 - Firefox 88+
 - Safari 14+
-- Any modern browser with ES6+ support
+- Modern browsers with ES6+ support
 
 ## License
 
-MIT License - See LICENSE file for details.
+MIT License
 
 ## Links
 
-- **GitHub**: [github.com/ajithrn/ev-triplog](https://github.com/ajithrn/ev-triplog)
-- **Developer**: [ajithrn.com](https://ajithrn.com)
+- Live Demo: https://trip.evaluate.autos/
+- GitHub: https://github.com/ajithrn/ev-triplog
+- Developer: https://ajithrn.com
 - **Support**: [Buy me a coffee](https://buymeacoffee.com/ajithrn)
-
----
-
-© 2025 EV Trip Log • Made with care for a sustainable future

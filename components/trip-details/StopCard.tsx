@@ -2,8 +2,7 @@
 
 import { useState } from 'react';
 import { Edit, Trash2, Zap } from 'lucide-react';
-import { useTrips } from '@/contexts/TripContext';
-import { useSettings } from '@/contexts/SettingsContext';
+import { useTrips, useSettings } from '@/src/presentation/hooks';
 import {
   formatDistance,
   formatEnergy,

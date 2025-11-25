@@ -22,119 +22,84 @@ Complete guide for using EV Trip Log to track your electric vehicle trips and an
 
 ### Dashboard Overview
 
-The dashboard displays:
-- Active trip status (if any)
-- Total statistics (trips, distance, energy, efficiency)
-- Recent completed trips
-- Quick access to start new trips
+The dashboard displays active trip status, total statistics, recent trips, and quick access to start new trips.
 
-## Progressive Web App (PWA)
+## Progressive Web App
 
 ### Installing the App
 
-The app will automatically show an install prompt when you first visit. You can also install manually:
+Desktop (Chrome/Edge/Brave):
+- Click the install icon in the address bar
+- Select "Install"
 
-**Desktop (Chrome/Edge/Brave)**:
-1. Look for the install icon (⊕) in the address bar
-2. Click "Install" to add to your desktop
+Mobile (Android):
+- Tap menu and select "Add to Home screen"
 
-**Mobile (Android)**:
-1. Tap the menu (⋮) and select "Add to Home screen"
-
-**Mobile (iOS/Safari)**:
-1. Tap the Share button
-2. Select "Add to Home Screen"
+Mobile (iOS/Safari):
+- Tap Share button
+- Select "Add to Home Screen"
 
 ### Offline Functionality
 
-The app works completely offline after your first visit. All pages, features, and data are accessible without internet connection.
-
-**What Works Offline**:
-- All pages and navigation
-- Create and edit trips
-- Add stops and charging sessions
-- View analytics and export data
-
-### Automatic Updates
-
-The app checks for updates when you open it. If an update is available, you'll see a prompt to reload and get the latest version.
+The app works completely offline after first visit. All features are accessible without internet connection.
 
 ## Vehicle Management
 
 ### Adding a Vehicle
 
-1. Navigate to **Vehicles** page
-2. Click **"Add Vehicle"**
-3. Fill in the required information:
-   - **Name**: Custom name for your vehicle (e.g., "My Tesla Model 3")
-   - **Make**: Manufacturer (e.g., "Tesla")
-   - **Model**: Model name (e.g., "Model 3")
-   - **Year**: Manufacturing year
-   - **Battery Capacity**: Total battery capacity in kWh (e.g., 75)
-   - **Charging Efficiency**: Percentage efficiency (e.g., 88 means 88% efficient, 12% loss)
-4. Click **"Add Vehicle"** to save
+1. Navigate to Vehicles page
+2. Click "Add Vehicle"
+3. Fill in required information:
+   - Name: Custom name for your vehicle
+   - Make: Manufacturer
+   - Model: Model name
+   - Year: Manufacturing year
+   - Battery Capacity: Total capacity in kWh
+   - Charging Efficiency: Percentage efficiency
+4. Click "Add Vehicle" to save
 
-### Editing a Vehicle
+### Editing and Deleting
 
-1. Go to Vehicles page
-2. Click on the vehicle you want to edit
-3. Update the information
-4. Save changes
-
-### Deleting a Vehicle
-
-1. Navigate to the vehicle edit page
-2. Click the delete button
-3. Confirm deletion
-
-**Note**: You cannot delete a vehicle that has associated trips.
+- Click on vehicle to edit details
+- Use delete button to remove (cannot delete vehicles with trips)
 
 ## Trip Tracking
 
 ### Starting a New Trip
 
-1. Go to **Trips** page
-2. Click **"New Trip"**
+1. Go to Trips page
+2. Click "New Trip"
 3. Enter trip details:
-   - **Trip Name**: Descriptive name (e.g., "Weekend Road Trip")
-   - **Vehicle**: Select from your vehicles
-   - **Starting Odometer**: Current odometer reading in km
-   - **Starting Battery %**: Current battery percentage
-   - **Starting Battery kWh**: Auto-calculated based on vehicle capacity
-   - **Location**: Optional starting location
-   - **Notes**: Optional trip notes
-4. Click **"Start Trip"**
+   - Trip Name
+   - Vehicle selection
+   - Starting Odometer (km)
+   - Starting Battery percentage
+   - Optional: Location and notes
+4. Click "Start Trip"
 
 ### Adding Stops
 
 During an active trip:
 
-1. Click **"Add Stop"** on the trip details page
+1. Click "Add Stop" on trip details page
 2. Enter current readings:
-   - **Odometer**: Current odometer reading in km
-   - **Battery %**: Current battery percentage
-   - **Battery kWh**: Current battery level in kWh
-   - **Location**: Optional location name
-   - **Notes**: Optional notes about this stop
-3. Click **"Add Stop"**
+   - Odometer reading
+   - Battery percentage
+   - Battery kWh
+   - Optional: Location and notes
+3. Click "Add Stop"
 
-The app automatically calculates for each stretch:
-- Distance traveled (km)
-- Energy consumed (kWh)
-- Efficiency (kWh/km and km/kWh)
-- Battery percentage used
-- km per percentage point
+The app automatically calculates:
+- Distance traveled
+- Energy consumed
+- Efficiency metrics
+- Battery usage
 
 ### Completing a Trip
 
-1. On the trip details page, click **"Complete Trip"**
-2. Review the trip summary showing:
-   - Total distance
-   - Total energy used
-   - Average efficiency
-   - All stops and stretches
-   - Charging sessions (if any)
-3. Export the trip data if needed
+1. Click "Complete Trip" on trip details page
+2. Review trip summary
+3. Export data if needed
 
 ## Charging Sessions
 
@@ -142,68 +107,40 @@ The app automatically calculates for each stretch:
 
 At any stop during a trip:
 
-1. Click **"Add Charging"** on the stop card
+1. Click "Add Charging" on the stop card
 2. Enter charging details:
-   - **Start SOC**: Battery percentage when charging started
-   - **End SOC**: Battery percentage when charging ended
-   - **Start kWh**: Battery kWh when charging started
-   - **End kWh**: Battery kWh when charging ended
-   - **Cost**: Total charging cost in ₹
-   - **Duration**: Charging time in minutes
-   - **Charger Type**: Optional (e.g., "DC Fast Charger", "AC Slow Charger")
-   - **Location**: Optional charging station location
-3. Click **"Add Charging Session"**
+   - Start and End SOC (percentage)
+   - Start and End kWh
+   - Cost
+   - Duration (minutes)
+   - Optional: Charger type and location
+3. Click "Add Charging Session"
 
-The app automatically calculates:
-- Energy added (kWh)
-- Cost per kWh
-- Charging efficiency
-
-### Understanding Charging Impact
-
-When you add a charging session at a stop:
-- The next stretch calculation uses the **post-charging** battery level
-- This ensures accurate efficiency measurements for driving segments
-- Charging energy is tracked separately from driving consumption
+The app automatically calculates energy added, cost per kWh, and charging efficiency.
 
 ## Analytics Dashboard
 
 ### Viewing Statistics
 
-Navigate to the **Analytics** page to see:
+Navigate to Analytics page to see:
 
-**Aggregate Metrics**:
-- Total number of trips
-- Total distance traveled
-- Total energy consumed
+- Total trips, distance, energy consumed
 - Average efficiency across all trips
-- Total charging costs
-- Total charging sessions
-
-**Visual Charts**:
-- Efficiency trends over time
-- Distance and energy usage patterns
-- Charging cost analysis
-
-### Filtering Data
-
-- View all trips or filter by specific vehicle
-- Analyze trends over different time periods
-- Compare performance across vehicles
+- Charging costs and sessions
+- Visual charts and trends
+- Time period filtering
 
 ### Understanding Efficiency Metrics
 
-**kWh/km** (Energy per distance):
+kWh/km (Energy per distance):
 - Lower is better
-- Shows how much energy you use per kilometer
-- Affected by driving style, speed, terrain, weather
+- Shows energy use per kilometer
 
-**km/kWh** (Distance per energy):
+km/kWh (Distance per energy):
 - Higher is better
-- Shows how far you can travel per kWh
-- Inverse of kWh/km
+- Shows distance per kWh
 
-**% per km** (Battery percentage per kilometer):
+Percentage per km:
 - Shows battery drain rate
 - Useful for range estimation
 
@@ -213,60 +150,40 @@ Navigate to the **Analytics** page to see:
 
 From any completed trip page:
 
-**CSV Export**:
-1. Click **"Export to CSV"**
-2. Opens spreadsheet-compatible file with:
-   - All stops and their data
-   - Stretch calculations
-   - Charging sessions
-   - Trip summary
+CSV Export:
+- Spreadsheet-compatible file with all trip data
 
-**PDF Report**:
-1. Click **"Export to PDF"**
-2. Generates detailed trip report with:
-   - Trip overview
-   - Stop-by-stop breakdown
-   - Efficiency metrics
-   - Charging session details
-   - Charts and visualizations
+PDF Report:
+- Detailed trip report with charts
 
-**JSON Backup**:
-1. Click **"Export to JSON"**
-2. Downloads complete trip data in JSON format
-3. Useful for data backup or migration
+JSON Backup:
+- Complete trip data for backup
 
 ### Backing Up All Data
 
-From the Analytics page:
-1. Click **"Export All Data"**
-2. Downloads JSON file containing:
-   - All vehicles
-   - All trips
-   - All stops
-   - All charging sessions
-
-**Recommendation**: Export your data regularly to prevent data loss.
+From Analytics page:
+- Click "Export All Data"
+- Downloads JSON file with all vehicles, trips, and sessions
+- Recommended: Export regularly to prevent data loss
 
 ## Data Storage
 
 ### Local Storage
 
-All data is stored in your browser's Local Storage:
-- **Storage Keys**:
-  - `ev-trip-logger-vehicles`: Vehicle data
-  - `ev-trip-logger-trips`: Trip data
-- **Automatic Saving**: Data is saved immediately on every change
-- **Privacy**: Data never leaves your device
+All data is stored in browser Local Storage:
+- Complete privacy, data never leaves device
+- Works offline
+- Fast performance
+- Device and browser specific
 
 ### Storage Limitations
 
-**Advantages**:
+Advantages:
 - Complete privacy
-- Works offline
+- Offline functionality
 - Fast performance
-- No server costs
 
-**Limitations**:
+Limitations:
 - Data is device-specific
 - Data is browser-specific
 - Clearing browser data deletes trips
@@ -274,56 +191,55 @@ All data is stored in your browser's Local Storage:
 
 ### Best Practices
 
-1. **Regular Backups**: Export to JSON monthly
-2. **Important Trips**: Export to PDF for records
-3. **Consistent Browser**: Use the same browser for continuity
-4. **Avoid Cache Clearing**: Be careful when clearing browser data
+1. Export to JSON monthly for backup
+2. Export important trips to PDF
+3. Use same browser for continuity
+4. Avoid clearing browser data
 
 ## Tips for Accurate Tracking
 
 ### Battery Readings
 
-- Record battery levels at consistent times
-- Use the vehicle's displayed percentage
-- Note the kWh reading from the vehicle display
-- Be consistent with your measurement method
+- Record levels at consistent times
+- Use vehicle's displayed percentage
+- Note kWh reading from vehicle display
+- Be consistent with measurement method
 
 ### Odometer Readings
 
-- Always use the same odometer (trip meter or main odometer)
-- Record readings at the same point (start/end of charging, etc.)
-- Be precise with decimal places if your vehicle shows them
+- Use same odometer consistently
+- Record at same points
+- Be precise with decimal places
 
 ### Charging Sessions
 
-- Record SOC before plugging in
-- Record SOC after unplugging
-- Note the actual cost from the charging station
-- Include charger type for better analysis
+- Record SOC before and after charging
+- Note actual cost from station
+- Include charger type for analysis
 
 ### Location Notes
 
 - Use consistent naming for frequent locations
-- Include relevant details (highway, city, weather conditions)
-- Note any unusual circumstances (heavy traffic, extreme weather)
+- Include relevant details
+- Note unusual circumstances
 
 ## Troubleshooting
 
 ### Data Not Saving
 
 - Check if browser allows Local Storage
-- Ensure you're not in private/incognito mode
+- Ensure not in private/incognito mode
 - Check browser storage quota
 
 ### Incorrect Calculations
 
-- Verify all input values are correct
+- Verify all input values
 - Check vehicle battery capacity setting
 - Ensure odometer readings are sequential
 
 ### Missing Trips
 
-- Check if you're using the same browser
+- Check same browser is being used
 - Verify browser data hasn't been cleared
 - Restore from JSON backup if available
 
