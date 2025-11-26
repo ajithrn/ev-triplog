@@ -7,19 +7,17 @@ import AppPreferences from '@/components/settings/AppPreferences';
 
 export default function SettingsPage() {
   return (
-    <div className="w-full">
+    <div className="space-y-6 animate-fade-in">
       {/* Header */}
-      <div className="mb-8">
-        <div>
-          <h1 className="text-3xl sm:text-4xl font-bold text-base-content">Settings</h1>
-          <p className="mt-1 text-base-content/70">Customize your app experience and manage your data</p>
-        </div>
+      <div>
+        <h1 className="text-3xl sm:text-4xl font-bold text-base-content">Settings</h1>
+        <p className="mt-1 text-base-content/70">Customize your app experience and manage your data</p>
       </div>
 
       {/* Settings Sections */}
-      <div className="space-y-8">
+      <div className="space-y-6">
         {/* Theme Settings */}
-        <div className="card bg-base-100 shadow-xl">
+        <div className="card bg-base-200 shadow-lg border border-base-300">
           <div className="card-body">
             <div className="flex items-center gap-2 mb-4">
               <Palette className="h-6 w-6 text-primary" />
@@ -30,7 +28,7 @@ export default function SettingsPage() {
         </div>
 
         {/* App Preferences */}
-        <div className="card bg-base-100 shadow-xl">
+        <div className="card bg-base-200 shadow-lg border border-base-300">
           <div className="card-body">
             <div className="flex items-center gap-2 mb-4">
               <Sliders className="h-6 w-6 text-primary" />
@@ -41,7 +39,7 @@ export default function SettingsPage() {
         </div>
 
         {/* Data Management */}
-        <div className="card bg-base-100 shadow-xl">
+        <div className="card bg-base-200 shadow-lg border border-base-300">
           <div className="card-body">
             <div className="flex items-center gap-2 mb-4">
               <Database className="h-6 w-6 text-primary" />

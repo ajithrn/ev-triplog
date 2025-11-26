@@ -13,16 +13,13 @@ export function useSettings() {
   const distanceUnit = useSettingsStore((state) => state.distanceUnit);
   const dateFormat = useSettingsStore((state) => state.dateFormat);
   const timeFormat = useSettingsStore((state) => state.timeFormat);
+  const defaultVehicleId = useSettingsStore((state) => state.defaultVehicleId);
+  const lastBackupDate = useSettingsStore((state) => state.lastBackupDate);
   const isLoading = useSettingsStore((state) => state.isLoading);
   const error = useSettingsStore((state) => state.error);
 
   // Get store actions
   const loadSettings = useSettingsStore((state) => state.loadSettings);
-  const updateTheme = useSettingsStore((state) => state.updateTheme);
-  const updateCurrency = useSettingsStore((state) => state.updateCurrency);
-  const updateDistanceUnit = useSettingsStore((state) => state.updateDistanceUnit);
-  const updateDateFormat = useSettingsStore((state) => state.updateDateFormat);
-  const updateTimeFormat = useSettingsStore((state) => state.updateTimeFormat);
   const updateSettings = useSettingsStore((state) => state.updateSettings);
   const resetSettings = useSettingsStore((state) => state.resetSettings);
   const clearError = useSettingsStore((state) => state.clearError);
@@ -34,28 +31,30 @@ export function useSettings() {
     distanceUnit,
     dateFormat,
     timeFormat,
+    defaultVehicleId,
+    lastBackupDate,
   };
 
-  // Memoized callbacks
+  // Memoized callbacks for convenience methods
   const handleUpdateTheme = useCallback((newTheme: Settings['theme']) => {
-    updateTheme(newTheme);
-  }, [updateTheme]);
+    updateSettings({ theme: newTheme });
+  }, [updateSettings]);
 
   const handleUpdateCurrency = useCallback((newCurrency: string) => {
-    updateCurrency(newCurrency);
-  }, [updateCurrency]);
+    updateSettings({ currency: newCurrency });
+  }, [updateSettings]);
 
   const handleUpdateDistanceUnit = useCallback((unit: Settings['distanceUnit']) => {
-    updateDistanceUnit(unit);
-  }, [updateDistanceUnit]);
+    updateSettings({ distanceUnit: unit });
+  }, [updateSettings]);
 
   const handleUpdateDateFormat = useCallback((format: Settings['dateFormat']) => {
-    updateDateFormat(format);
-  }, [updateDateFormat]);
+    updateSettings({ dateFormat: format });
+  }, [updateSettings]);
 
   const handleUpdateTimeFormat = useCallback((format: Settings['timeFormat']) => {
-    updateTimeFormat(format);
-  }, [updateTimeFormat]);
+    updateSettings({ timeFormat: format });
+  }, [updateSettings]);
 
   const handleUpdateSettings = useCallback((newSettings: Partial<Settings>) => {
     updateSettings(newSettings);
@@ -73,6 +72,8 @@ export function useSettings() {
     distanceUnit,
     dateFormat,
     timeFormat,
+    defaultVehicleId,
+    lastBackupDate,
     isLoading,
     error,
 

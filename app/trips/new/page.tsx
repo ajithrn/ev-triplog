@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import DatePicker from 'react-datepicker';
-import { useTrips, useVehicles } from '@/src/presentation/hooks';
+import { useTrips, useVehicles, useSettings } from '@/src/presentation/hooks';
 import { MapPin, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 
@@ -11,6 +11,7 @@ export default function NewTripPage() {
   const router = useRouter();
   const { createTrip, activeTrip } = useTrips();
   const { vehicles } = useVehicles();
+  const { settings } = useSettings();
   const [mounted, setMounted] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const { trips } = useTrips(); // Add trips from useTrips
@@ -26,13 +27,18 @@ export default function NewTripPage() {
   useEffect(() => {
     setMounted(true);
     if (vehicles.length > 0 && !formData.vehicleId) {
-      const firstVehicle = vehicles[0];
+      // Use default vehicle from settings if available, otherwise use first vehicle
+      const defaultVehicle = settings.defaultVehicleId 
+        ? vehicles.find(v => v.id === settings.defaultVehicleId)
+        : null;
+      const vehicleToSelect = defaultVehicle || vehicles[0];
+      
       setFormData((prev) => ({
         ...prev,
-        vehicleId: firstVehicle.id,
+        vehicleId: vehicleToSelect.id,
       }));
     }
-  }, [vehicles, formData.vehicleId]);
+  }, [vehicles, formData.vehicleId, settings.defaultVehicleId]);
 
   // Auto-fill odometer and battery from last trip
   useEffect(() => {

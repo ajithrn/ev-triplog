@@ -2,8 +2,7 @@ import { create } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
 import type { Settings } from '../../core/domain/entities';
-import { storageAdapter, STORAGE_KEYS } from '../../infrastructure/storage/storageAdapter';
-import { validateSettings } from '../../shared/schemas/validation';
+import { settingsRepository } from '../../infrastructure/storage/storageRepository';
 
 interface SettingsState extends Settings {
   isLoading: boolean;
@@ -13,11 +12,6 @@ interface SettingsState extends Settings {
 interface SettingsActions {
   // Settings operations
   loadSettings: () => void;
-  updateTheme: (theme: Settings['theme']) => void;
-  updateCurrency: (currency: string) => void;
-  updateDistanceUnit: (unit: Settings['distanceUnit']) => void;
-  updateDateFormat: (format: Settings['dateFormat']) => void;
-  updateTimeFormat: (format: Settings['timeFormat']) => void;
   updateSettings: (settings: Partial<Settings>) => void;
   resetSettings: () => void;
   
@@ -34,6 +28,31 @@ const DEFAULT_SETTINGS: Settings = {
   distanceUnit: 'km',
   dateFormat: 'dd/MM/yyyy',
   timeFormat: '24h',
+  defaultVehicleId: undefined,
+  lastBackupDate: undefined,
+};
+
+// Helper function to get current settings from store
+const getCurrentSettings = (state: SettingsStore): Settings => ({
+  theme: state.theme,
+  currency: state.currency,
+  distanceUnit: state.distanceUnit,
+  dateFormat: state.dateFormat,
+  timeFormat: state.timeFormat,
+  defaultVehicleId: state.defaultVehicleId,
+  lastBackupDate: state.lastBackupDate,
+});
+
+// Helper function to apply theme to document
+const applyTheme = (theme: Settings['theme']) => {
+  if (typeof window !== 'undefined') {
+    if (theme === 'system') {
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+    } else {
+      document.documentElement.setAttribute('data-theme', theme);
+    }
+  }
 };
 
 export const useSettingsStore = create<SettingsStore>()(
@@ -53,26 +72,21 @@ export const useSettingsStore = create<SettingsStore>()(
               state.error = null;
             });
 
-            const storedSettings = storageAdapter.get<Settings>(STORAGE_KEYS.SETTINGS);
+            const storedSettings = settingsRepository.get();
             
             if (storedSettings) {
-              try {
-                const validatedSettings = validateSettings(storedSettings);
-                set((state) => {
-                  Object.assign(state, validatedSettings);
-                  state.isLoading = false;
-                });
-              } catch (error) {
-                console.warn('Invalid settings found, using defaults:', error);
-                set((state) => {
-                  Object.assign(state, DEFAULT_SETTINGS);
-                  state.isLoading = false;
-                });
-              }
+              set((state) => {
+                Object.assign(state, storedSettings);
+                state.isLoading = false;
+              });
+              // Apply the loaded theme
+              applyTheme(storedSettings.theme);
             } else {
               set((state) => {
                 state.isLoading = false;
               });
+              // Apply default theme
+              applyTheme(DEFAULT_SETTINGS.theme);
             }
           } catch (error) {
             set((state) => {
@@ -82,142 +96,7 @@ export const useSettingsStore = create<SettingsStore>()(
           }
         },
 
-        // Update theme
-        updateTheme: (theme: Settings['theme']) => {
-          try {
-            set((state) => {
-              state.theme = theme;
-              state.error = null;
-            });
-
-            const currentSettings = get();
-            const settings: Settings = {
-              theme: currentSettings.theme,
-              currency: currentSettings.currency,
-              distanceUnit: currentSettings.distanceUnit,
-              dateFormat: currentSettings.dateFormat,
-              timeFormat: currentSettings.timeFormat,
-            };
-            storageAdapter.set(STORAGE_KEYS.SETTINGS, settings);
-
-            // Apply theme to document
-            if (typeof window !== 'undefined') {
-              if (theme === 'system') {
-                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-                document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
-              } else {
-                document.documentElement.setAttribute('data-theme', theme);
-              }
-            }
-          } catch (error) {
-            set((state) => {
-              state.error = error instanceof Error ? error.message : 'Failed to update theme';
-            });
-            throw error;
-          }
-        },
-
-        // Update currency
-        updateCurrency: (currency: string) => {
-          try {
-            set((state) => {
-              state.currency = currency;
-              state.error = null;
-            });
-
-            const currentSettings = get();
-            const settings: Settings = {
-              theme: currentSettings.theme,
-              currency: currentSettings.currency,
-              distanceUnit: currentSettings.distanceUnit,
-              dateFormat: currentSettings.dateFormat,
-              timeFormat: currentSettings.timeFormat,
-            };
-            storageAdapter.set(STORAGE_KEYS.SETTINGS, settings);
-          } catch (error) {
-            set((state) => {
-              state.error = error instanceof Error ? error.message : 'Failed to update currency';
-            });
-            throw error;
-          }
-        },
-
-        // Update distance unit
-        updateDistanceUnit: (unit: Settings['distanceUnit']) => {
-          try {
-            set((state) => {
-              state.distanceUnit = unit;
-              state.error = null;
-            });
-
-            const currentSettings = get();
-            const settings: Settings = {
-              theme: currentSettings.theme,
-              currency: currentSettings.currency,
-              distanceUnit: currentSettings.distanceUnit,
-              dateFormat: currentSettings.dateFormat,
-              timeFormat: currentSettings.timeFormat,
-            };
-            storageAdapter.set(STORAGE_KEYS.SETTINGS, settings);
-          } catch (error) {
-            set((state) => {
-              state.error = error instanceof Error ? error.message : 'Failed to update distance unit';
-            });
-            throw error;
-          }
-        },
-
-        // Update date format
-        updateDateFormat: (format: Settings['dateFormat']) => {
-          try {
-            set((state) => {
-              state.dateFormat = format;
-              state.error = null;
-            });
-
-            const currentSettings = get();
-            const settings: Settings = {
-              theme: currentSettings.theme,
-              currency: currentSettings.currency,
-              distanceUnit: currentSettings.distanceUnit,
-              dateFormat: currentSettings.dateFormat,
-              timeFormat: currentSettings.timeFormat,
-            };
-            storageAdapter.set(STORAGE_KEYS.SETTINGS, settings);
-          } catch (error) {
-            set((state) => {
-              state.error = error instanceof Error ? error.message : 'Failed to update date format';
-            });
-            throw error;
-          }
-        },
-
-        // Update time format
-        updateTimeFormat: (format: Settings['timeFormat']) => {
-          try {
-            set((state) => {
-              state.timeFormat = format;
-              state.error = null;
-            });
-
-            const currentSettings = get();
-            const settings: Settings = {
-              theme: currentSettings.theme,
-              currency: currentSettings.currency,
-              distanceUnit: currentSettings.distanceUnit,
-              dateFormat: currentSettings.dateFormat,
-              timeFormat: currentSettings.timeFormat,
-            };
-            storageAdapter.set(STORAGE_KEYS.SETTINGS, settings);
-          } catch (error) {
-            set((state) => {
-              state.error = error instanceof Error ? error.message : 'Failed to update time format';
-            });
-            throw error;
-          }
-        },
-
-        // Update multiple settings at once
+        // Update settings (handles all setting updates)
         updateSettings: (newSettings: Partial<Settings>) => {
           try {
             set((state) => {
@@ -225,24 +104,12 @@ export const useSettingsStore = create<SettingsStore>()(
               state.error = null;
             });
 
-            const currentSettings = get();
-            const settings: Settings = {
-              theme: currentSettings.theme,
-              currency: currentSettings.currency,
-              distanceUnit: currentSettings.distanceUnit,
-              dateFormat: currentSettings.dateFormat,
-              timeFormat: currentSettings.timeFormat,
-            };
-            storageAdapter.set(STORAGE_KEYS.SETTINGS, settings);
+            const currentSettings = getCurrentSettings(get());
+            settingsRepository.save(currentSettings);
 
             // Apply theme if it was updated
-            if (newSettings.theme && typeof window !== 'undefined') {
-              if (newSettings.theme === 'system') {
-                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-                document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
-              } else {
-                document.documentElement.setAttribute('data-theme', newSettings.theme);
-              }
+            if (newSettings.theme) {
+              applyTheme(newSettings.theme);
             }
           } catch (error) {
             set((state) => {
@@ -260,13 +127,8 @@ export const useSettingsStore = create<SettingsStore>()(
               state.error = null;
             });
 
-            storageAdapter.set(STORAGE_KEYS.SETTINGS, DEFAULT_SETTINGS);
-
-            // Apply default theme
-            if (typeof window !== 'undefined') {
-              const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-              document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
-            }
+            settingsRepository.save(DEFAULT_SETTINGS);
+            applyTheme(DEFAULT_SETTINGS.theme);
           } catch (error) {
             set((state) => {
               state.error = error instanceof Error ? error.message : 'Failed to reset settings';
@@ -290,6 +152,8 @@ export const useSettingsStore = create<SettingsStore>()(
           distanceUnit: state.distanceUnit,
           dateFormat: state.dateFormat,
           timeFormat: state.timeFormat,
+          defaultVehicleId: state.defaultVehicleId,
+          lastBackupDate: state.lastBackupDate,
         }),
       }
     ),
@@ -303,12 +167,6 @@ export const selectCurrency = (state: SettingsStore) => state.currency;
 export const selectDistanceUnit = (state: SettingsStore) => state.distanceUnit;
 export const selectDateFormat = (state: SettingsStore) => state.dateFormat;
 export const selectTimeFormat = (state: SettingsStore) => state.timeFormat;
-export const selectSettings = (state: SettingsStore): Settings => ({
-  theme: state.theme,
-  currency: state.currency,
-  distanceUnit: state.distanceUnit,
-  dateFormat: state.dateFormat,
-  timeFormat: state.timeFormat,
-});
+export const selectSettings = (state: SettingsStore): Settings => getCurrentSettings(state);
 export const selectIsLoading = (state: SettingsStore) => state.isLoading;
 export const selectError = (state: SettingsStore) => state.error;

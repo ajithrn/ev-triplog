@@ -1,7 +1,7 @@
-import type { Vehicle, Trip } from '../../core/domain/entities';
+import type { Vehicle, Trip, Settings } from '../../core/domain/entities';
 import type { IVehicleRepository, ITripRepository, IStorageRepository } from '../../core/domain/interfaces';
 import { storageAdapter, STORAGE_KEYS } from './storageAdapter';
-import { safeValidateVehicle, safeValidateTrip } from '../../shared/schemas/validation';
+import { safeValidateVehicle, safeValidateTrip, validateSettings } from '../../shared/schemas/validation';
 
 // Vehicle Repository Implementation
 export class VehicleRepository implements IVehicleRepository {
@@ -106,6 +106,29 @@ export class TripRepository implements ITripRepository {
   }
 }
 
+// Settings Repository Implementation
+export class SettingsRepository {
+  get(): Settings | null {
+    const settings = storageAdapter.get<Settings>(STORAGE_KEYS.SETTINGS);
+    if (!settings) return null;
+    
+    try {
+      return validateSettings(settings);
+    } catch (error) {
+      console.warn('Invalid settings data found:', error);
+      return null;
+    }
+  }
+
+  save(settings: Settings): void {
+    storageAdapter.set(STORAGE_KEYS.SETTINGS, settings);
+  }
+
+  clear(): void {
+    storageAdapter.remove(STORAGE_KEYS.SETTINGS);
+  }
+}
+
 // Storage Repository Implementation
 export class StorageRepository implements IStorageRepository {
   constructor(
@@ -178,4 +201,4 @@ export class StorageRepository implements IStorageRepository {
 // Create singleton instances
 export const vehicleRepository = new VehicleRepository();
 export const tripRepository = new TripRepository();
-export const storageRepository = new StorageRepository(vehicleRepository, tripRepository);
+export const settingsRepository = new SettingsRepository();

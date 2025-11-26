@@ -20,12 +20,12 @@ export default function ThemeSelector() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {AVAILABLE_THEMES.map((theme) => (
           <button
             key={theme.value}
             onClick={() => handleThemeChange(theme.value)}
-            className={`relative p-6 rounded-lg border-2 transition-all hover:scale-105 ${
+            className={`relative p-6 rounded-lg border-2 transition-all ${
               settings.theme === theme.value
                 ? 'border-primary shadow-lg'
                 : 'border-base-300 hover:border-base-content/20'

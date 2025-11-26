@@ -1,29 +1,21 @@
 'use client';
 
-import { useState } from 'react';
 import { useSettings, useVehicles } from '@/src/presentation/hooks';
-import { Save, CheckCircle } from 'lucide-react';
+import { CheckCircle } from 'lucide-react';
+import { useState } from 'react';
 
 export default function AppPreferences() {
   const { settings, updateSettings } = useSettings();
   const { vehicles, isLoading } = useVehicles();
-  const [localSettings, setLocalSettings] = useState(settings);
   const [showSaved, setShowSaved] = useState(false);
-  const [hasChanges, setHasChanges] = useState(false);
 
   const handleChange = (key: string, value: any) => {
-    setLocalSettings((prev) => ({ ...prev, [key]: value }));
-    setHasChanges(true);
-  };
-
-  const handleSave = () => {
     try {
-      updateSettings(localSettings);
-      setHasChanges(false);
+      updateSettings({ [key]: value });
       setShowSaved(true);
-      setTimeout(() => setShowSaved(false), 3000);
+      setTimeout(() => setShowSaved(false), 2000);
     } catch (err) {
-      console.error('Failed to save preferences:', err);
+      console.error('Failed to save preference:', err);
     }
   };
 
@@ -32,9 +24,17 @@ export default function AppPreferences() {
       <div>
         <h3 className="text-lg font-semibold mb-2">App Preferences</h3>
         <p className="text-sm opacity-70 mb-4">
-          Configure default settings for your app
+          Configure default settings for your app. Changes are saved automatically.
         </p>
       </div>
+
+      {/* Success Message */}
+      {showSaved && (
+        <div className="alert alert-success shadow-lg">
+          <CheckCircle className="h-5 w-5" />
+          <span className="font-semibold">Preference saved successfully!</span>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Distance Unit */}
@@ -44,7 +44,7 @@ export default function AppPreferences() {
           </label>
           <select
             className="select select-bordered w-full"
-            value={localSettings.distanceUnit}
+            value={settings.distanceUnit}
             onChange={(e) => handleChange('distanceUnit', e.target.value)}
           >
             <option value="km">Kilometers (km)</option>
@@ -64,7 +64,7 @@ export default function AppPreferences() {
           </label>
           <select
             className="select select-bordered w-full"
-            value={localSettings.currency}
+            value={settings.currency}
             onChange={(e) => handleChange('currency', e.target.value)}
           >
             <option value="₹">Indian Rupee (₹)</option>
@@ -89,7 +89,7 @@ export default function AppPreferences() {
           </label>
           <select
             className="select select-bordered w-full"
-            value={localSettings.dateFormat}
+            value={settings.dateFormat}
             onChange={(e) => handleChange('dateFormat', e.target.value)}
           >
             <option value="dd/MM/yyyy">31/12/2024 (DD/MM/YYYY)</option>
@@ -106,14 +106,34 @@ export default function AppPreferences() {
           </label>
         </div>
 
-        {/* Default Vehicle */}
+        {/* Time Format */}
         <div className="form-control">
+          <label className="label">
+            <span className="label-text font-semibold">Time Format</span>
+          </label>
+          <select
+            className="select select-bordered w-full"
+            value={settings.timeFormat}
+            onChange={(e) => handleChange('timeFormat', e.target.value)}
+          >
+            <option value="12h">12-hour (3:30 PM)</option>
+            <option value="24h">24-hour (15:30)</option>
+          </select>
+          <label className="label">
+            <span className="label-text-alt opacity-70">
+              Choose how times are displayed
+            </span>
+          </label>
+        </div>
+
+        {/* Default Vehicle */}
+        <div className="form-control md:col-span-2">
           <label className="label">
             <span className="label-text font-semibold">Default Vehicle</span>
           </label>
           <select
             className="select select-bordered w-full"
-            value={localSettings.defaultVehicleId || ''}
+            value={settings.defaultVehicleId || ''}
             onChange={(e) => handleChange('defaultVehicleId', e.target.value || undefined)}
             disabled={isLoading}
           >
@@ -134,24 +154,6 @@ export default function AppPreferences() {
             </span>
           </label>
         </div>
-      </div>
-
-      {/* Save Button */}
-      <div className="flex items-center gap-4">
-        <button
-          onClick={handleSave}
-          disabled={!hasChanges}
-          className={`btn btn-primary ${!hasChanges ? 'btn-disabled' : ''}`}
-        >
-          <Save className="h-4 w-4" />
-          Save Preferences
-        </button>
-        {showSaved && (
-          <div className="flex items-center gap-2 text-success">
-            <CheckCircle className="h-5 w-5" />
-            <span className="font-semibold">Preferences saved successfully!</span>
-          </div>
-        )}
       </div>
 
       {/* Info Alert */}
