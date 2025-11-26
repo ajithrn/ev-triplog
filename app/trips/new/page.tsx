@@ -40,7 +40,7 @@ export default function NewTripPage() {
     }
   }, [vehicles, formData.vehicleId, settings.defaultVehicleId]);
 
-  // Auto-fill odometer and battery from last trip
+  // Auto-fill odometer, battery, and location from last trip
   useEffect(() => {
     if (formData.vehicleId && trips.length > 0) {
       // Get trips for this vehicle
@@ -62,10 +62,14 @@ export default function NewTripPage() {
             ? lastStop.chargingSession.endSoc
             : lastStop.batteryPercent;
 
+          // Get last location
+          const lastLocation = lastStop.location || '';
+
           setFormData((prev) => ({
             ...prev,
             odometer: lastOdo,
             batteryPercent: lastCharge,
+            location: lastLocation,
           }));
         }
       }
