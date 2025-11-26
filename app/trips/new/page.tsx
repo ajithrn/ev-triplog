@@ -13,11 +13,12 @@ export default function NewTripPage() {
   const { vehicles } = useVehicles();
   const [mounted, setMounted] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+  const { trips } = useTrips(); // Add trips from useTrips
   const [formData, setFormData] = useState({
     name: '',
     vehicleId: '',
-    odometer: 0,
-    batteryPercent: 100,
+    odometer: '' as number | string,
+    batteryPercent: 100 as number | string,
     location: '',
     notes: '',
   });
@@ -32,6 +33,38 @@ export default function NewTripPage() {
       }));
     }
   }, [vehicles, formData.vehicleId]);
+
+  // Auto-fill odometer and battery from last trip
+  useEffect(() => {
+    if (formData.vehicleId && trips.length > 0) {
+      // Get trips for this vehicle
+      const vehicleTrips = trips.filter((t) => t.vehicleId === formData.vehicleId);
+      
+      // Sort by start date descending to get the last one
+      const sortedTrips = [...vehicleTrips].sort((a, b) => b.startDate - a.startDate);
+
+      if (sortedTrips.length > 0) {
+        const lastTrip = sortedTrips[0];
+        
+        // Get last stop data
+        if (lastTrip.stops.length > 0) {
+          const lastStop = lastTrip.stops[lastTrip.stops.length - 1];
+          const lastOdo = lastStop.odometer;
+          
+          // Get last charge (from charging session end SOC or stop battery percent)
+          const lastCharge = lastStop.chargingSession
+            ? lastStop.chargingSession.endSoc
+            : lastStop.batteryPercent;
+
+          setFormData((prev) => ({
+            ...prev,
+            odometer: lastOdo,
+            batteryPercent: lastCharge,
+          }));
+        }
+      }
+    }
+  }, [formData.vehicleId, trips]);
 
   // Redirect if there's already an active trip
   useEffect(() => {
@@ -63,11 +96,16 @@ export default function NewTripPage() {
     const vehicle = vehicles.find((v) => v.id === vehicleId);
     if (!vehicle) return;
     
-    const batteryKwh = (vehicle.batteryCapacity * batteryPercent) / 100;
+    // Ensure numeric values
+    const finalBatteryPercent = Number(batteryPercent) || 0;
+    const finalOdometer = Number(stopData.odometer) || 0;
+    
+    const batteryKwh = (vehicle.batteryCapacity * finalBatteryPercent) / 100;
     
     const trip = createTrip(name, vehicleId, {
       ...stopData,
-      batteryPercent,
+      odometer: finalOdometer,
+      batteryPercent: finalBatteryPercent,
       batteryKwh,
       timestamp: selectedDate.getTime(),
     });
@@ -76,9 +114,12 @@ export default function NewTripPage() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
+    
     setFormData((prev) => ({
       ...prev,
-      [name]: name === 'odometer' || name === 'batteryPercent' ? Number(value) : value,
+      [name]: name === 'odometer' || name === 'batteryPercent' 
+        ? (value === '' ? '' : Number(value)) 
+        : value,
     }));
   };
 
@@ -190,7 +231,7 @@ export default function NewTripPage() {
               {selectedVehicle && (
                 <label className="label">
                   <span className="label-text-alt">
-                    Battery capacity: {selectedVehicle.batteryCapacity} kWh • Current: {((selectedVehicle.batteryCapacity * formData.batteryPercent) / 100).toFixed(2)} kWh
+                    Battery capacity: {selectedVehicle.batteryCapacity} kWh • Current: {((selectedVehicle.batteryCapacity * (Number(formData.batteryPercent) || 0)) / 100).toFixed(2)} kWh
                   </span>
                 </label>
               )}
