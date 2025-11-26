@@ -1,5 +1,4 @@
 @import "tailwindcss";
-@import "react-datepicker/dist/react-datepicker.css";
 
 @plugin "daisyui";
 
@@ -72,11 +71,6 @@ html {
   white-space: normal !important;
   word-wrap: break-word !important;
   overflow-wrap: break-word !important;
-}
-
-/* React Datepicker custom styles */
-.react-datepicker-wrapper {
-  width: 100%;
 }
 
 /* Mobile-specific improvements */

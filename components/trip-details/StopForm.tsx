@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import DatePicker from 'react-datepicker';
 import { useTrips, useVehicles } from '@/src/presentation/hooks';
 
 interface StopFormProps {
@@ -57,14 +56,16 @@ export default function StopForm({ tripId, stop, onCancel }: StopFormProps) {
         <h3 className="card-title">{stop ? 'Edit Stop' : 'Add New Stop'}</h3>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="form-control">
-            <label className="label">
+            <label htmlFor="stopDateTime" className="label">
               <span className="label-text font-medium">Date & Time *</span>
             </label>
-            <DatePicker
-              selected={selectedDate}
-              onChange={(date) => date && setSelectedDate(date)}
-              showTimeSelect
-              dateFormat="PPp"
+            <input
+              type="datetime-local"
+              id="stopDateTime"
+              required
+              value={new Date(selectedDate.getTime() - selectedDate.getTimezoneOffset() * 60000).toISOString().slice(0, 16)}
+              onChange={(e) => setSelectedDate(new Date(e.target.value))}
+              step="60"
               className="input input-bordered w-full"
             />
           </div>

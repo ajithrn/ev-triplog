@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import DatePicker from 'react-datepicker';
 import { useTrips, useVehicles, useSettings } from '@/src/presentation/hooks';
 import { MapPin, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
@@ -192,14 +191,16 @@ export default function NewTripPage() {
             </div>
 
             <div className="form-control">
-              <label className="label">
+              <label htmlFor="startDateTime" className="label">
                 <span className="label-text font-medium">Start Date & Time *</span>
               </label>
-              <DatePicker
-                selected={selectedDate}
-                onChange={(date) => date && setSelectedDate(date)}
-                showTimeSelect
-                dateFormat="PPp"
+              <input
+                type="datetime-local"
+                id="startDateTime"
+                required
+                value={new Date(selectedDate.getTime() - selectedDate.getTimezoneOffset() * 60000).toISOString().slice(0, 16)}
+                onChange={(e) => setSelectedDate(new Date(e.target.value))}
+                step="60"
                 className="input input-bordered w-full"
               />
             </div>
