@@ -34,9 +34,9 @@ export function calculateStretch(fromStop: Stop, toStop: Stop): Stretch {
 /**
  * Calculate all stretches for a trip with cost tracking
  */
-export function calculateTripStretches(stops: Stop[]): Stretch[] {
+export function calculateTripStretches(stops: Stop[], initialCostPerKwh: number = 0): Stretch[] {
   const stretches: Stretch[] = [];
-  let lastKnownCostPerKwh = 0;
+  let currentCostPerKwh = initialCostPerKwh;
   
   for (let i = 0; i < stops.length - 1; i++) {
     const fromStop = stops[i];
@@ -45,8 +45,16 @@ export function calculateTripStretches(stops: Stop[]): Stretch[] {
     // Update cost per kWh if this stop has charging
     if (fromStop.chargingSession) {
       const chargingEnergy = fromStop.chargingSession.endKwh - fromStop.chargingSession.startKwh;
-      if (chargingEnergy > 0) {
-        lastKnownCostPerKwh = fromStop.chargingSession.cost / chargingEnergy;
+      const batteryEnergyBeforeCharge = fromStop.chargingSession.startKwh;
+      
+      // Calculate new weighted average cost
+      // (Current Value + New Value) / Total Energy
+      const currentValue = batteryEnergyBeforeCharge * currentCostPerKwh;
+      const addedValue = fromStop.chargingSession.cost;
+      const totalEnergy = batteryEnergyBeforeCharge + chargingEnergy;
+      
+      if (totalEnergy > 0) {
+        currentCostPerKwh = (currentValue + addedValue) / totalEnergy;
       }
     }
     
@@ -54,7 +62,7 @@ export function calculateTripStretches(stops: Stop[]): Stretch[] {
     const stretch = calculateStretch(fromStop, toStop);
     
     // Calculate estimated cost for this stretch
-    const estimatedCost = stretch.energyUsed * lastKnownCostPerKwh;
+    const estimatedCost = stretch.energyUsed * currentCostPerKwh;
     const costPerKm = stretch.distance > 0 ? estimatedCost / stretch.distance : 0;
     
     stretches.push({
@@ -65,6 +73,13 @@ export function calculateTripStretches(stops: Stop[]): Stretch[] {
   }
   
   return stretches;
+}
+
+/**
+ * Calculate total estimated driving cost for a trip
+ */
+export function calculateTripEstimatedCost(stretches: Stretch[]): number {
+  return stretches.reduce((sum, stretch) => sum + stretch.estimatedCost, 0);
 }
 
 /**

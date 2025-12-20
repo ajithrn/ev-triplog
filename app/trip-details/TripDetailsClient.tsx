@@ -64,7 +64,7 @@ export default function TripDetailsClient() {
 
   const tripId = searchParams.get('id');
   const trip = tripId ? getTripById(tripId) : null;
-  
+
   if (!trip) {
     return (
       <div className="card bg-base-200 shadow-xl max-w-md mx-auto mt-12 border border-base-300">
@@ -81,39 +81,37 @@ export default function TripDetailsClient() {
   }
 
   const vehicle = vehicles.find((v) => v.id === trip.vehicleId);
-  
+
   // Get all trips for this vehicle sorted by date to find last charging session
   const vehicleTrips = trips
     .filter(t => t.vehicleId === trip.vehicleId && t.status === 'completed')
     .sort((a, b) => a.startDate - b.startDate);
-  
-  // Find the last charging session cost per kWh from all trips
+
+  // Find the last charging session cost per kWh from all trips using weighted average
   let globalLastCostPerKwh = 0;
   for (const t of vehicleTrips) {
+    if (t.startDate >= trip.startDate) break;
+
     for (const stop of t.stops) {
       if (stop.chargingSession) {
-        const energy = stop.chargingSession.endKwh - stop.chargingSession.startKwh;
-        if (energy > 0) {
-          globalLastCostPerKwh = stop.chargingSession.cost / energy;
+        const chargingEnergy = stop.chargingSession.endKwh - stop.chargingSession.startKwh;
+        const batteryEnergyBeforeCharge = stop.chargingSession.startKwh;
+
+        // Weighted average
+        const currentValue = batteryEnergyBeforeCharge * globalLastCostPerKwh;
+        const addedValue = stop.chargingSession.cost;
+        const totalEnergy = batteryEnergyBeforeCharge + chargingEnergy;
+
+        if (totalEnergy > 0) {
+          globalLastCostPerKwh = (currentValue + addedValue) / totalEnergy;
         }
       }
-      // Stop when we reach the current trip
-      if (t.id === trip.id) break;
     }
-    if (t.id === trip.id) break;
   }
-  
+
   // Calculate stretches with the global cost per kWh context
-  const stretches = calculateTripStretches(trip.stops);
-  
-  // If no charging in current trip, apply global cost to stretches
-  if (globalLastCostPerKwh > 0 && stretches.every(s => s.costPerKm === 0)) {
-    stretches.forEach(stretch => {
-      stretch.estimatedCost = stretch.energyUsed * globalLastCostPerKwh;
-      stretch.costPerKm = stretch.distance > 0 ? stretch.estimatedCost / stretch.distance : 0;
-    });
-  }
-  
+  const stretches = calculateTripStretches(trip.stops, globalLastCostPerKwh);
+
   // Calculate total charging cost
   const totalChargingCost = trip.stops.reduce((sum, stop) => {
     return sum + (stop.chargingSession?.cost || 0);
@@ -257,11 +255,10 @@ export default function TripDetailsClient() {
             )}
             <button
               onClick={handleDeleteTrip}
-              className={`btn gap-2 ${
-                deleteConfirm
-                  ? 'btn-error'
-                  : 'btn-ghost text-error'
-              }`}
+              className={`btn gap-2 ${deleteConfirm
+                ? 'btn-error'
+                : 'btn-ghost text-error'
+                }`}
             >
               <Trash2 className="h-4 w-4" />
               {deleteConfirm ? 'Confirm?' : 'Delete'}
@@ -304,6 +301,19 @@ export default function TripDetailsClient() {
               {trip.averageEfficiency > 0 ? (1 / trip.averageEfficiency).toFixed(2) : 'N/A'}
             </p>
             <p className="text-xs text-base-content/60 mt-1">km/kWh</p>
+          </div>
+        </div>
+
+        <div className="card bg-base-200 shadow-lg border border-base-300">
+          <div className="card-body p-3 sm:p-4">
+            <div className="flex items-center gap-2 mb-2">
+              <DollarSign className="h-4 w-4 text-warning flex-shrink-0" />
+              <h3 className="text-xs font-medium text-base-content/70">Driving Cost</h3>
+            </div>
+            <p className="text-2xl sm:text-3xl font-bold text-base-content">
+              {formatCurrency(stretches.reduce((sum, s) => sum + s.estimatedCost, 0), settings)}
+            </p>
+            <p className="text-xs text-base-content/60 mt-1">est. consumption</p>
           </div>
         </div>
 
@@ -361,7 +371,7 @@ export default function TripDetailsClient() {
           const index = trip.stops.length - 1 - reverseIndex;
           const stretch = index < trip.stops.length - 1 ? stretches[index] : null;
           const isEditing = editingStop === stop.id;
-          
+
           return (
             <div key={stop.id}>
               {/* Stretch Info */}

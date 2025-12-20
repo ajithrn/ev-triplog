@@ -18,6 +18,7 @@ import {
 import { format } from 'date-fns';
 import {
   calculateTripStretches,
+  calculateTripEstimatedCost,
   formatDistance,
   formatEnergy,
 } from '@/utils/calculations';
@@ -51,7 +52,7 @@ export default function TripDetailsClient() {
   }
 
   const trip = getTripById(params.id as string);
-  
+
   if (!trip) {
     return (
       <div className="card bg-base-100 shadow-xl max-w-md mx-auto mt-12">
@@ -68,8 +69,45 @@ export default function TripDetailsClient() {
   }
 
   const vehicle = vehicles.find((v) => v.id === trip.vehicleId);
-  const stretches = calculateTripStretches(trip.stops);
-  
+
+  // Calculate initial cost per kWh from previous trips for this vehicle
+  // This is needed to correctly calculate the cost of the first stretch if it relies on energy from previous charges
+  let initialCostPerKwh = 0;
+  if (trip.vehicleId) {
+    const vehicleTrips = trips
+      .filter(t => t.vehicleId === trip.vehicleId && t.status === 'completed')
+      .sort((a, b) => a.startDate - b.startDate);
+
+    // Find index of current trip (if it's completed and in the list, stop before it)
+    // If active, it won't be in completed list, so we iterate all completed trips before it
+    const currentTripStart = trip.startDate;
+
+    for (const prevTrip of vehicleTrips) {
+      if (prevTrip.startDate >= currentTripStart) break;
+
+      // We need to simulate the cost evolution through this previous trip
+      // Ideally we would cache this or have it on the trip object, but for now we calculate
+      for (const stop of prevTrip.stops) {
+        if (stop.chargingSession) {
+          const chargingEnergy = stop.chargingSession.endKwh - stop.chargingSession.startKwh;
+          const batteryEnergyBeforeCharge = stop.chargingSession.startKwh;
+
+          // Weighted average
+          const currentValue = batteryEnergyBeforeCharge * initialCostPerKwh;
+          const addedValue = stop.chargingSession.cost;
+          const totalEnergy = batteryEnergyBeforeCharge + chargingEnergy;
+
+          if (totalEnergy > 0) {
+            initialCostPerKwh = (currentValue + addedValue) / totalEnergy;
+          }
+        }
+      }
+    }
+  }
+
+  const stretches = calculateTripStretches(trip.stops, initialCostPerKwh);
+  const estimatedDrivingCost = calculateTripEstimatedCost(stretches);
+
   // Calculate total charging cost
   const totalChargingCost = trip.stops.reduce((sum, stop) => {
     return sum + (stop.chargingSession?.cost || 0);
@@ -174,11 +212,10 @@ export default function TripDetailsClient() {
             )}
             <button
               onClick={handleDeleteTrip}
-              className={`btn gap-2 ${
-                deleteConfirm
-                  ? 'btn-error'
-                  : 'btn-ghost'
-              }`}
+              className={`btn gap-2 ${deleteConfirm
+                ? 'btn-error'
+                : 'btn-ghost'
+                }`}
             >
               <Trash2 className="h-4 w-4" />
               {deleteConfirm ? 'Confirm?' : 'Delete'}
@@ -221,10 +258,19 @@ export default function TripDetailsClient() {
         <div className="stat">
           <div className="flex items-center gap-3 mb-2">
             <DollarSign className="h-8 w-8 text-warning" />
-            <div className="stat-title">Charging Cost</div>
+            <div className="stat-title">Driving Cost</div>
           </div>
-          <div className="stat-value">${totalChargingCost.toFixed(2)}</div>
-          <div className="stat-desc">total cost</div>
+          <div className="stat-value text-xl">${estimatedDrivingCost.toFixed(2)}</div>
+          <div className="stat-desc">est. consumption</div>
+        </div>
+
+        <div className="stat">
+          <div className="flex items-center gap-3 mb-2">
+            <Zap className="h-8 w-8 text-info" />
+            <div className="stat-title">Charged</div>
+          </div>
+          <div className="stat-value text-xl">${totalChargingCost.toFixed(2)}</div>
+          <div className="stat-desc">session cost</div>
         </div>
 
         <div className="stat">
@@ -257,7 +303,7 @@ export default function TripDetailsClient() {
           const index = trip.stops.length - 1 - reverseIndex;
           const stretch = index > 0 ? stretches[index - 1] : null;
           const isEditing = editingStop === stop.id;
-          
+
           return (
             <div key={stop.id}>
               {/* Stretch Info */}

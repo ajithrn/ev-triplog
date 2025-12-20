@@ -47,7 +47,7 @@ export function filterTripsByDateRange(
 ): Trip[] {
   const start = typeof startDate === 'number' ? new Date(startDate) : startDate;
   const end = typeof endDate === 'number' ? new Date(endDate) : endDate;
-  
+
   return trips.filter((trip) =>
     isWithinInterval(new Date(trip.startDate), {
       start,
@@ -222,7 +222,7 @@ export function analyzeDrivingPatterns(trips: Trip[]): DrivingPattern[] {
   trips.forEach((trip) => {
     if (trip.status === 'completed') {
       const hour = new Date(trip.startDate).getHours();
-      
+
       if (patterns.has(hour)) {
         const pattern = patterns.get(hour)!;
         pattern.count++;
@@ -283,21 +283,27 @@ export function calculateCostPerKmTrend(trips: Trip[]): Array<{
       // Update cost per kWh if this stop has charging
       if (fromStop.chargingSession) {
         const chargingEnergy = fromStop.chargingSession.endKwh - fromStop.chargingSession.startKwh;
-        if (chargingEnergy > 0) {
-          lastKnownCostPerKwh = fromStop.chargingSession.cost / chargingEnergy;
+        const batteryEnergyBeforeCharge = fromStop.chargingSession.startKwh;
+
+        // Calculate new weighted average cost
+        const currentValue = batteryEnergyBeforeCharge * lastKnownCostPerKwh;
+        const addedValue = fromStop.chargingSession.cost;
+        const totalEnergy = batteryEnergyBeforeCharge + chargingEnergy;
+
+        if (totalEnergy > 0) {
+          lastKnownCostPerKwh = (currentValue + addedValue) / totalEnergy;
         }
       }
 
       // Calculate stretch metrics
-      const startBatteryKwh = fromStop.chargingSession 
-        ? fromStop.chargingSession.endKwh 
+      const startBatteryKwh = fromStop.chargingSession
+        ? fromStop.chargingSession.endKwh
         : fromStop.batteryKwh;
-      
+
       const distance = toStop.odometer - fromStop.odometer;
       const energyUsed = startBatteryKwh - toStop.batteryKwh;
 
       // Calculate estimated cost for this stretch
-      // Use the last known cost per kWh (from this trip or previous trips)
       const estimatedCost = energyUsed * lastKnownCostPerKwh;
       const costPerKm = distance > 0 ? estimatedCost / distance : 0;
 
@@ -393,8 +399,8 @@ export function comparePeriods(
   const costChange =
     previousStats.totalChargingCost > 0
       ? ((currentStats.totalChargingCost - previousStats.totalChargingCost) /
-          previousStats.totalChargingCost) *
-        100
+        previousStats.totalChargingCost) *
+      100
       : 0;
 
   const tripsChange =
@@ -434,7 +440,7 @@ export function aggregateByPeriod(
   trips.forEach((trip) => {
     if (trip.status === 'completed') {
       const date = new Date(trip.startDate);
-      const key = period === 'week' 
+      const key = period === 'week'
         ? format(startOfWeek(date), 'MMM dd, yyyy')
         : format(startOfMonth(date), 'MMM yyyy');
 
